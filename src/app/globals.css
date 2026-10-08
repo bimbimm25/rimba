@@ -1,26 +1,58 @@
 @import "tailwindcss";
 
+@theme {
+  /* Font Family */
+  --font-sans: var(--font-inter), sans-serif;
+  --font-display: var(--font-lexend), sans-serif;
+
+  /* Warna Primer Rimba */
+  --color-rimba-50: #F2F8F5;
+  --color-rimba-100: #E1EFE8;
+  --color-rimba-200: #C2DFD2;
+  --color-rimba-300: #94C7B1;
+  --color-rimba-400: #5EA88B;
+  --color-rimba-500: #2E7D5B;
+  --color-rimba-600: #24664A;
+  --color-rimba-700: #1D513B;
+  --color-rimba-800: #184130;
+  --color-rimba-900: #143628;
+
+  /* Warna Sekunder Leaf */
+  --color-leaf-light: #EAF7EE;
+  --color-leaf: #38A169;
+  --color-leaf-dark: #276749;
+
+  /* Warna Dasar Earth */
+  --color-earth-cream: #FCFBF7;
+  --color-earth-soft: #F5F2EB;
+  --color-earth-sand: #E6DFD3;
+
+  /* Warna Aksen */
+  --color-accent-sky: #3B82F6;
+  --color-accent-skyLight: #EFF6FF;
+  --color-accent-sun: #F59E0B;
+  --color-accent-sunLight: #FEF3C7;
+  --color-accent-flame: #EA580C;
+  --color-accent-flameLight: #FFF7ED;
+
+  /* Radius */
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #FCFBF7;
+  --foreground: #1A2E26;
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--background);
+  font-family: var(--font-inter), sans-serif;
+  overflow-x: hidden;
+}
+
+*:focus-visible {
+  outline: 3px solid #2E7D5B;
+  outline-offset: 2px;
 }
