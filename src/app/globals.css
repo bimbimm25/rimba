@@ -56,3 +56,10 @@ body {
   outline: 3px solid #2E7D5B;
   outline-offset: 2px;
 }
+
+/* Sembunyikan kursor HANYA di area kosong */
+@media (pointer: fine) {
+  body.hide-cursor {
+    cursor: none;
+  }
+}

@@ -5,143 +5,199 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
     Trees,
-    Compass,
-    ShieldCheck,
+    Home,
     BookOpen,
-    ArrowRight,
+    Target,
+    Gamepad2,
+    PackageCheck,
     Menu,
-    X
+    X,
+    PhoneCall
 } from 'lucide-react';
 
-export const Navbar = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [isScrolled, setIsScrolled] = useState(false);
+const NAV_ITEMS = [
+    {
+        label: 'Beranda',
+        href: '/',
+        icon: Home,
+        desc: 'Halaman Utama Rimba'
+    },
+    {
+        label: 'Belajar',
+        href: '/belajar',
+        icon: BookOpen,
+        desc: 'Kurikulum Hutan & Gambut'
+    },
+    {
+        label: 'Misi',
+        href: '/misi',
+        icon: Target,
+        desc: 'Simulasi Tanggap Bencana'
+    },
+    {
+        label: 'Arcade Lab',
+        href: '/lab',
+        icon: Gamepad2,
+        desc: 'Mini-Game Refleks Karhutla'
+    },
+    {
+        label: 'Kit Siaga',
+        href: '/kit',
+        icon: PackageCheck,
+        desc: 'Daftar Logistik & P3K'
+    },
+];
+
+export const Navbar: React.FC = () => {
     const pathname = usePathname();
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
-            // Beralih ke mode Floating Card setelah scroll melewati 30px
-            if (window.scrollY > 30) {
-                setIsScrolled(true);
-            } else {
-                setIsScrolled(false);
-            }
+            // Deteksi posisi scroll: jika > 20px, ubah status navbar
+            setIsScrolled(window.scrollY > 20);
         };
 
+        handleScroll();
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const navLinks = [
-        { href: '/', label: 'Beranda' },
-        { href: '/belajar', label: 'Belajar' },
-        { href: '/misi', label: 'Misi' },
-        { href: '/tentang', label: 'Panduan' },
-    ];
+    // Tutup menu mobile ketika berpindah halaman
+    useEffect(() => {
+        setMobileMenuOpen(false);
+    }, [pathname]);
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out">
-            <div
-                className={`mx-auto transition-all duration-300 ease-in-out ${isScrolled
-                        ? 'max-w-4xl px-4 pt-3'
-                        : 'max-w-6xl px-4 sm:px-6 pt-5'
+        <header className={`fixed top-0 inset-x-0 z-40 transition-all duration-500 ease-in-out px-4 sm:px-6 ${isScrolled ? 'py-2.5 sm:py-3' : 'py-4 sm:py-6'
+            }`}>
+            <nav
+                className={`max-w-6xl mx-auto rounded-3xl transition-all duration-500 ease-in-out px-4 sm:px-6 py-2.5 flex items-center justify-between ${isScrolled
+                        ? 'bg-white/90 backdrop-blur-md border border-rimba-200/80 shadow-md'
+                        : 'bg-transparent border border-transparent shadow-none'
                     }`}
             >
-                {/* Container: Tanpa Card di atas, Menjadi Card Melayang saat discroll */}
-                <div
-                    className={`flex items-center justify-between transition-all duration-300 ${isScrolled
-                            ? 'bg-white/90 backdrop-blur-xl border border-rimba-100/80 shadow-md shadow-rimba-900/5 px-5 py-2.5 rounded-full'
-                            : 'bg-transparent border-transparent px-2 py-1'
-                        }`}
-                >
-                    {/* 1. Brand Logo Ringkas */}
-                    <Link href="/" className="flex items-center gap-2.5 group">
-                        <div
-                            className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all ${isScrolled
-                                    ? 'bg-rimba-500 text-white shadow-xs'
-                                    : 'bg-rimba-900/10 text-rimba-900 group-hover:bg-rimba-900/15'
-                                }`}
-                        >
-                            <Trees className="w-5 h-5 text-rimba-700" />
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="font-display font-extrabold text-lg tracking-tight text-rimba-950">
-                                R.I.M.B.A
-                            </span>
-                        </div>
-                    </Link>
-
-                    {/* 2. Desktop Navigation Minimalis */}
-                    <nav className="hidden md:flex items-center gap-1">
-                        {navLinks.map((item) => {
-                            const isActive = pathname === item.href;
-                            return (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all ${isActive
-                                            ? 'text-rimba-950 bg-rimba-900/10 font-bold'
-                                            : 'text-rimba-800 hover:text-rimba-950 hover:bg-black/5'
-                                        }`}
-                                >
-                                    {item.label}
-                                </Link>
-                            );
-                        })}
-                    </nav>
-
-                    {/* 3. Action Button Padat */}
-                    <div className="hidden md:flex items-center">
-                        <Link href="/belajar">
-                            <button className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-rimba-500 hover:bg-rimba-600 text-white text-xs font-bold font-display shadow-sm shadow-rimba-500/20 active:scale-95 transition-all">
-                                <span>Mulai</span>
-                                <ArrowRight className="w-3.5 h-3.5" />
-                            </button>
-                        </Link>
+                {/* Logo R.I.M.B.A */}
+                <Link href="/" className="flex items-center gap-2.5 group">
+                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-600 to-rimba-800 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-300">
+                        <Trees className="w-5 h-5 text-amber-300" />
                     </div>
+                    <div>
+                        <span className="font-display font-black text-lg text-rimba-950 tracking-tight block leading-tight">
+                            R.I.M.B.A
+                        </span>
+                        <span className="text-[10px] text-rimba-700 font-bold tracking-wider uppercase block -mt-0.5">
+                            Edukasi Karhutla
+                        </span>
+                    </div>
+                </Link>
 
-                    {/* 4. Mobile Menu Button */}
-                    <button
-                        onClick={() => setIsOpen(!isOpen)}
-                        className="md:hidden p-2 text-rimba-900 rounded-lg hover:bg-black/5 transition-colors"
-                        aria-label={isOpen ? 'Tutup navigasi' : 'Buka navigasi'}
-                    >
-                        {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-                    </button>
+                {/* Menu Desktop */}
+                <div className="hidden md:flex items-center gap-1">
+                    {NAV_ITEMS.map((item) => {
+                        const isActive = item.href === '/'
+                            ? pathname === '/'
+                            : pathname.startsWith(item.href);
+                        const Icon = item.icon;
+
+                        return (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                className={`relative px-3.5 py-2 rounded-2xl text-xs font-bold transition-all duration-300 flex items-center gap-2 ${isActive
+                                        ? 'bg-rimba-800 text-white shadow-xs'
+                                        : isScrolled
+                                            ? 'text-rimba-800 hover:text-rimba-950 hover:bg-earth-soft'
+                                            : 'text-rimba-900 hover:text-rimba-950 hover:bg-white/50 backdrop-blur-xs'
+                                    }`}
+                            >
+                                <Icon className={`w-4 h-4 ${isActive ? 'text-amber-300' : 'text-rimba-600'}`} />
+                                <span>{item.label}</span>
+                                
+                            </Link>
+                        );
+                    })}
                 </div>
 
-                {/* 5. Mobile Drawer */}
-                {isOpen && (
-                    <div className="md:hidden mt-2 p-3 bg-white/95 backdrop-blur-xl border border-rimba-100 rounded-2xl shadow-lg shadow-rimba-900/10 space-y-1 animate-in fade-in duration-200">
-                        {navLinks.map((item) => {
-                            const isActive = pathname === item.href;
-                            return (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    onClick={() => setIsOpen(false)}
-                                    className={`block px-3 py-2 rounded-xl text-xs font-semibold ${isActive
-                                            ? 'bg-rimba-50 text-rimba-950 font-bold'
-                                            : 'text-rimba-800 hover:bg-gray-100'
-                                        }`}
-                                >
-                                    {item.label}
-                                </Link>
-                            );
-                        })}
-                        <div className="pt-2 border-t border-gray-100">
+                {/* Tombol Aksi Kanan (Contact) */}
+                <div className="hidden md:flex items-center gap-2">
+                    <Link
+                        href="/contact"
+                        className={`px-4 py-2 rounded-2xl text-xs font-bold flex items-center gap-1.5 transition-all duration-300 border ${isScrolled
+                                ? 'bg-emerald-50 hover:bg-emerald-100 text-rimba-950 border-emerald-200'
+                                : 'bg-white/80 hover:bg-white text-rimba-950 border-white/60 shadow-xs backdrop-blur-xs'
+                            }`}
+                    >
+                        <PhoneCall className="w-3.5 h-3.5 text-emerald-700" />
+                        <span>Contact</span>
+                    </Link>
+                </div>
+
+                {/* Tombol Hamburger Mobile */}
+                <button
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    className={`md:hidden p-2.5 rounded-2xl text-rimba-800 transition-colors border ${isScrolled
+                            ? 'bg-white hover:bg-earth-soft border-rimba-100 shadow-2xs'
+                            : 'bg-white/70 hover:bg-white border-rimba-200/60 backdrop-blur-xs'
+                        }`}
+                    aria-label="Toggle Navigation Menu"
+                >
+                    {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                </button>
+            </nav>
+
+            {/* Menu Mobile Dropdown */}
+            {mobileMenuOpen && (
+                <div className="md:hidden mt-2 max-w-6xl mx-auto bg-white/95 backdrop-blur-md rounded-3xl border border-rimba-100 shadow-xl p-3.5 space-y-1.5 animate-in fade-in slide-in-from-top-2 duration-300">
+                    {NAV_ITEMS.map((item) => {
+                        const isActive = item.href === '/'
+                            ? pathname === '/'
+                            : pathname.startsWith(item.href);
+                        const Icon = item.icon;
+
+                        return (
                             <Link
-                                href="/belajar"
-                                onClick={() => setIsOpen(false)}
-                                className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-rimba-500 text-white rounded-xl text-xs font-bold shadow-xs"
+                                key={item.href}
+                                href={item.href}
+                                className={`p-3 rounded-2xl flex items-center justify-between transition-all ${isActive
+                                        ? 'bg-rimba-800 text-white shadow-xs'
+                                        : 'bg-earth-soft/60 hover:bg-earth-soft text-rimba-950'
+                                    }`}
                             >
-                                <span>Mulai</span>
-                                <ArrowRight className="w-3.5 h-3.5" />
+                                <div className="flex items-center gap-3">
+                                    <div
+                                        className={`w-8 h-8 rounded-xl flex items-center justify-center ${isActive ? 'bg-white/20 text-amber-300' : 'bg-white text-rimba-700 border border-rimba-100'
+                                            }`}
+                                    >
+                                        <Icon className="w-4 h-4" />
+                                    </div>
+                                    <div>
+                                        <span className="font-display font-bold text-sm block leading-tight">
+                                            {item.label}
+                                        </span>
+                                        <span className={`text-[10px] ${isActive ? 'text-rimba-200' : 'text-rimba-700'}`}>
+                                            {item.desc}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                
                             </Link>
-                        </div>
+                        );
+                    })}
+
+                    <div className="pt-2 border-t border-rimba-100">
+                        <Link
+                            href="/contact"
+                            className="w-full p-3 rounded-2xl bg-emerald-50 hover:bg-emerald-100 text-emerald-950 text-xs font-bold flex items-center justify-center gap-2 transition-colors border border-emerald-200"
+                        >
+                            <PhoneCall className="w-4 h-4 text-emerald-700" />
+                            <span>Contact</span>
+                        </Link>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
         </header>
     );
 };
