@@ -1,322 +1,673 @@
 export interface MissionQuestion {
+
     id: string;
+
     question: string;
+
     options: {
+
         id: string;
+
         text: string;
+
         isCorrect: boolean;
+
         explanation: string;
+
     }[];
+
 }
+
+
 
 export interface Mission {
+
     id: string;
+
     level: number;
+
     slug: string;
+
     title: string;
+
     subtitle: string;
+
     category: string;
+
     xpReward: number;
+
     duration: string;
+
     lore: string;
+
     questions: MissionQuestion[];
+
 }
 
+
+
 export const MISSIONS: Mission[] = [
+
+    // LEVEL 1 -> Menguji pemahaman Bab 1*
+
     {
+
         id: '1',
+
         level: 1,
-        slug: 'patroli-darat',
-        title: 'Misi 1: Patroli Pertama di Tepian Rawa',
-        subtitle: 'Mengenal tanda-tanda awal lahan gambut yang mulai mengering.',
-        category: 'Dasar Siaga',
+
+        slug: 'patroli-pertama-rimba',
+
+        title: 'Misi 1: Mengenal Pentingnya Hutan',
+
+        subtitle: 'Cari tahu bagaimana hutan membantu manusia, hewan, dan lingkungan.',
+
+        category: 'Bab 1: Pengenalan',
+
         xpReward: 100,
-        duration: '4 Menit',
-        lore: 'Kamu ditugaskan berjalan di jalan setapak hutan rawa. Matahari sedang terik dan tanah mulai terasa hangat.',
+
+        duration: '3 Menit',
+
+        lore: 'Selamat datang, Penjaga Rimba! Kamu sedang menjelajahi hutan yang dipenuhi pepohonan dan suara burung. Yuk, cari tahu mengapa hutan penting bagi kehidupan kita.',
+
         questions: [
+
             {
+
                 id: 'q1',
-                question: 'Apa tanda paling jelas bahwa tanah gambut sudah mulai kekurangan air dan rawan terbakar?',
+
+                question: 'Apa salah satu manfaat penting pohon bagi manusia dan hewan?',
+
                 options: [
+
                     {
+
                         id: 'a',
-                        text: 'Tanah terasa empuk berair dan banyak genangan katak.',
+
+                        text: 'Pohon membuat udara semakin kotor dengan mengeluarkan asap.',
+
                         isCorrect: false,
-                        explanation: 'Itu tanda gambut yang sehat dan basah, bukan yang rawan terbakar.'
+
+                        explanation: 'Belum tepat. Pohon tidak menghasilkan asap seperti itu. Asap justru dapat mengotori udara.'
+
                     },
+
                     {
+
                         id: 'b',
-                        text: 'Permukaan tanah retak-retak kering dan daun semak di atasnya mudah remuk seperti kerupuk.',
+
+                        text: 'Pohon membantu menghasilkan oksigen yang kita hirup dan menjadi tempat tinggal banyak hewan.',
+
                         isCorrect: true,
-                        explanation: 'Tepat! Gambut yang kering kehilangan air dan serat organiknya menjadi sangat mudah disulut api.'
+
+                        explanation: 'Benar! Pohon membantu menghasilkan oksigen dan menyediakan tempat berlindung bagi banyak hewan.'
+
                     },
+
                     {
+
                         id: 'c',
-                        text: 'Banyak embun pagi menempel di dedaunan.',
+
+                        text: 'Pohon bisa berpindah tempat sendiri untuk mencari air.',
+
                         isCorrect: false,
-                        explanation: 'Embun pagi adalah hal normal dan menandakan kelembapan udara yang baik.'
+
+                        explanation: 'Pohon tumbuh di tempatnya. Akarnya menyerap air dari tanah.'
+
                     }
+
                 ]
+
             }
+
         ]
+
     },
+
+
+
+    // LEVEL 2 -> Menguji pemahaman Bab 2*
+
     {
+
         id: '2',
+
         level: 2,
-        slug: 'sekat-kanal-darurat',
-        title: 'Misi 2: Membendung Parit Kering',
-        subtitle: 'Menahan aliran air agar tanah gambut tidak terkuras habis.',
-        category: 'Mitigasi Air',
+
+        slug: 'menjaga-spons-gambut',
+
+        title: 'Misi 2: Menjaga Tanah Gambut Tetap Basah',
+
+        subtitle: 'Pahami mengapa tanah gambut perlu tetap lembap agar tidak mudah terbakar.',
+
+        category: 'Bab 2: Lahan Gambut',
+
         xpReward: 120,
-        duration: '5 Menit',
-        lore: 'Ada saluran parit buatan manusia yang mengalirkan air rawa ke sungai besar secara berlebihan.',
+
+        duration: '4 Menit',
+
+        lore: 'Kamu sedang menjelajahi rawa gambut. Saat airnya berkurang, tanah gambut bisa menjadi kering. Tanah gambut yang kering lebih mudah terbakar, jadi kita perlu menjaganya tetap lembap.',
+
         questions: [
+
             {
+
                 id: 'q1',
-                question: 'Kenapa petugas hutan harus membuat bendungan sekat kanal dari balok kayu di parit itu?',
+
+                question: 'Apa yang perlu dilakukan agar tanah gambut tidak mudah terbakar?',
+
                 options: [
+
                     {
+
                         id: 'a',
-                        text: 'Agar air rawa tidak terkuras habis ke sungai dan tanah gambut tetap basah seperti spons.',
+
+                        text: 'Agar tanah tidak mudah terbakar saat cuaca panas.',
+
                         isCorrect: true,
-                        explanation: 'Benar! Sekat kanal menjaga air tetap menggenang di rawa sehingga api mustahil menjalar di tanah basah.'
+
+                        explanation: 'Betul! Tanah gambut yang lembap lebih sulit terbakar. Pengaturan air harus dilakukan oleh orang dewasa atau petugas yang paham caranya.'
+
                     },
+
                     {
+
                         id: 'b',
-                        text: 'Supaya ikan rawa bisa melompat lebih tinggi.',
+
+                        text: 'Mengeringkan rawa sampai tanahnya retak-retak.',
+
                         isCorrect: false,
-                        explanation: 'Bukan itu tujuannya, bendungan sekat kanal dibuat khusus menjaga kelembapan tanah gambut.'
+
+                        explanation: 'Belum tepat. Tanah gambut yang kering lebih mudah terbakar dan apinya bisa sulit dipadamkan.'
+
                     },
+
                     {
+
                         id: 'c',
-                        text: 'Untuk membuat tempat berenang anak-anak desa.',
+
+                        text: 'Membuang sampah plastik ke dalam parit.',
+
                         isCorrect: false,
-                        explanation: 'Sekat kanal dibuat di area konservasi gambut, bukan tempat pemandian umum.'
+
+                        explanation: 'Sampah plastik dapat mencemari air dan membahayakan hewan yang hidup di rawa.'
+
                     }
+
                 ]
+
             }
+
         ]
+
     },
+
+
+
+    // LEVEL 3 -> Menguji pemahaman Bab 3*
+
     {
+
         id: '3',
+
         level: 3,
-        slug: 'bara-bawah-tanah',
-        title: 'Misi 3: Melacak Asap Bawah Tanah',
-        subtitle: 'Menjinakkan bara api tersembunyi yang merayap di akar pohon.',
-        category: 'Taktik Pemadam',
-        xpReward: 150,
-        duration: '6 Menit',
-        lore: 'Tidak ada api berkobar di atas rumput, tapi ada asap putih panas keluar dari sela-sela akar pohon kelapa sawit liar.',
+
+        slug: 'patroli-bebas-bakar',
+
+        title: 'Misi 3: Cegah Api Sebelum Membesar',
+
+        subtitle: 'Belajar mengapa membakar daun kering bisa memicu kebakaran.',
+
+        category: 'Bab 3: Pencegahan',
+
+        xpReward: 140,
+
+        duration: '4 Menit',
+
+        lore: 'Hari ini cuaca sangat panas dan angin bertiup kencang. Kamu melihat seseorang hendak membakar daun kering di dekat semak. Kamu tahu api kecil pun bisa berbahaya.',
+
         questions: [
+
             {
+
                 id: 'q1',
-                question: 'Bagaimana cara memadamkan api yang bersembunyi di kedalaman 1 meter di bawah tanah gambut?',
+
+                question: 'Apa yang bisa terjadi jika daun kering dibakar saat cuaca panas dan angin bertiup kencang?',
+
                 options: [
+
                     {
+
                         id: 'a',
-                        text: 'Cukup disiram memakai satu ember air dari atas permukaan tanah.',
-                        isCorrect: false,
-                        explanation: 'Air di atas permukaan tidak tembus sampai ke bara bawah tanah yang dalam.'
-                    },
-                    {
-                        id: 'b',
-                        text: 'Memakai pipa suntik besi bertekanan tinggi yang ditancapkan ke dalam tanah sampai baranya dingin.',
+
+                        text: 'Api bisa terbawa angin ke daun dan semak kering, lalu menyebar menjadi kebakaran.',
+
                         isCorrect: true,
-                        explanation: 'Luar biasa! Pipa suntik air memasukkan air langsung ke pusat bara api di dalam tanah hingga padam total.'
+
+                        explanation: 'Benar! Api bisa menyebar dengan cepat saat angin kencang. Karena itu, jangan membakar daun atau sampah di lahan terbuka.'
+
                     },
+
                     {
-                        id: 'c',
-                        text: 'Menutup kepulan asap dengan rumput kering.',
+
+                        id: 'b',
+
+                        text: 'Api akan membuat semua tanaman tumbuh lebih cepat.',
+
                         isCorrect: false,
-                        explanation: 'Rumput kering justru akan ikut terbakar dan membuat apinya membesar.'
+
+                        explanation: 'Api dapat membakar tanaman dan merusak tempat tinggal hewan.'
+
+                    },
+
+                    {
+
+                        id: 'c',
+
+                        text: 'Abu dari pembakaran akan berubah menjadi es.',
+
+                        isCorrect: false,
+
+                        explanation: 'Abu tidak berubah menjadi es. Membakar daun juga tetap menghasilkan asap yang mengotori udara.'
+
                     }
+
                 ]
+
             }
+
         ]
+
     },
+
+
+
+    // LEVEL 4 -> Menguji pemahaman Bab 4*
+
     {
+
         id: '4',
+
         level: 4,
-        slug: 'sinyal-hotspot',
-        title: 'Misi 4: Membaca Radar Panas Satelit',
-        subtitle: 'Mengetahui koordinat titik panas sebelum api membesar.',
-        category: 'Deteksi Dini',
+
+        slug: 'padamkan-bara-tanah',
+
+        title: 'Misi 4: Waspada Api di Dalam Tanah',
+
+        subtitle: 'Kenali bahaya bara api yang bisa bersembunyi di tanah gambut.',
+
+        category: 'Bab 4: Taktik Lapangan',
+
         xpReward: 160,
+
         duration: '5 Menit',
-        lore: 'Layar monitor posko berbunyi! Satelit cuaca mendeteksi titik merah berderajat panas tinggi di Blok Rimba Utara.',
+
+        lore: 'Kamu melihat asap keluar dari tanah gambut. Tidak ada api besar yang terlihat di permukaan, tetapi bisa saja masih ada bara panas di bawah tanah. Situasi ini berbahaya dan perlu ditangani petugas.',
+
         questions: [
+
             {
+
                 id: 'q1',
-                question: 'Jika satelit mendeteksi "Hotspot" dengan tingkat keyakinan tinggi, tindakan apa yang wajib segera diambil?',
+
+                question: 'Apa yang harus kamu lakukan jika melihat asap keluar dari tanah di area hutan?',
+
                 options: [
+
                     {
+
                         id: 'a',
-                        text: 'Menunggu 3 hari sampai apinya mati sendiri kena hujan.',
-                        isCorrect: false,
-                        explanation: 'Jika ditunggu, bara api bisa merambat membakar puluhan hektar hutan.'
-                    },
-                    {
-                        id: 'b',
-                        text: 'Segera kirim regu patroli darat atau drone ke koordinat tersebut untuk memastikan dan memadamkannya.',
+
+                        text: 'Menjauh dari tempat itu lalu segera memberi tahu orang dewasa atau petugas.',
+
                         isCorrect: true,
-                        explanation: 'Tepat! Verifikasi cepat oleh tim darat adalah kunci mematikan api selagi masih berupa titik kecil.'
+
+                        explanation: 'Benar! Bara di dalam tanah bisa berbahaya. Jangan mencoba memadamkannya sendiri; biarkan petugas yang menanganinya.'
+
                     },
+
                     {
-                        id: 'c',
-                        text: 'Mematikan layar komputer agar alarm berhenti berbunyi.',
+
+                        id: 'b',
+
+                        text: 'Mendekat untuk memeriksa asap itu sendirian.',
+
                         isCorrect: false,
-                        explanation: 'Mematikan alarm justru membahayakan keselamatan seluruh kawasan hutan.'
+
+                        explanation: 'Jangan mendekat sendirian. Bara bisa menyebar di bawah tanah dan kamu dapat terluka.'
+
+                    },
+
+                    {
+
+                        id: 'c',
+
+                        text: 'Menutup asap dengan daun kering lalu pergi.',
+
+                        isCorrect: false,
+
+                        explanation: 'Daun kering mudah terbakar dan tidak menyelesaikan masalah. Segera laporkan kepada orang dewasa atau petugas.'
+
                     }
+
                 ]
+
             }
+
         ]
+
     },
+
+
+
+    // LEVEL 5 -> Menguji pemahaman Bab 5*
+
     {
+
         id: '5',
+
         level: 5,
-        slug: 'siaga-kabut-asap',
-        title: 'Misi 5: Menyelamatkan Warga dari Kabut Asap',
-        subtitle: 'Melindungi mata dan paru-paru dari racun partikel debu halus.',
-        category: 'Kesehatan Siaga',
+
+        slug: 'tanggap-kabut-asap',
+
+        title: 'Misi 5: Lindungi Diri dari Asap',
+
+        subtitle: 'Ketahui cara menjaga pernapasan saat udara dipenuhi asap.',
+
+        category: 'Bab 5: Kesehatan Siaga',
+
         xpReward: 180,
-        duration: '6 Menit',
-        lore: 'Desa di dekat hutan mulai diselimuti kabut kuning pekat berbau sangit. Anak-anak mulai batuk-batuk.',
+
+        duration: '4 Menit',
+
+        lore: 'Langit terlihat berkabut dan udara berbau asap. Kamu mulai merasa tidak nyaman saat bernapas. Saat seperti ini, kamu perlu mengikuti arahan orang tua atau guru agar tetap aman.',
+
         questions: [
+
             {
+
                 id: 'q1',
-                question: 'Perlindungan diri apa yang paling tepat saat indeks pencemaran udara sudah berada di zona Berbahaya?',
+
+                question: 'Apa yang sebaiknya kamu lakukan saat asap kebakaran membuat udara di sekitar rumah menjadi kotor?',
+
                 options: [
+
                     {
+
                         id: 'a',
-                        text: 'Berlari kencang di jalanan desa tanpa penutup hidung.',
+
+                        text: 'Tetap bermain di luar rumah meskipun asap terlihat tebal.',
+
                         isCorrect: false,
-                        explanation: 'Bernapas terengah-engah di udara berasap membuat racun PM2.5 menumpuk di paru-paru.'
+
+                        explanation: 'Udara berasap bisa mengganggu pernapasan. Sebaiknya masuk ke dalam ruangan dan ikuti arahan orang dewasa.'
+
                     },
+
                     {
+
                         id: 'b',
-                        text: 'Menutup rapat pintu dan jendela, menyalakan penyaring udara, dan memakai masker N95 jika harus keluar.',
+
+                        text: 'Berada di dalam ruangan, menutup jendela, dan mengikuti arahan orang tua atau guru.',
+
                         isCorrect: true,
-                        explanation: 'Pintar! Masker standar N95 mampu menahan partikel debu halus berbahaya agar tidak terhirup ke darah.'
+
+                        explanation: 'Betul! Mengurangi kegiatan di luar dan menutup jendela membantu mengurangi asap yang masuk. Jika harus keluar, ikuti petunjuk orang dewasa tentang perlindungan yang tepat.'
+
                     },
+
                     {
+
                         id: 'c',
-                        text: 'Membuka semua ventilasi rumah selebar mungkin.',
+
+                        text: 'Membuka semua jendela agar asap masuk ke dalam rumah.',
+
                         isCorrect: false,
-                        explanation: 'Membuka ventilasi membuat racun asap karhutla masuk dan mengendap di dalam rumah.'
+
+                        explanation: 'Jendela yang terbuka dapat membuat lebih banyak asap masuk ke rumah.'
+
                     }
+
                 ]
+
             }
+
         ]
+
     },
+
+
+
+    // LEVEL 6 -> Menguji pemahaman Bab 6*
+
     {
+
         id: '6',
+
         level: 6,
-        slug: 'koridor-satwa',
-        title: 'Misi 6: Evakuasi Satwa yang Tersesat',
-        subtitle: 'Membantu keluarga orangutan yang panik mencari udara bersih.',
-        category: 'Perlindungan Satwa',
+
+        slug: 'evakuasi-sahabat-satwa',
+
+        title: 'Misi 6: Menolong Hewan dengan Aman',
+
+        subtitle: 'Belajar membantu satwa liar tanpa membahayakan diri sendiri atau hewan.',
+
+        category: 'Bab 6: Sahabat Satwa',
+
         xpReward: 200,
+
         duration: '5 Menit',
-        lore: 'Di pinggir kebun sawit tua, ada induk orangutan dan bayinya yang terperangkap kabut asap tebal dan kehausan.',
+
+        lore: 'Di dekat kebun, kamu melihat seekor hewan liar yang tampak ketakutan setelah kebakaran hutan. Hewan itu mungkin terluka atau kehilangan tempat tinggal. Kamu ingin menolongnya, tetapi harus tetap aman.',
+
         questions: [
+
             {
+
                 id: 'q1',
-                question: 'Apa langkah paling bijak saat menemukan satwa liar yang tersesat akibat kebakaran hutan?',
+
+                question: 'Apa tindakan paling aman jika kamu menemukan satwa liar yang tampak terluka atau ketakutan?',
+
                 options: [
+
                     {
+
                         id: 'a',
-                        text: 'Menangkapnya untuk dijual ke pasar hewan.',
+
+                        text: 'Menangkapnya dan membawanya pulang untuk dipelihara.',
+
                         isCorrect: false,
-                        explanation: 'Itu perbuatan terlarang dan melanggar hukum perlindungan satwa langka!'
+
+                        explanation: 'Satwa liar bisa merasa semakin takut atau menyerang saat didekati. Perawatannya juga harus dilakukan oleh orang yang terlatih.'
+
                     },
+
                     {
+
                         id: 'b',
-                        text: 'Menghubungi petugas BKSDA atau dokter satwa liar agar diberi oksigen dan dipindahkan ke hutan aman.',
+
+                        text: 'Menjauh dengan tenang dan memberi tahu orang dewasa atau petugas penyelamat satwa.',
+
                         isCorrect: true,
-                        explanation: 'Sangat benar! Dokter satwa punya peralatan medis khusus untuk memeriksa paru-paru hewan yang menghirup asap.'
+
+                        explanation: 'Tepat! Petugas tahu cara menolong satwa dengan aman. Jangan mendekati, menyentuh, atau memberi makan satwa liar sendiri.'
+
                     },
+
                     {
+
                         id: 'c',
-                        text: 'Melempari hewan dengan batu supaya mereka lari ke tengah api.',
+
+                        text: 'Melemparinya dengan batu agar pergi.',
+
                         isCorrect: false,
-                        explanation: 'Sangat kejam dan membahayakan nyawa satwa yang sedang ketakutan.'
+
+                        explanation: 'Tindakan itu bisa melukai hewan dan membuatnya semakin ketakutan.'
+
                     }
+
                 ]
+
             }
+
         ]
+
     },
+
+
+
+    // LEVEL 7 -> Menguji pemahaman Bab 7*
+
     {
+
         id: '7',
+
         level: 7,
-        slug: 'kampung-bebas-bakar',
-        title: 'Misi 7: Aksi Kompos Pengganti Bakar Daun',
-        subtitle: 'Mengubah kebiasaan warga agar tidak membakar sampah sembarangan.',
-        category: 'Solusi Warga',
+
+        slug: 'olah-kompos-daun',
+
+        title: 'Misi 7: Ubah Daun Kering Jadi Kompos',
+
+        subtitle: 'Cari cara memanfaatkan daun kering tanpa membakarnya.',
+
+        category: 'Bab 7: Aksi Nyata',
+
         xpReward: 220,
+
         duration: '5 Menit',
-        lore: 'Pak RT dan warga sedang mengumpulkan tumpukan dahan dan daun kering di pekarangan setelah kerja bakti.',
+
+        lore: 'Setelah halaman dibersihkan, banyak daun kering terkumpul. Daun itu tidak harus dibakar, lho! Kita bisa memanfaatkannya menjadi kompos yang membantu tanaman tumbuh subur.',
+
         questions: [
+
             {
+
                 id: 'q1',
-                question: 'Daripada membakar tumpukan sampah daun kering, apa cara ramah lingkungan yang paling bermanfaat?',
+
+                question: 'Apa yang bisa dilakukan dengan daun kering agar bermanfaat bagi tanaman?',
+
                 options: [
+
                     {
+
                         id: 'a',
-                        text: 'Memasukkan daun ke lubang tanah biopori agar diubah cacing menjadi pupuk kompos yang subur.',
+
+                        text: 'Mengolah daun kering menjadi kompos dengan bantuan orang dewasa.',
+
                         isCorrect: true,
-                        explanation: 'Bagus sekali! Daun yang dikomposkan menyuburkan tanah dan mencegah risiko kebakaran semak.'
+
+                        explanation: 'Benar! Daun yang membusuk akan terurai dan menjadi kompos. Cara ini membuat tanah lebih subur tanpa menghasilkan asap dari pembakaran.'
+
                     },
+
                     {
+
                         id: 'b',
-                        text: 'Membuang daun kering ke dalam selokan hingga mampet.',
+
+                        text: 'Membuang semua daun ke selokan.',
+
                         isCorrect: false,
-                        explanation: 'Membuang sampah ke selokan bisa menyumbat saluran air dan memicu banjir.'
+
+                        explanation: 'Daun yang menumpuk bisa menyumbat aliran air dan menyebabkan genangan saat hujan.'
+
                     },
+
                     {
+
                         id: 'c',
-                        text: 'Menyiram bensin dan menyulutnya di bawah pohon rindang.',
+
+                        text: 'Menyiram daun dengan bahan bakar lalu membakarnya.',
+
                         isCorrect: false,
-                        explanation: 'Bensin membuat api langsung menyambar pohon dan bisa merembet membakar rumah warga.'
+
+                        explanation: 'Bahan bakar mudah menyala dan api bisa menyebar. Jangan membakar daun atau bermain dengan bahan bakar.'
+
                     }
+
                 ]
+
             }
+
         ]
+
     },
+
+
+
+    // LEVEL 8 -> Menguji pemahaman Bab 8*
+
     {
+
         id: '8',
+
         level: 8,
-        slug: 'revegetasi-rimba',
-        title: 'Misi 8: Menanam Kembali Hutan yang Pulih',
-        subtitle: 'Menghijaukan kembali area bekas kebakaran dengan pohon endemik.',
-        category: 'Restorasi Akhir',
+
+        slug: 'tanam-kembali-gambut',
+
+        title: 'Misi 8: Membantu Hutan Tumbuh Kembali',
+
+        subtitle: 'Belajar mengapa hutan perlu dipulihkan dengan tanaman yang sesuai.',
+
+        category: 'Bab 8: Restorasi',
+
         xpReward: 250,
-        duration: '7 Menit',
-        lore: 'Lahan gosong seluas 5 hektar sudah dingin dan siap ditanami kembali bibit pohon agar hutan kembali rindang.',
+
+        duration: '6 Menit',
+
+        lore: 'Sebagian hutan pernah terbakar dan banyak tanaman rusak. Setelah area dinyatakan aman oleh petugas, hutan perlu dipulihkan. Salah satu caranya adalah menanam kembali tumbuhan asli yang cocok dengan lingkungan setempat.',
+
         questions: [
+
             {
+
                 id: 'q1',
-                question: 'Jenis bibit pohon apa yang harus ditanam di rawa gambut agar akarnya kuat dan tahan genangan air alami?',
+
+                question: 'Tanaman seperti apa yang sebaiknya dipilih untuk membantu memulihkan rawa gambut?',
+
                 options: [
+
                     {
+
                         id: 'a',
-                        text: 'Pohon kaktus padang pasir yang tidak suka air.',
+
+                        text: 'Kaktus yang cocok hidup di tempat kering.',
+
                         isCorrect: false,
-                        explanation: 'Kaktus akan busuk dan mati jika ditanam di tanah rawa yang berair.'
+
+                        explanation: 'Kaktus umumnya cocok di tempat kering, bukan untuk lingkungan rawa gambut yang basah.'
+
                     },
+
                     {
+
                         id: 'b',
-                        text: 'Pohon asli rawa gambut seperti Jelutung Rawa, Belangeran, dan Pulai Rawa.',
+
+                        text: 'Pohon asli rawa gambut, seperti jelutung, yang cocok dengan kondisi lingkungan setempat.',
+
                         isCorrect: true,
-                        explanation: 'Sempurna! Pohon asli rawa memang dirancang alami oleh alam untuk mengikat air gambut dan menjaga kesejukan udara.'
+
+                        explanation: 'Bagus! Tanaman asli yang sesuai dengan lingkungan lebih tepat untuk membantu memulihkan hutan. Penanaman sebaiknya dilakukan bersama orang dewasa atau petugas.'
+
                     },
+
                     {
+
                         id: 'c',
-                        text: 'Pohon cemara plastik yang tidak perlu disiram.',
+
+                        text: 'Pohon mainan dari plastik yang hanya menjadi hiasan.',
+
                         isCorrect: false,
-                        explanation: 'Pohon plastik tidak bisa menghasilkan oksigen dan mencemari alam.'
+
+                        explanation: 'Pohon plastik tidak bisa tumbuh atau menjadi tempat tinggal bagi satwa seperti pohon sungguhan.'
+
                     }
+
                 ]
+
             }
+
         ]
+
     }
+
 ];

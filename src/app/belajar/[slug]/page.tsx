@@ -23,7 +23,6 @@ import {
     X,
     Volume2,
     VolumeX,
-    MessageCircleQuestion,
     CheckCheck
 } from 'lucide-react';
 import { DETAILED_LESSONS, KeyPoint } from '@/data/lessons';
@@ -44,12 +43,11 @@ export default function DetailModulBelajarPage() {
     const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
     const [isAlreadyCompleted, setIsAlreadyCompleted] = useState<boolean>(false);
 
-    // Referensi speech synthesis anti-macet & anti-timeout
+    // Referensi speech synthesis anti-macet
     const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
     const speechQueueRef = useRef<string[]>([]);
     const isPlayingRef = useRef<boolean>(false);
 
-    // Periksa apakah modul ini sudah tuntas sebelumnya
     useEffect(() => {
         try {
             const saved = localStorage.getItem('rimba_completed_lessons');
@@ -60,11 +58,10 @@ export default function DetailModulBelajarPage() {
                 }
             }
         } catch {
-            // Abaikan jika storage dibatasi browser
+            // Abaikan jika storage browser dibatasi
         }
     }, [slug]);
 
-    // Hentikan suara seketika jika halaman berpindah / di-unmount
     useEffect(() => {
         return () => {
             if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
@@ -91,7 +88,6 @@ export default function DetailModulBelajarPage() {
         );
     }
 
-    // Fungsi pemutar antrean kalimat secara rekursif
     const playNextSpeechChunk = () => {
         if (!isPlayingRef.current || speechQueueRef.current.length === 0) {
             setIsSpeaking(false);
@@ -131,7 +127,6 @@ export default function DetailModulBelajarPage() {
             return;
         }
 
-        // Jika sedang bersuara, hentikan
         if (isSpeaking) {
             isPlayingRef.current = false;
             speechQueueRef.current = [];
@@ -140,7 +135,6 @@ export default function DetailModulBelajarPage() {
             return;
         }
 
-        // 1. Kumpulkan seluruh materi teks dari awal sampai selesai
         const fullText = [
             currentModule.title,
             currentModule.subtitle,
@@ -149,7 +143,6 @@ export default function DetailModulBelajarPage() {
             `Tahukah kamu? ${currentModule.deepDive.funFact}`
         ].join('. ');
 
-        // 2. Pecah teks menjadi antrean kalimat kecil agar Chrome tidak memutus audio
         const chunks = fullText
             .split(/([.!?]+)/)
             .reduce((acc: string[], cur: string, idx: number, arr: string[]) => {
@@ -161,7 +154,6 @@ export default function DetailModulBelajarPage() {
             }, [])
             .filter((chunk) => chunk.trim().length > 0);
 
-        // 3. Mainkan antrean
         window.speechSynthesis.cancel();
         speechQueueRef.current = chunks;
         isPlayingRef.current = true;
@@ -261,7 +253,7 @@ export default function DetailModulBelajarPage() {
                             </span>
                             {isAlreadyCompleted && (
                                 <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 ml-auto">
-                                    <CheckCheck className="w-3.5 h-3.5" /> Modul Tuntas
+                                    <CheckCheck className="w-3.5 h-3.5" /> Modul Selesai
                                 </span>
                             )}
                         </div>
@@ -277,14 +269,14 @@ export default function DetailModulBelajarPage() {
 
                     {/* Pengantar */}
                     <section className="bg-earth-soft/60 p-6 rounded-2xl border border-rimba-100 text-sm sm:text-base text-rimba-900 leading-relaxed font-normal">
-                        <p className="font-medium">{currentModule.introText}</p>
+                        <p className="font-medium leading-relaxed">{currentModule.introText}</p>
                     </section>
 
-                    {/* 3 Poin Kunci Utama */}
+                    {/* 3 Hal Penting Utama */}
                     <section className="space-y-4">
                         <div className="flex items-center gap-2 text-rimba-950 font-display font-bold text-base">
                             <Sparkles className="w-5 h-5 text-rimba-600" />
-                            <span>3 Hal Penting yang Wajib Kamu Ketahui</span>
+                            <span>3 Hal Penting yang Perlu Kamu Pahami</span>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -300,7 +292,7 @@ export default function DetailModulBelajarPage() {
                                         <h3 className="font-display font-bold text-rimba-950 text-sm sm:text-base mb-1.5">
                                             {point.title}
                                         </h3>
-                                        <p className="text-xs text-rimba-800 leading-relaxed font-medium">
+                                        <p className="text-xs text-rimba-800 leading-relaxed font-normal">
                                             {point.desc}
                                         </p>
                                     </div>
@@ -334,21 +326,7 @@ export default function DetailModulBelajarPage() {
                         </div>
                     </section>
 
-                    {/* Dialog Diskusi */}
-                    <section className="bg-amber-50/70 p-6 rounded-3xl border border-amber-200/80 space-y-3">
-                        <div className="flex items-center gap-2.5 text-amber-900 font-display font-bold text-sm sm:text-base">
-                            <MessageCircleQuestion className="w-5 h-5 text-amber-700" />
-                            <span>Obrolan Meja Makan (Diskusi dengan Orang Tua / Guru)</span>
-                        </div>
-                        <p className="text-xs sm:text-sm text-amber-950 leading-relaxed font-medium">
-                            Ajak orang tuamu atau bapak/ibu guru berdiskusi tentang bab ini:
-                        </p>
-                        <div className="p-4 bg-white/90 rounded-2xl border border-amber-200 text-xs sm:text-sm font-semibold text-rimba-950">
-                            &ldquo;Ayah / Ibu / Guru, apakah dulu pernah melihat kabut asap tebal saat kebakaran lahan? Apa yang paling dirasakan saat itu?&rdquo;
-                        </div>
-                    </section>
-
-                    {/* Kuis Interaktif */}
+                    {/* Kuis Interaktif Penguji Materi */}
                     <section className="bg-earth-soft p-6 sm:p-8 rounded-3xl border border-rimba-100/90 space-y-5">
                         <div className="flex items-center gap-2 text-rimba-950 font-display font-bold text-base">
                             <HelpCircle className="w-5 h-5 text-rimba-600" />
@@ -403,7 +381,7 @@ export default function DetailModulBelajarPage() {
                                 )}
                                 <div className="flex-1">
                                     <p className="font-bold">
-                                        {activeOption.isCorrect ? 'Jawaban Benar!' : 'Belum Tepat, Coba Pahami Lagi:'}
+                                        {activeOption.isCorrect ? 'Jawaban Benar!' : 'Belum Tepat, Pelajari Penjelasannya:'}
                                     </p>
                                     <p className="mt-0.5 font-normal leading-relaxed">
                                         {activeOption.feedback}
@@ -413,11 +391,11 @@ export default function DetailModulBelajarPage() {
                         )}
                     </section>
 
-                    {/* Footer Aksi Lanjut */}
+                    {/* Footer Tombol Lanjut */}
                     <footer className="pt-6 border-t border-rimba-100 flex flex-col sm:flex-row items-center justify-between gap-4">
                         <span className="text-xs text-rimba-700 font-semibold flex items-center gap-1.5">
                             <Sparkles className="w-4 h-4 text-accent-sun" />
-                            Tuntaskan materi untuk membuka akumulasi syarat Sertifikat Duta Rimba
+                            Selesaikan materi ini untuk membuka misi selanjutnya
                         </span>
 
                         <button
@@ -425,7 +403,7 @@ export default function DetailModulBelajarPage() {
                             className="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-rimba-500 hover:bg-rimba-600 active:scale-95 text-white font-display font-bold text-sm shadow-sm hover:shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
                         >
                             <span>
-                                {nextModule ? `Lanjut ke Bab 0${nextModule.level}` : 'Selesai Materi & Mulai Misi Akhir'}
+                                {nextModule ? `Lanjut ke Bab 0${nextModule.level}` : 'Selesai Materi & Mulai Misi Lapangan'}
                             </span>
                             <ArrowRight className="w-4 h-4" />
                         </button>

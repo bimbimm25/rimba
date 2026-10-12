@@ -5,6 +5,7 @@ import { Navbar } from '@/components/navigation/Navbar';
 import { Footer } from '@/components/navigation/Footer';
 import { SmoothScroll } from '@/components/SmoothScroll';
 import { CustomCursor } from '@/components/ui/CustomCursor';
+import { RouteLoadingScreen } from '@/components/common/RouteLoadingScreen';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const lexend = Lexend({ subsets: ['latin'], variable: '--font-lexend' });
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${inter.variable} ${lexend.variable}`}>
       <body className="min-h-screen flex flex-col bg-earth-cream antialiased selection:bg-rimba-200 selection:text-rimba-900">
+        <RouteLoadingScreen />
         <CustomCursor />
         <SmoothScroll>
           <Navbar />

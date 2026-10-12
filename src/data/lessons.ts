@@ -1,481 +1,632 @@
+
 export interface KeyPoint {
   title: string;
   desc: string;
-  iconName: 'Trees' | 'Wind' | 'Flame' | 'CloudRain' | 'Shield' | 'Bird' | 'Trash' | 'ShieldAlert' | 'PhoneCall' | 'Leaf' | 'Users' | 'Award' | 'CheckCircle2';
-}
-
-export interface InteractiveCheck {
-  type: 'myth_fact' | 'hazard_finder' | 'impact_match' | 'action_sort' | 'safety_decision';
-  prompt: string;
-  instruction: string;
-  options: {
-    id: string;
-    text: string;
-    isCorrect: boolean;
-    feedback: string;
-  }[];
+  iconName:
+  | 'Trees'
+  | 'Wind'
+  | 'Flame'
+  | 'CloudRain'
+  | 'Shield'
+  | 'Bird'
+  | 'Trash'
+  | 'ShieldAlert'
+  | 'PhoneCall';
 }
 
 export interface DetailedLesson {
   id: string;
-  slug: string;
   level: number;
+  slug: string;
   title: string;
   subtitle: string;
-  readTime: string;
   heroBadge: string;
+  readTime: string;
   introText: string;
   keyPoints: KeyPoint[];
-  videoEmbed?: {
-    youtubeId: string;
-    title: string;
-    channelName: string;
-    channelUrl: string;
-    description: string;
-  };
   deepDive: {
     heading: string;
     paragraphs: string[];
     funFact: string;
   };
-  interactiveCheck: InteractiveCheck;
+  interactiveCheck: {
+    prompt: string;
+    instruction: string;
+    options: {
+      id: string;
+      text: string;
+      isCorrect: boolean;
+      feedback: string;
+    }[];
+  };
 }
 
 export const DETAILED_LESSONS: DetailedLesson[] = [
-  // =====================================================
-  // LEVEL 1 — MENGENAL KARHUTLA
-  // =====================================================
+  // ==========================================
+  // BAB 1: MENGENAL HUTAN
+  // ==========================================
   {
-    id: 'lvl-01',
-    slug: 'kenali-karhutla',
+    id: '1',
     level: 1,
-    title: 'Apa Sih Karhutla Itu?',
-    subtitle: 'Yuk, kenalan dengan hutan dan rumah bagi banyak makhluk hidup!',
-    readTime: '5 Menit Baca',
-    heroBadge: 'Mulai Petualangan',
-
+    slug: 'mengenal-hutan-rimba',
+    title: 'Mengenal Hutan',
+    subtitle: 'Belajar mengenal hutan, manfaatnya, dan alasan kita harus menjaganya.',
+    heroBadge: 'Mengenal Hutan',
+    readTime: '7 Menit',
     introText:
-      'Hai, Sahabat Rimba! Pernahkah kamu melihat hutan yang dipenuhi pohon tinggi, tumbuhan hijau, burung yang terbang, dan suara hewan dari kejauhan? Hutan adalah tempat tinggal bagi banyak makhluk hidup. Hutan juga membantu menjaga udara, air, dan tanah agar tetap baik bagi kehidupan. Namun, hutan bisa mengalami bahaya besar, salah satunya kebakaran hutan dan lahan atau yang biasa disebut Karhutla. Karhutla terjadi ketika api membakar hutan atau lahan dan menyebar tanpa bisa dikendalikan dengan mudah. Kebakaran ini dapat merusak tumbuhan, mengancam hewan, mengotori udara, dan mengganggu kehidupan manusia. Yuk, kita pelajari kenapa hutan begitu penting dan mengapa kita harus menjaganya!',
-
-    videoEmbed: {
-      youtubeId: 'y7djd0VZzM0',
-      title: 'Kenapa Indonesia Sering Kebakaran Hutan?',
-      channelName: 'Kok Bisa?',
-      channelUrl: 'https://www.youtube.com/@KokBisa',
-      description: 'Yuk tonton video animasi seru ini untuk melihat langsung kenapa hutan dan lahan gambut di Indonesia bisa terbakar!',
-    },
+      'Pernahkah kamu berjalan di tempat yang banyak pohonnya? Udara di sana biasanya terasa lebih sejuk. Kamu juga bisa mendengar suara burung dan melihat berbagai jenis tumbuhan. Tempat seperti itu bisa menjadi bagian dari hutan. Hutan bukan hanya kumpulan pohon, tetapi juga rumah bagi banyak makhluk hidup. Hutan membantu menjaga air, tanah, dan udara agar lingkungan tetap nyaman untuk ditinggali.',
     keyPoints: [
       {
-        title: 'Hutan Adalah Rumah Banyak Makhluk Hidup',
+        title: 'Hutan Menghasilkan Oksigen',
         desc:
-          'Di dalam hutan, ada pohon, bunga, jamur, serangga, burung, dan berbagai hewan lainnya. Setiap makhluk hidup punya peran. Pohon menyediakan tempat berteduh, sebagian hewan membantu menyebarkan biji, dan tumbuhan menjadi sumber makanan bagi banyak makhluk hidup. Kalau hutan terbakar, rumah mereka bisa rusak atau hilang.',
-        iconName: 'Trees',
+          'Pohon menggunakan sinar matahari, air, dan karbon dioksida untuk membuat makanan. Proses ini disebut fotosintesis. Dalam proses tersebut, pohon juga melepaskan oksigen yang dibutuhkan manusia dan hewan untuk bernapas.',
+        iconName: 'Trees'
       },
       {
-        title: 'Pohon Membantu Menjaga Udara',
+        title: 'Hutan Menyimpan Air',
         desc:
-          'Pohon menyerap karbon dioksida dan menggunakan cahaya matahari untuk membuat makanannya sendiri. Dalam proses itu, pohon juga menghasilkan oksigen. Hutan yang sehat membantu menjaga keseimbangan lingkungan. Karena itulah, pohon bukan sekadar tanaman yang membuat pemandangan terlihat hijau.',
-        iconName: 'Wind',
+          'Akar pohon membantu air hujan masuk ke dalam tanah. Tanah yang ditumbuhi banyak tanaman juga dapat menahan air dan mengurangi aliran air di permukaan.',
+        iconName: 'CloudRain'
       },
       {
-        title: 'Apa Hubungannya dengan Tanah Gambut?',
+        title: 'Hutan Menjadi Rumah Satwa',
         desc:
-          'Tanah gambut terbentuk dari sisa tumbuhan yang menumpuk selama waktu yang sangat lama dalam keadaan basah. Gambut dapat menyimpan banyak air ketika kondisinya terjaga. Namun, gambut yang mengering menjadi lebih mudah terbakar. Api bahkan bisa menjalar di dalam lapisan gambut sehingga sulit diketahui dan dipadamkan.',
-        iconName: 'CloudRain',
-      },
+          'Burung membuat sarang di pohon, serangga hidup di antara daun, dan berbagai mamalia mencari makanan di hutan. Setiap makhluk hidup memiliki peran dalam menjaga keseimbangan alam.',
+        iconName: 'Bird'
+      }
     ],
-
     deepDive: {
-      heading: 'Mengenal Karhutla Lebih Dekat',
-
+      heading: 'Mengapa Hutan Penting bagi Kehidupan?',
       paragraphs: [
-        'Kata Karhutla merupakan singkatan dari Kebakaran Hutan dan Lahan. Hutan adalah kawasan yang dipenuhi pepohonan dan berbagai tumbuhan, sedangkan lahan merupakan bagian permukaan tanah yang digunakan untuk berbagai keperluan. Jika api membakar kawasan tersebut dan menyebar di luar kendali, terjadilah kebakaran hutan dan lahan.',
-
-        'Kebakaran tidak selalu dimulai dari api yang besar. Kadang-kadang, semuanya bermula dari satu percikan kecil yang mengenai rumput kering atau tumpukan daun. Jika keadaan di sekitarnya mendukung, api dapat membesar dan menjalar ke tumbuhan lain. Angin bisa membantu membawa bara ke tempat yang lebih jauh.',
-
-        'Di Indonesia, kebakaran hutan dan lahan menjadi perhatian penting, terutama ketika cuaca kering berlangsung lama. Beberapa wilayah memiliki lahan gambut yang menyimpan banyak bahan organik. Saat gambut mengering, kebakaran dapat terjadi di bawah permukaan tanah. Api seperti ini sulit dilihat secara langsung dan dapat terus membara meskipun bagian atasnya tampak sudah padam.',
-
-        'Karhutla tidak hanya membuat pohon menjadi hangus. Asapnya juga dapat menyebar ke permukiman, sekolah, dan jalan raya. Udara yang tercemar asap bisa membuat mata perih, menyebabkan batuk, dan mengganggu pernapasan. Itulah sebabnya mencegah kebakaran jauh lebih baik daripada menunggu api membesar.',
+        'Hutan adalah wilayah yang ditumbuhi banyak pohon dan berbagai jenis tumbuhan. Di dalamnya hidup banyak makhluk, seperti burung, monyet, orangutan, serangga, jamur, dan hewan lainnya. Mereka saling berhubungan. Tumbuhan menyediakan makanan dan tempat berlindung, sedangkan beberapa hewan membantu menyebarkan biji sehingga tumbuhan baru bisa tumbuh.',
+        'Pohon juga membantu menjaga udara di sekitar kita. Daunnya menggunakan cahaya matahari untuk membuat makanan melalui proses yang disebut fotosintesis. Untuk melakukan proses ini, pohon membutuhkan air dan karbon dioksida. Hasilnya adalah makanan bagi pohon dan oksigen yang dilepaskan ke udara. Namun, udara bersih tidak hanya bergantung pada pohon. Kita juga perlu mengurangi asap kendaraan, asap pabrik, dan sumber pencemaran lainnya.',
+        'Hutan membantu menjaga air dan tanah. Ketika hujan turun, sebagian air masuk ke tanah dan diserap oleh akar. Akar juga membantu tanah tetap kuat sehingga tidak mudah terbawa air. Jika banyak pohon ditebang dan tanah dibiarkan terbuka, air hujan bisa mengalir lebih deras. Akibatnya, risiko banjir dan tanah longsor di tempat tertentu dapat meningkat.',
+        'Sayangnya, hutan bisa rusak karena penebangan liar, pembukaan lahan yang tidak bertanggung jawab, dan kebakaran hutan. Ketika hutan terbakar, tumbuhan rusak, hewan kehilangan tempat tinggal, dan asapnya dapat mengganggu kesehatan manusia. Karena itu, menjaga hutan bukan hanya tugas petugas kehutanan. Kita juga bisa membantu dengan tidak membuang sampah sembarangan, menghemat kertas, merawat tanaman, dan tidak bermain api di dekat tumbuhan kering.'
       ],
-
       funFact:
-        'Tahukah kamu? Orangutan, bekantan, dan burung enggang merupakan beberapa satwa yang dapat ditemukan di Kalimantan. Hutan membantu menyediakan makanan, tempat berlindung, dan tempat hidup bagi banyak satwa tersebut.',
+        'Tahukah kamu? Ada hutan di Indonesia yang menjadi rumah bagi orangutan, harimau Sumatra, gajah, dan banyak satwa lainnya. Setiap hutan memiliki makhluk hidup yang perlu dilindungi.'
     },
-
     interactiveCheck: {
-      type: 'myth_fact',
-      prompt: 'Tebak Benar atau Salah!',
-      instruction:
-        'Sekarang, coba pilih pernyataan yang paling benar tentang hutan dan Karhutla.',
-
+      prompt: 'Ayo Periksa Pemahamanmu!',
+      instruction: 'Mengapa hutan perlu dijaga?',
       options: [
         {
-          id: 'opt-1',
-          text:
-            'Kalau bagian atas tanah terlihat tidak terbakar, berarti api pasti sudah padam seluruhnya.',
-          isCorrect: false,
-          feedback:
-            'Belum tentu, ya! Pada tanah gambut yang kering, api bisa menjalar di bawah permukaan tanah. Karena itu, kebakaran harus diperiksa dan ditangani oleh petugas yang terlatih.',
-        },
-        {
-          id: 'opt-2',
-          text:
-            'Hutan merupakan tempat hidup banyak makhluk dan kebakarannya bisa mengganggu manusia maupun hewan.',
+          id: 'a',
+          text: 'Karena hutan menjadi tempat hidup satwa, membantu menjaga air dan tanah, serta menghasilkan oksigen.',
           isCorrect: true,
           feedback:
-            'Hebat! Kamu sudah memahami hal penting tentang hutan. Jika hutan terbakar, satwa bisa kehilangan tempat tinggal, udara menjadi tercemar, dan kehidupan manusia ikut terganggu.',
+            'Benar! Hutan memiliki banyak manfaat. Jika hutan sehat, manusia, hewan, dan tumbuhan dapat hidup dengan lebih baik.'
         },
-      ],
-    },
+        {
+          id: 'b',
+          text: 'Karena hutan hanya berguna untuk menghasilkan kayu.',
+          isCorrect: false,
+          feedback:
+            'Belum tepat. Hutan memang menghasilkan kayu, tetapi manfaatnya jauh lebih banyak, seperti menjadi rumah satwa dan membantu menjaga air serta tanah.'
+        },
+        {
+          id: 'c',
+          text: 'Karena semua hewan hanya bisa hidup di kebun.',
+          isCorrect: false,
+          feedback:
+            'Belum tepat. Banyak hewan membutuhkan hutan untuk mencari makanan, berlindung, berkembang biak, dan membesarkan anaknya.'
+        }
+      ]
+    }
   },
 
-  // =====================================================
-  // LEVEL 2 — PENYEBAB KARHUTLA
-  // =====================================================
+  // ==========================================
+  // BAB 2: TANAH GAMBUT
+  // ==========================================
   {
-    id: 'lvl-02',
-    slug: 'kenapa-bisa-terjadi',
+    id: '2',
     level: 2,
-    title: 'Kenapa Hutan Bisa Terbakar?',
-    subtitle: 'Mencari tahu bagaimana api kecil bisa menjadi kebakaran besar',
-    readTime: '6 Menit Baca',
-    heroBadge: 'Cari Penyebab',
-
+    slug: 'keajaiban-rawa-gambut',
+    title: 'Mengenal Tanah Gambut',
+    subtitle: 'Memahami tanah gambut, cara tanah ini menyimpan air, dan alasan gambut harus dijaga tetap basah.',
+    heroBadge: 'Tanah Gambut',
+    readTime: '7 Menit',
     introText:
-      'Sahabat Rimba, pernahkah kamu bertanya-tanya mengapa hutan yang awalnya hijau bisa berubah menjadi hitam karena terbakar? Api tidak muncul begitu saja tanpa sebab. Kebakaran dapat bermula dari kegiatan manusia, misalnya membakar sampah atau membuka lahan dengan api secara tidak terkendali. Dalam keadaan tertentu, sambaran petir juga bisa menyalakan api. Ketika rumput dan daun mengering, api lebih mudah menyebar. Angin kencang dapat membuat api menjalar semakin cepat. Yuk, kita cari tahu apa saja yang menyebabkan kebakaran dan bagaimana cara mengenali keadaan yang berbahaya!',
-
+      'Tidak semua tanah terbentuk dengan cara yang sama. Ada tanah yang banyak mengandung pasir, ada yang berupa tanah liat, dan ada pula tanah gambut. Tanah gambut terbentuk dari sisa tumbuhan yang menumpuk selama waktu yang sangat lama. Tanah ini dapat menyimpan banyak air. Namun, jika gambut dikeringkan terlalu lama, tanahnya menjadi mudah terbakar dan apinya sulit dipadamkan.',
     keyPoints: [
       {
-        title: 'Daun Kering Mudah Terbakar',
+        title: 'Terbentuk dari Sisa Tumbuhan',
         desc:
-          'Daun dan ranting yang kering mengandung sedikit air sehingga lebih mudah terbakar dibandingkan tumbuhan yang masih segar dan basah. Ketika musim kemarau berlangsung lama, banyak tumbuhan mengering. Keadaan ini membuat lingkungan lebih rawan mengalami kebakaran.',
-        iconName: 'Leaf',
+          'Daun, ranting, akar, dan bagian tumbuhan lainnya menumpuk di tempat yang basah. Karena kekurangan oksigen, sisa tumbuhan tersebut membusuk dengan lambat dan membentuk lapisan gambut.',
+        iconName: 'Trees'
       },
       {
-        title: 'Api dari Kegiatan Manusia',
+        title: 'Menyimpan Banyak Air',
         desc:
-          'Membakar sampah di dekat rumput kering, meninggalkan api unggun tanpa pengawasan, atau membakar lahan secara sembarangan bisa memicu kebakaran. Api yang awalnya kecil dapat menyebar ke luar tempat pembakaran dan sulit dikendalikan.',
-        iconName: 'Flame',
+          'Tanah gambut memiliki banyak rongga yang dapat menyimpan air. Saat kondisinya terjaga, gambut membantu mempertahankan kelembapan lingkungan dan menyimpan cadangan air.',
+        iconName: 'CloudRain'
       },
       {
-        title: 'Angin dan Cuaca Kering Memperburuk Kebakaran',
+        title: 'Mudah Terbakar Saat Kering',
         desc:
-          'Angin bisa membawa panas dan bara ke tumbuhan di sekitarnya. Cuaca kering membuat bahan seperti rumput, daun, dan ranting lebih mudah terbakar. Jika keduanya terjadi bersamaan, kebakaran dapat berkembang lebih cepat.',
-        iconName: 'Wind',
-      },
+          'Gambut yang mengering mengandung banyak bahan tumbuhan yang mudah terbakar. Api bahkan dapat merambat di bawah permukaan tanah dan sulit ditemukan.',
+        iconName: 'Flame'
+      }
     ],
-
     deepDive: {
-      heading: 'Bagaimana Api Bisa Menyebar?',
-
+      heading: 'Bagaimana Tanah Gambut Terbentuk?',
       paragraphs: [
-        'Bayangkan kamu sedang melihat halaman sekolah yang dipenuhi rumput hijau setelah hujan. Beberapa waktu kemudian, musim kemarau datang dan hujan jarang turun. Rumput mulai menguning, daun menjadi kering, dan ranting yang jatuh mudah patah. Bahan-bahan kering ini dapat menjadi bahan bakar bagi api.',
-
-        'Agar api bisa menyala, ada tiga hal yang biasanya dibutuhkan, yaitu bahan yang dapat terbakar, oksigen dari udara, dan panas yang cukup. Ketiganya dikenal sebagai segitiga api. Jika salah satu unsur tersebut dihilangkan dengan cara yang tepat, api tidak dapat terus menyala. Namun, memadamkan api di hutan bukan pekerjaan yang aman untuk anak-anak.',
-
-        'Misalnya, seseorang membakar tumpukan daun kering di dekat kebun. Ketika angin bertiup, percikan bara dapat terbawa ke rumput kering di sebelahnya. Rumput itu menyala, lalu api merambat ke semak dan ranting. Dalam keadaan tertentu, api dapat meluas ke kawasan yang lebih besar. Karena itulah, membakar sampah sembarangan sangat berbahaya.',
-
-        'Ada pula kebakaran yang terjadi ketika lahan dibuka menggunakan api tanpa pengendalian yang baik. Padahal, api dapat bergerak melampaui batas lahan yang ingin dibersihkan. Di beberapa tempat, sambaran petir juga bisa menjadi sumber penyalaan. Jadi, tidak semua kebakaran memiliki penyebab yang sama, tetapi banyak kebakaran dapat dicegah dengan perilaku yang lebih aman.',
-
-        'Apa yang bisa kita lakukan? Jangan bermain korek api, jangan membakar daun kering, dan jangan membuat api unggun tanpa pengawasan orang dewasa. Jika melihat orang membakar sesuatu di dekat hutan atau lahan kering, jangan mendekat atau mencoba menghentikannya sendiri. Beri tahu orang dewasa yang dapat membantu.',
+        'Bayangkan ada rawa yang dipenuhi tumbuhan. Ketika daun, ranting, dan batang tumbuhan jatuh ke tanah, sisa-sisa tersebut biasanya akan diuraikan oleh makhluk hidup kecil, seperti bakteri dan jamur. Namun, di tempat yang terus basah dan kekurangan oksigen, proses penguraian berlangsung sangat lambat. Akibatnya, sisa tumbuhan menumpuk sedikit demi sedikit selama ratusan hingga ribuan tahun dan membentuk tanah gambut.',
+        'Tanah gambut berbeda dari tanah biasa karena banyak mengandung bahan organik dari sisa tumbuhan. Gambut juga memiliki banyak rongga yang dapat menyimpan air. Bayangkan sebuah spons yang menyerap air. Ketika spons itu basah, air tersimpan di dalamnya. Tanah gambut memiliki kemampuan menyimpan air dengan cara yang berbeda, tetapi gambaran spons dapat membantu kita memahami mengapa kelembapan gambut sangat penting.',
+        'Masalah muncul ketika rawa gambut dikeringkan, misalnya melalui saluran air yang membuat air keluar terlalu banyak. Lapisan gambut yang semula basah menjadi kering. Daun, akar, dan sisa tumbuhan di dalamnya kemudian dapat terbakar jika terkena sumber api. Kebakaran gambut berbahaya karena api bisa merambat di bawah tanah. Dari permukaan, tempat itu mungkin hanya terlihat berasap, padahal bara masih menyala di dalamnya.',
+        'Untuk menjaga gambut, air di kawasan tersebut perlu dikelola dengan baik. Di lokasi tertentu, petugas dapat membuat sekat kanal untuk memperlambat keluarnya air melalui saluran buatan. Tujuannya adalah menjaga tinggi air agar gambut tidak terlalu kering. Menjaga gambut tetap basah membantu mengurangi risiko kebakaran, tetapi masyarakat tetap harus mencegah munculnya sumber api.'
       ],
-
       funFact:
-        'Segitiga api terdiri dari panas, bahan bakar, dan oksigen. Daun kering dapat menjadi bahan bakar, sedangkan percikan api menjadi sumber panas. Angin bukan salah satu dari tiga unsur segitiga api, tetapi dapat mempercepat penyebaran kebakaran.',
+        'Tanah gambut terbentuk sangat lambat. Lapisan yang tebal bisa menyimpan sisa tumbuhan dari masa yang sangat lama, sehingga gambut perlu dijaga dan tidak mudah digantikan jika rusak.'
     },
-
     interactiveCheck: {
-      type: 'hazard_finder',
-      prompt: 'Ayo Temukan Perilaku Berbahaya!',
-      instruction:
-        'Manakah kegiatan yang paling berisiko menyebabkan kebakaran saat musim kemarau?',
-
+      prompt: 'Ayo Periksa Pemahamanmu!',
+      instruction: 'Apa yang bisa terjadi jika tanah gambut mengering?',
       options: [
         {
-          id: 'opt-1',
-          text:
-            'Menyiram tanaman pada sore hari dan memastikan tanaman mendapatkan air yang cukup.',
-          isCorrect: false,
-          feedback:
-            'Benar, ini bukan penyebab kebakaran. Menyiram tanaman merupakan cara merawat tanaman, meskipun kita tetap perlu menggunakan air dengan bijak.',
-        },
-        {
-          id: 'opt-2',
-          text:
-            'Membakar tumpukan daun kering di dekat lapangan yang dipenuhi rumput kering saat angin bertiup.',
+          id: 'a',
+          text: 'Tanah gambut menjadi lebih mudah terbakar dan api bisa merambat di bawah permukaan tanah.',
           isCorrect: true,
           feedback:
-            'Tepat sekali! Api dan bara bisa terbawa angin lalu menyulut rumput kering. Sebaiknya daun kering diolah menjadi kompos atau ditangani dengan cara aman tanpa membakarnya.',
+            'Benar! Gambut yang kering dapat menjadi bahan bakar bagi api. Karena itu, menjaga kelembapan gambut sangat penting.'
         },
         {
-          id: 'opt-3',
-          text:
-            'Mengumpulkan sampah ke dalam tempat sampah dan menjaga halaman sekolah tetap bersih.',
+          id: 'b',
+          text: 'Tanah gambut berubah menjadi air dan tidak bisa terbakar.',
           isCorrect: false,
           feedback:
-            'Bagus! Mengumpulkan sampah di tempat yang sesuai merupakan kebiasaan baik. Yang penting, jangan membakar sampah tersebut sembarangan.',
+            'Belum tepat. Gambut tidak berubah menjadi air. Saat kering, bahan tumbuhan di dalamnya justru dapat terbakar.'
         },
-      ],
-    },
+        {
+          id: 'c',
+          text: 'Semua tumbuhan di atasnya langsung tumbuh lebih subur.',
+          isCorrect: false,
+          feedback:
+            'Belum tepat. Gambut yang terlalu kering dapat merusak lingkungan dan meningkatkan risiko kebakaran.'
+        }
+      ]
+    }
   },
 
-  // =====================================================
-  // LEVEL 3 — DAMPAK KARHUTLA
-  // =====================================================
+  // ==========================================
+  // BAB 3: PENYEBAB KARHUTLA
+  // ==========================================
   {
-    id: 'lvl-03',
-    slug: 'dampak-pada-alam',
+    id: '3',
     level: 3,
-    title: 'Apa yang Terjadi Kalau Hutan Terbakar?',
-    subtitle: 'Mengenal dampak asap, kerusakan alam, dan nasib satwa',
-    readTime: '6 Menit Baca',
-    heroBadge: 'Pahami Akibat',
-
+    slug: 'bahaya-bakar-sampah',
+    title: 'Penyebab Kebakaran Hutan',
+    subtitle: 'Mengenal penyebab kebakaran hutan dan lahan serta cara mencegah api menyebar.',
+    heroBadge: 'Pencegahan Kebakaran',
+    readTime: '7 Menit',
     introText:
-      'Coba bayangkan kamu sedang bermain di halaman sekolah, tetapi tiba-tiba udara dipenuhi asap dan langit terlihat berkabut. Mata mulai terasa perih, tenggorokan gatal, dan guru meminta semua murid masuk ke kelas. Keadaan seperti ini bisa terjadi ketika asap kebakaran hutan menyebar ke suatu wilayah. Namun, dampak Karhutla tidak hanya dirasakan manusia. Pohon dapat hangus, hewan kehilangan tempat tinggal, dan tanah mengalami kerusakan. Kebakaran juga dapat mengganggu kegiatan belajar, perjalanan, dan pekerjaan masyarakat. Yuk, kita pelajari mengapa Karhutla merupakan masalah yang harus kita cegah bersama!',
-
+      'Kebakaran hutan dan lahan dapat bermula dari api kecil. Api yang digunakan untuk membakar sampah atau membersihkan lahan bisa menyebar ketika angin bertiup dan rumput di sekitarnya kering. Karena itu, kita tidak boleh menganggap api kecil selalu aman. Kebiasaan sederhana, seperti tidak bermain korek api dan segera memberi tahu orang dewasa saat melihat kebakaran, dapat membantu melindungi lingkungan.',
     keyPoints: [
       {
-        title: 'Asap Membuat Udara Tidak Sehat',
+        title: 'Api Kecil Bisa Menyebar',
         desc:
-          'Asap kebakaran mengandung gas dan partikel kecil yang dapat masuk ke saluran pernapasan. Udara berasap bisa membuat mata perih, batuk, dan sesak napas. Anak-anak perlu lebih berhati-hati karena tubuh mereka masih berkembang.',
-        iconName: 'Wind',
+          'Bara atau percikan api dapat mengenai daun dan rumput kering. Jika api terus mendapat bahan bakar, kobarannya bisa membesar dan menyebar ke area lain.',
+        iconName: 'Flame'
       },
       {
-        title: 'Hewan Kehilangan Tempat Tinggal',
+        title: 'Angin Membantu Api Menjalar',
         desc:
-          'Ketika hutan terbakar, sarang, tempat berlindung, dan sumber makanan hewan bisa rusak. Sebagian hewan mencoba melarikan diri ke tempat lain, tetapi tidak semuanya berhasil. Satwa yang keluar dari hutan juga bisa menghadapi bahaya baru di dekat permukiman atau jalan.',
-        iconName: 'Bird',
+          'Angin dapat membawa panas dan percikan api ke tempat lain. Api juga dapat menyebar lebih cepat ketika banyak tumbuhan kering berada di sekitarnya.',
+        iconName: 'Wind'
       },
       {
-        title: 'Tanaman dan Tanah Ikut Rusak',
+        title: 'Jangan Membakar Sampah Sembarangan',
         desc:
-          'Api dapat membakar pohon, semak, dan tumbuhan kecil. Hewan serta makhluk hidup lain yang bergantung pada tumbuhan juga ikut terdampak. Kebakaran yang parah dapat merusak lapisan tanah dan menghambat pertumbuhan kembali tumbuhan.',
-        iconName: 'Trees',
-      },
+          'Membakar daun dan sampah di tempat terbuka memiliki risiko kebakaran dan menghasilkan asap. Gunakan cara pengelolaan sampah yang lebih aman.',
+        iconName: 'Trash'
+      }
     ],
-
     deepDive: {
-      heading: 'Mengapa Dampak Karhutla Bisa Sampai ke Sekolah dan Rumah?',
-
+      heading: 'Bagaimana Kebakaran Hutan Bisa Terjadi?',
       paragraphs: [
-        'Ketika hutan terbakar, asap dapat naik ke udara dan terbawa angin ke tempat yang jauh dari sumber kebakaran. Karena itu, sebuah kota atau desa bisa mengalami kabut asap meskipun kobaran api tidak berada tepat di dekat rumahnya. Tebal atau tipisnya asap yang sampai ke suatu tempat dipengaruhi oleh banyak hal, termasuk besarnya kebakaran, arah angin, dan keadaan cuaca.',
-
-        'Asap kebakaran bukan sekadar bau yang tidak enak. Di dalamnya dapat terdapat partikel sangat kecil yang sulit dilihat dengan mata. Ketika terhirup, partikel tersebut bisa mengganggu saluran pernapasan. Anak-anak, orang lanjut usia, dan orang yang memiliki gangguan pernapasan perlu mendapat perhatian khusus saat kualitas udara memburuk.',
-
-        'Jika udara di luar tidak sehat, sekolah mungkin perlu membatasi kegiatan di luar ruangan atau mengikuti arahan dari pihak berwenang. Kita juga sebaiknya menghindari olahraga di luar ketika asap tebal. Masker yang sesuai dapat membantu mengurangi paparan partikel, tetapi tidak membuat kita aman untuk bermain di dekat kebakaran. Ikuti arahan orang tua, guru, dan petugas kesehatan.',
-
-        'Dampak lainnya dirasakan hewan. Orangutan, bekantan, burung, dan berbagai satwa lain membutuhkan habitat yang sesuai untuk mencari makan, berlindung, dan berkembang biak. Ketika habitat terbakar, hewan dapat kehilangan sumber makanan atau terpaksa berpindah. Satwa yang terluka atau berada di dekat permukiman juga bisa menghadapi bahaya tambahan.',
-
-        'Karhutla juga dapat mengganggu kehidupan sehari-hari. Jalan bisa menjadi berbahaya karena jarak pandang berkurang, penerbangan dapat terganggu, dan kegiatan masyarakat bisa terhenti. Warga yang menghirup asap mungkin perlu beristirahat atau mendapatkan pertolongan medis. Itulah sebabnya mencegah kebakaran berarti melindungi manusia, hewan, tumbuhan, dan kegiatan masyarakat sekaligus.',
+        'Agar api dapat menyala, ada tiga hal yang dibutuhkan: panas, bahan yang bisa terbakar, dan oksigen dari udara. Ketiganya sering disebut segitiga api. Contoh sumber panas adalah korek api atau bara. Daun kering, ranting, dan rumput dapat menjadi bahan bakar. Sementara itu, oksigen tersedia di udara. Jika salah satu unsur ini tidak tersedia, api tidak dapat terus menyala.',
+        'Pada musim kemarau, hujan lebih jarang turun di beberapa daerah. Tanah, rumput, dan daun dapat menjadi lebih kering. Dalam keadaan ini, api lebih mudah menyala dan menyebar. Angin dapat membuat api menjalar lebih cepat atau membawa percikan ke tempat yang jauh dari sumber awalnya. Karena itu, api yang tampak kecil sekalipun tidak boleh ditinggalkan tanpa pengawasan.',
+        'Kebakaran bisa bermula ketika seseorang membakar sampah, membersihkan lahan dengan api, membuang puntung rokok yang masih menyala, atau meninggalkan api unggun yang belum benar-benar padam. Kebakaran juga dapat terjadi akibat sambaran petir dalam kondisi tertentu. Jadi, tidak semua kebakaran disebabkan oleh manusia, tetapi banyak kejadian dapat dicegah dengan menggunakan api secara bertanggung jawab.',
+        'Anak-anak tidak boleh mencoba memadamkan kebakaran hutan sendiri. Jika melihat api, asap yang tidak biasa, atau seseorang membakar lahan dekat tumbuhan kering, segera menjauh ke tempat aman dan beri tahu orang dewasa. Jangan mendekati api untuk mengambil foto atau memeriksa sumbernya. Pencegahan yang baik dimulai dengan tidak bermain api, tidak membakar sampah sembarangan, dan selalu mengikuti petunjuk keselamatan.'
       ],
-
       funFact:
-        'Burung enggang merupakan salah satu satwa yang hidup di hutan Kalimantan. Beberapa jenis burung membantu menyebarkan biji melalui buah yang mereka makan. Dengan begitu, mereka ikut membantu proses tumbuhnya tumbuhan baru di hutan.',
+        'Api dapat berpindah ke tempat lain ketika angin membawa bara atau percikan panas. Itulah sebabnya lokasi yang tampak cukup jauh dari api tetap bisa ikut terbakar.'
     },
-
     interactiveCheck: {
-      type: 'impact_match',
-      prompt: 'Kuis Detektif Dampak Karhutla!',
-      instruction:
-        'Jika asap kebakaran membuat udara di sekitar sekolah tidak sehat, tindakan mana yang paling tepat?',
-
+      prompt: 'Ayo Periksa Pemahamanmu!',
+      instruction: 'Mengapa membakar daun kering di dekat hutan berbahaya?',
       options: [
         {
-          id: 'opt-1',
-          text:
-            'Tetap bermain sepak bola di lapangan karena asap hanya mengganggu pemandangan.',
-          isCorrect: false,
-          feedback:
-            'Belum tepat, ya. Asap dapat mengandung partikel kecil yang mengganggu pernapasan. Ketika udara tidak sehat, hindari kegiatan berat di luar ruangan dan ikuti arahan guru.',
-        },
-        {
-          id: 'opt-2',
-          text:
-            'Memberi tahu guru, mengurangi kegiatan di luar ruangan, dan mengikuti petunjuk keselamatan.',
+          id: 'a',
+          text: 'Karena angin dapat membawa percikan api ke rumput atau daun kering sehingga kebakaran menyebar.',
           isCorrect: true,
           feedback:
-            'Betul sekali! Kamu sudah tahu cara melindungi diri. Jika ada asap, beri tahu orang dewasa dan ikuti petunjuk sekolah serta petugas setempat.',
+            'Benar! Api kecil bisa menjadi kebakaran besar jika mengenai bahan yang mudah terbakar, terutama saat cuaca kering dan berangin.'
         },
-      ],
-    },
+        {
+          id: 'b',
+          text: 'Karena daun kering akan berubah menjadi air ketika terkena api.',
+          isCorrect: false,
+          feedback:
+            'Belum tepat. Daun kering justru bisa terbakar. Itulah sebabnya membakar sampah dekat tumbuhan kering sangat berisiko.'
+        },
+        {
+          id: 'c',
+          text: 'Karena api hanya bisa menyala ketika hujan turun.',
+          isCorrect: false,
+          feedback:
+            'Belum tepat. Api dapat menyala saat ada panas, bahan yang terbakar, dan oksigen. Kondisi kering bahkan dapat membuat api lebih mudah menyebar.'
+        }
+      ]
+    }
   },
 
-  // =====================================================
-  // LEVEL 4 — PENCEGAHAN KARHUTLA
-  // =====================================================
+  // ==========================================
+  // BAB 4: KEBAKARAN DI BAWAH TANAH
+  // ==========================================
   {
-    id: 'lvl-04',
-    slug: 'ayo-cegah',
+    id: '4',
     level: 4,
-    title: 'Ayo, Kita Bantu Cegah Karhutla!',
-    subtitle: 'Tidak harus jadi orang dewasa untuk menjadi penjaga hutan',
-    readTime: '6 Menit Baca',
-    heroBadge: 'Aksi Pahlawan',
-
+    slug: 'bara-api-bawah-tanah',
+    title: 'Kebakaran di Bawah Tanah',
+    subtitle: 'Belajar mengapa api di tanah gambut sulit terlihat dan membutuhkan penanganan khusus.',
+    heroBadge: 'Mengenal Bahaya Api',
+    readTime: '7 Menit',
     introText:
-      'Sahabat Rimba, sekarang kamu sudah tahu bahwa kebakaran hutan dapat membawa banyak masalah. Kabar baiknya, kita bisa membantu mencegah kebakaran melalui kebiasaan sederhana. Kita tidak perlu memegang selang pemadam atau masuk ke hutan untuk menjadi penjaga lingkungan. Kita bisa memulai dari rumah dan sekolah, seperti tidak bermain api, tidak membakar sampah, menjaga lingkungan, serta mengingatkan teman dengan cara yang baik. Kita juga bisa belajar mengapa hutan perlu dijaga dan mengajak orang lain untuk ikut peduli. Setiap tindakan kecil yang aman bisa menjadi bagian dari usaha besar melindungi alam.',
-
+      'Pernahkah kamu membayangkan api yang menyala di bawah tanah? Hal itu bisa terjadi di lahan gambut yang kering. Api tidak selalu terlihat besar di permukaan. Kadang-kadang, yang tampak hanya asap yang keluar dari tanah. Meskipun tidak terlihat menyala, bara di bawahnya masih bisa membakar bahan tumbuhan dan menyebar ke tempat lain.',
     keyPoints: [
       {
-        title: 'Jangan Bermain dengan Api',
+        title: 'Api Bisa Merambat di Bawah Tanah',
         desc:
-          'Korek api, korek gas, lilin menyala, dan bahan yang bisa menimbulkan percikan bukan mainan. Jangan mencoba membakar daun, rumput, kertas, atau benda lainnya. Jika menemukan korek api atau melihat teman bermain api, segera beri tahu orang dewasa.',
-        iconName: 'Flame',
+          'Pada gambut yang kering, api dapat membakar sisa tumbuhan di dalam tanah. Bara ini bisa merambat tanpa menghasilkan kobaran besar di permukaan.',
+        iconName: 'Flame'
       },
       {
-        title: 'Kelola Daun Kering Tanpa Membakarnya',
+        title: 'Asap Menjadi Tanda Bahaya',
         desc:
-          'Daun yang gugur dapat dikumpulkan untuk dibuat kompos dengan bantuan orang dewasa. Kompos membantu memperbaiki tanah dan menyediakan unsur hara bagi tanaman. Cara ini mengurangi kebutuhan untuk membakar daun dan menghasilkan asap.',
-        iconName: 'Leaf',
+          'Asap yang keluar dari tanah dapat menandakan adanya pembakaran di bawah permukaan. Tempat seperti ini tidak aman untuk didekati atau diinjak.',
+        iconName: 'Wind'
       },
       {
-        title: 'Ajak Orang Lain Menjaga Hutan',
+        title: 'Pemadaman Harus Sampai ke Sumber Api',
         desc:
-          'Kamu bisa membuat poster tentang bahaya Karhutla, mengingatkan teman agar tidak membuang puntung rokok sembarangan, atau menceritakan hal yang kamu pelajari kepada keluarga. Jangan menghadapi orang yang melakukan tindakan berbahaya sendirian; mintalah bantuan orang dewasa.',
-        iconName: 'Users',
-      },
+          'Petugas terlatih menggunakan air dan peralatan khusus untuk membasahi bagian tanah yang terbakar. Api perlu dipastikan padam agar tidak muncul kembali.',
+        iconName: 'Shield'
+      }
     ],
-
     deepDive: {
-      heading: 'Dari Kebiasaan Kecil Menjadi Aksi Besar',
-
+      heading: 'Mengapa Api di Dalam Gambut Sulit Dipadamkan?',
       paragraphs: [
-        'Menjaga hutan bukan hanya tugas petugas pemadam kebakaran atau orang yang tinggal di dekat hutan. Semua orang dapat membantu dengan melakukan hal yang sesuai dengan usia dan kemampuannya. Untuk anak-anak, langkah terpenting adalah tidak memulai api, mengenali bahaya, dan mengajak orang lain menjaga lingkungan.',
-
-        'Salah satu kebiasaan yang perlu dihindari adalah membakar sampah. Saat sampah dibakar, asap dapat mencemari udara. Jika pembakaran dilakukan di dekat rumput kering atau semak, api juga bisa menyebar. Sebagai gantinya, sampah sebaiknya dipilah dan dikelola sesuai jenisnya. Daun dan sisa tumbuhan tertentu dapat diolah menjadi kompos dengan cara yang benar.',
-
-        'Kompos adalah bahan yang terbentuk ketika sisa makhluk hidup, seperti daun, terurai menjadi bahan yang dapat membantu menyuburkan tanah. Kamu bisa belajar membuat kompos bersama orang tua atau guru. Pilih tempat yang sesuai dan ikuti petunjuk orang dewasa. Tidak perlu menggunakan api untuk mengolah daun kering menjadi pupuk.',
-
-        'Kita juga dapat membantu dengan merawat tanaman di rumah atau sekolah. Tanaman yang tumbuh sehat membuat lingkungan lebih nyaman dan dapat menyediakan tempat hidup bagi makhluk kecil. Namun, menanam satu atau dua pohon saja tidak langsung menggantikan hutan yang rusak. Hutan alami memiliki banyak jenis tumbuhan dan hewan yang saling bergantung, sehingga perlindungannya tetap sangat penting.',
-
-        'Bagaimana jika kamu melihat seseorang membakar lahan dekat hutan? Jangan mendekat untuk menegur sendirian dan jangan mencoba memadamkan api. Pergilah ke tempat aman, kemudian beri tahu orang tua, guru, atau orang dewasa yang bertanggung jawab. Mereka dapat melaporkan kejadian tersebut kepada petugas yang sesuai.',
-
-        'Kamu juga bisa menjadi Sahabat Rimba melalui kegiatan sederhana di sekolah. Buatlah poster pencegahan Karhutla, adakan kuis tentang hutan, atau ajak teman berdiskusi tentang cara mengurangi sampah. Yang penting, informasi yang kamu bagikan benar, tidak menakut-nakuti, dan mendorong orang lain untuk melakukan tindakan yang aman.',
+        'Pada kebakaran yang terjadi di atas tanah, kita biasanya dapat melihat api membakar rumput, semak, atau pohon. Namun, pada lahan gambut yang kering, api juga dapat membakar sisa akar, ranting, dan bahan tumbuhan yang berada di bawah permukaan tanah. Pembakaran ini dapat berlangsung perlahan sehingga orang tidak selalu melihat kobaran api yang besar.',
+        'Bayangkan bara kecil yang tersembunyi di antara tumpukan daun kering. Walaupun bagian atas tumpukan terlihat tidak menyala, bagian dalamnya masih bisa menyimpan panas. Hal yang mirip dapat terjadi pada gambut. Lapisan tanah di atas bara mungkin terlihat gelap atau hanya mengeluarkan asap. Karena itu, api yang tidak terlihat bukan berarti api sudah padam.',
+        'Menyiram permukaan tanah saja belum tentu cukup. Air mungkin tidak mencapai bagian gambut yang sedang terbakar. Panas di dalam tanah dapat membuat bagian yang basah kembali mengering, sementara bara masih tersisa di tempat lain. Jika tidak ditangani dengan benar, api dapat muncul kembali setelah beberapa waktu.',
+        'Petugas pemadam yang terlatih akan memeriksa area kebakaran dan menggunakan peralatan yang sesuai. Di lokasi tertentu, mereka dapat menggunakan pipa atau alat khusus untuk menyalurkan air ke lapisan gambut yang terbakar. Petugas juga perlu memeriksa kembali area tersebut untuk memastikan tidak ada bara yang tertinggal. Jika kamu melihat tanah berasap, jangan menginjak atau menggali bagian itu. Segera menjauh dan laporkan kepada orang dewasa.'
       ],
-
       funFact:
-        'Daun kering dapat menjadi bahan kompos. Dengan bantuan air, udara, dan makhluk pengurai, daun akan terurai secara bertahap. Jadi, daun yang jatuh bukan selalu sampah yang harus dibakar!',
+        'Kebakaran bawah tanah dapat tetap berlangsung meskipun kobaran api di permukaan sudah tidak terlihat. Karena itu, petugas perlu memastikan bara benar-benar padam sebelum meninggalkan lokasi.'
     },
-
     interactiveCheck: {
-      type: 'action_sort',
-      prompt: 'Pilih Aksi Sahabat Rimba!',
-      instruction:
-        'Kebiasaan mana yang paling tepat untuk membantu mencegah kebakaran hutan dan lahan?',
-
+      prompt: 'Ayo Periksa Pemahamanmu!',
+      instruction: 'Apa yang harus kamu lakukan jika melihat asap keluar dari tanah?',
       options: [
         {
-          id: 'opt-1',
-          text:
-            'Membakar tumpukan daun sendirian supaya halaman cepat bersih.',
-          isCorrect: false,
-          feedback:
-            'Jangan lakukan itu! Membakar daun bisa menghasilkan asap dan memicu kebakaran. Mintalah bantuan orang dewasa untuk mengelola daun tanpa membakarnya.',
-        },
-        {
-          id: 'opt-2',
-          text:
-            'Tidak bermain api, mengolah daun menjadi kompos dengan aman, dan mengajak teman menjaga lingkungan.',
+          id: 'a',
+          text: 'Menjauh dari lokasi dan segera melaporkannya kepada orang dewasa atau petugas.',
           isCorrect: true,
           feedback:
-            'Keren sekali! Kamu sudah memilih tindakan yang aman dan bermanfaat. Kebiasaan baik seperti ini membantu mengurangi risiko kebakaran dan menjaga lingkungan tetap sehat.',
+            'Benar! Asap dari tanah bisa menjadi tanda adanya bara tersembunyi. Kamu harus menjaga jarak dan meminta bantuan orang yang terlatih.'
         },
-      ],
-    },
+        {
+          id: 'b',
+          text: 'Menginjak tanah berasap untuk memeriksa apakah masih panas.',
+          isCorrect: false,
+          feedback:
+            'Jangan lakukan itu. Tanah bisa menyimpan bara dan bagian permukaannya mungkin tidak kuat untuk diinjak.'
+        },
+        {
+          id: 'c',
+          text: 'Menggali tanah sendiri sampai menemukan sumber api.',
+          isCorrect: false,
+          feedback:
+            'Belum tepat. Menggali tanah yang terbakar bisa berbahaya. Pemeriksaan harus dilakukan oleh petugas yang memiliki peralatan dan pelatihan.'
+        }
+      ]
+    }
   },
 
-  // =====================================================
-  // LEVEL 5 — KESELAMATAN SAAT MELIHAT API ATAU ASAP
-  // =====================================================
+  // ==========================================
+  // BAB 5: KABUT ASAP
+  // ==========================================
   {
-    id: 'lvl-05',
-    slug: 'kalau-ada-api',
+    id: '5',
     level: 5,
-    title: 'Kalau Melihat Api atau Asap, Harus Apa?',
-    subtitle: 'Jadi anak pintar berarti tahu cara menyelamatkan diri',
-    readTime: '6 Menit Baca',
-    heroBadge: 'Aturan Penting',
-
+    slug: 'bahaya-asap-dan-pm25',
+    title: 'Bahaya Kabut Asap',
+    subtitle: 'Mengenal dampak asap kebakaran bagi tubuh dan cara menjaga kesehatan saat udara tercemar.',
+    heroBadge: 'Menjaga Kesehatan',
+    readTime: '7 Menit',
     introText:
-      'Sahabat Rimba, bayangkan kamu sedang berjalan pulang sekolah bersama teman. Dari kejauhan, kamu melihat asap tebal dan api di dekat semak-semak. Apa yang harus dilakukan? Hal pertama yang perlu kamu ingat adalah jangan mendekat! Kebakaran dapat membesar dengan cepat, asap bisa mengganggu pernapasan, dan arah api dapat berubah karena angin. Kamu tidak perlu menjadi pahlawan dengan memadamkan api sendiri. Tindakan paling berani dan cerdas adalah menjauh dari bahaya, mengajak teman ke tempat yang aman, lalu segera memberi tahu orang dewasa. Yuk, pelajari langkah-langkah keselamatan yang penting untuk kamu ingat!',
-
+      'Ketika hutan terbakar, asap dapat terbawa angin menuju desa dan kota. Udara yang biasanya jernih bisa berubah menjadi berkabut dan berbau seperti sesuatu yang terbakar. Asap bukan hanya membuat mata perih, tetapi juga membawa partikel kecil yang berbahaya jika terhirup. Karena itu, kita perlu mengetahui cara melindungi diri saat udara dipenuhi asap.',
     keyPoints: [
       {
-        title: 'Langkah 1: Segera Menjauh',
+        title: 'Asap Mengandung Partikel Kecil',
         desc:
-          'Jika melihat api atau asap yang mencurigakan, jangan mendekat untuk memeriksa. Menjauhlah menuju tempat aman dan, jika memungkinkan, bergeraklah menjauhi arah asap. Jangan bersembunyi di semak-semak atau mencoba melewati api.',
-        iconName: 'ShieldAlert',
+          'Asap kebakaran membawa debu dan partikel halus, termasuk PM2.5. Ukurannya sangat kecil sehingga dapat masuk jauh ke dalam saluran pernapasan.',
+        iconName: 'Wind'
       },
       {
-        title: 'Langkah 2: Beri Tahu Orang Dewasa',
+        title: 'Asap Mengganggu Kesehatan',
         desc:
-          'Setelah berada di tempat aman, segera beri tahu guru, orang tua, petugas keamanan, atau orang dewasa yang bertanggung jawab. Jelaskan lokasi kejadian sejelas yang kamu bisa. Jangan kembali mendekati api untuk mengambil foto atau barang.',
-        iconName: 'Users',
+          'Menghirup asap dapat menyebabkan batuk, mata perih, tenggorokan terasa tidak nyaman, dan sesak napas. Anak-anak perlu lebih berhati-hati.',
+        iconName: 'ShieldAlert'
       },
       {
-        title: 'Langkah 3: Minta Bantuan Petugas',
+        title: 'Lindungi Diri dari Asap',
         desc:
-          'Orang dewasa dapat menghubungi pemadam kebakaran atau layanan darurat setempat. Jika asap mulai masuk ke rumah atau sekolah, ikuti petunjuk evakuasi dari guru dan petugas. Jangan kembali ke lokasi sebelum dinyatakan aman.',
-        iconName: 'PhoneCall',
-      },
+          'Kurangi kegiatan di luar ruangan, tutup pintu dan jendela jika asap masuk, dan ikuti arahan orang dewasa. Gunakan masker yang sesuai jika diperlukan.',
+        iconName: 'Shield'
+      }
     ],
-
     deepDive: {
-      heading: 'Kenapa Kita Tidak Boleh Mendekati Kebakaran?',
-
+      heading: 'Apa yang Harus Dilakukan Saat Udara Berasap?',
       paragraphs: [
-        'Api yang terlihat kecil belum tentu aman. Angin dapat membuatnya menyebar ke rumput, daun, dan ranting di sekitarnya. Di kawasan gambut yang kering, api bahkan dapat menjalar di bawah permukaan tanah. Karena itu, jangan menganggap suatu kebakaran mudah dipadamkan hanya karena kobarannya terlihat kecil.',
-
-        'Asap juga berbahaya. Menghirup asap dapat membuat mata perih, batuk, pusing, atau kesulitan bernapas. Jangan sengaja mendekat untuk melihat lebih jelas atau mengambil foto. Ponsel, video, dan rasa penasaran tidak lebih penting daripada keselamatanmu.',
-
-        'Jika kamu sedang bersama teman, ajak mereka menjauh dengan tenang tetapi cepat. Pilih jalan yang aman dan jangan berjalan menuju arah api. Jika jalur yang biasa kamu lewati dipenuhi asap atau terhalang, jangan menerobosnya. Ikuti arahan guru, orang dewasa, atau petugas yang mengetahui kondisi lokasi.',
-
-        'Setelah sampai di tempat aman, beri tahu orang dewasa tentang lokasi kebakaran. Ceritakan apa yang kamu lihat tanpa harus kembali untuk memastikan. Orang dewasa dapat menghubungi petugas pemadam kebakaran atau layanan darurat setempat. Jika kamu sendirian dan membutuhkan pertolongan, mintalah bantuan kepada orang dewasa yang dapat dipercaya.',
-
-        'Bagaimana kalau asap masuk ke sekolah? Dengarkan instruksi guru. Jangan berlari tanpa arah, jangan bersembunyi, dan jangan kembali ke kelas untuk mengambil tas jika kamu sudah diminta keluar. Ikuti jalur evakuasi menuju tempat berkumpul yang aman. Jika berada di rumah, ikuti arahan orang tua atau petugas dan jangan kembali ke dalam bangunan yang berbahaya.',
-
-        'Jika kamu mulai batuk terus-menerus, pusing, atau kesulitan bernapas setelah terpapar asap, segera beri tahu orang dewasa dan minta pertolongan medis. Jangan menutupi gejala atau memaksakan diri tetap beraktivitas. Keselamatanmu selalu menjadi yang utama.',
-
-        'Ingat, Sahabat Rimba: tugasmu bukan memadamkan kebakaran. Tugasmu adalah menjauhi bahaya, membantu teman menuju tempat aman, dan memberi tahu orang dewasa. Petugas yang terlatih memiliki perlengkapan dan kemampuan untuk menangani kebakaran dengan lebih aman.',
+        'Asap kebakaran terdiri atas campuran gas dan partikel yang berasal dari bahan yang terbakar. Ketika banyak pohon, rumput, atau gambut terbakar, asap dapat menyebar mengikuti arah angin. Akibatnya, orang yang tinggal jauh dari lokasi kebakaran pun bisa merasakan dampaknya.',
+        'Salah satu jenis partikel yang perlu diwaspadai adalah PM2.5. Nama ini digunakan untuk partikel yang memiliki ukuran sangat kecil, dengan diameter sekitar 2,5 mikrometer atau lebih kecil. Ukurannya jauh lebih kecil daripada sehelai rambut manusia. Karena sangat halus, partikel ini dapat masuk jauh ke dalam paru-paru saat kita bernapas.',
+        'Ketika menghirup asap, seseorang bisa mengalami batuk, mata berair, tenggorokan terasa gatal, atau sulit bernapas. Anak-anak, orang lanjut usia, dan orang yang memiliki gangguan pernapasan perlu mendapat perhatian khusus. Jika seseorang merasa sesak atau mengalami kesulitan bernapas, segera beri tahu orang dewasa agar mendapatkan pertolongan medis.',
+        'Saat udara berasap, usahakan berada di dalam ruangan dengan udara yang lebih bersih. Tutup pintu dan jendela jika asap masuk dari luar. Jika tersedia, gunakan penyaring udara yang sesuai. Hindari berlari atau berolahraga di luar ruangan karena kegiatan berat membuat kita bernapas lebih cepat dan dapat meningkatkan jumlah partikel yang terhirup.',
+        'Masker yang pas di wajah dan memiliki kemampuan menyaring partikel, seperti respirator N95 atau KN95 yang sesuai, dapat membantu mengurangi paparan partikel halus. Namun, masker tidak menghilangkan semua risiko, dan masker harus digunakan dengan benar. Anak-anak sebaiknya mengikuti arahan orang tua atau guru. Jangan pergi mendekati lokasi kebakaran untuk melihat-lihat. Keselamatan diri selalu lebih penting.'
       ],
-
       funFact:
-        'Petugas pemadam kebakaran menggunakan pakaian pelindung, perlengkapan pernapasan, dan peralatan khusus sesuai kondisi kebakaran. Perlengkapan biasa yang digunakan anak-anak tidak dapat menggantikan perlindungan tersebut.',
+        'Partikel PM2.5 sangat kecil sehingga tidak selalu terlihat oleh mata. Udara yang tampak tidak terlalu berasap pun belum tentu bebas dari partikel halus.'
     },
-
     interactiveCheck: {
-      type: 'safety_decision',
-      prompt: 'Skenario Pulang Sekolah',
-      instruction:
-        'Saat pulang sekolah bersama teman, kamu melihat asap tebal dan api di semak dekat jalan. Apa tindakan yang paling aman?',
-
+      prompt: 'Ayo Periksa Pemahamanmu!',
+      instruction: 'Apa yang sebaiknya dilakukan ketika udara di sekitar rumah dipenuhi asap?',
       options: [
         {
-          id: 'opt-1',
-          text:
-            'Mengambil ember dan mencoba memadamkan api sebelum membesar.',
-          isCorrect: false,
-          feedback:
-            'Jangan lakukan itu! Api bisa menyebar dengan cepat dan asap dapat mengganggu pernapasan. Menjauhlah dan biarkan petugas terlatih menangani kebakaran.',
-        },
-        {
-          id: 'opt-2',
-          text:
-            'Mendekat untuk mengambil foto agar bisa mengunggahnya ke media sosial.',
-          isCorrect: false,
-          feedback:
-            'Tidak aman! Kamu tidak perlu mendekat untuk membuktikan bahwa kebakaran terjadi. Foto tidak sebanding dengan risiko terkena asap atau terjebak api.',
-        },
-        {
-          id: 'opt-3',
-          text:
-            'Mengajak teman menjauh menuju tempat aman, lalu segera memberi tahu orang dewasa.',
+          id: 'a',
+          text: 'Mengurangi kegiatan di luar ruangan, berada di tempat dengan udara lebih bersih, dan mengikuti arahan orang dewasa.',
           isCorrect: true,
           feedback:
-            'Hebat! Kamu memilih tindakan yang benar. Menjauh, menjaga teman tetap aman, dan melaporkan kejadian kepada orang dewasa merupakan langkah penting untuk melindungi diri.',
+            'Benar! Mengurangi paparan asap dapat membantu melindungi paru-paru. Mintalah bantuan orang dewasa jika udara semakin buruk.'
         },
-      ],
-    },
+        {
+          id: 'b',
+          text: 'Bermain dan berlari di luar rumah agar tubuh terbiasa menghirup asap.',
+          isCorrect: false,
+          feedback:
+            'Tidak benar. Asap dapat mengganggu pernapasan. Berolahraga di luar saat udara tercemar justru bisa meningkatkan paparan asap.'
+        },
+        {
+          id: 'c',
+          text: 'Mendekati kebakaran agar bisa melihat asal asap.',
+          isCorrect: false,
+          feedback:
+            'Jangan lakukan itu. Lokasi kebakaran berbahaya karena api bisa menyebar dan asapnya dapat mengganggu kesehatan.'
+        }
+      ]
+    }
   },
+
+  // ==========================================
+  // BAB 6: SATWA LIAR
+  // ==========================================
+  {
+    id: '6',
+    level: 6,
+    slug: 'menyelamatkan-satwa-hutan',
+    title: 'Melindungi Satwa Liar',
+    subtitle: 'Memahami dampak kebakaran terhadap hewan dan cara membantu satwa dengan aman.',
+    heroBadge: 'Melindungi Satwa',
+    readTime: '7 Menit',
+    introText:
+      'Hutan merupakan rumah bagi banyak satwa liar. Di sana, mereka mencari makanan, membuat sarang, dan membesarkan anak-anaknya. Ketika kebakaran terjadi, rumah mereka dapat rusak dan sumber makanan menghilang. Beberapa hewan terpaksa berpindah ke tempat lain untuk mencari perlindungan. Kita perlu memahami keadaan mereka dan tidak menyakiti satwa yang sedang terdampak.',
+    keyPoints: [
+      {
+        title: 'Satwa Kehilangan Rumah',
+        desc:
+          'Kebakaran dapat merusak sarang, tempat berlindung, dan sumber makanan. Hewan juga berisiko terluka atau terpisah dari kelompoknya.',
+        iconName: 'Bird'
+      },
+      {
+        title: 'Satwa Bisa Keluar dari Hutan',
+        desc:
+          'Hewan yang kehilangan makanan atau tempat berlindung bisa mendekati kebun dan permukiman. Kehadiran mereka tidak berarti kita boleh mendekat atau menangkapnya.',
+        iconName: 'Trees'
+      },
+      {
+        title: 'Minta Bantuan Petugas',
+        desc:
+          'Jika menemukan satwa liar yang terluka atau berada di tempat berbahaya, jaga jarak dan beri tahu orang dewasa agar dapat menghubungi petugas yang tepat.',
+        iconName: 'Shield'
+      }
+    ],
+    deepDive: {
+      heading: 'Bagaimana Kebakaran Memengaruhi Kehidupan Satwa?',
+      paragraphs: [
+        'Setiap satwa memiliki kebutuhan yang berbeda. Burung membutuhkan tempat untuk bersarang, orangutan mencari buah dan pepohonan untuk bergerak, sedangkan berbagai serangga hidup di antara tumbuhan dan tanah. Hutan menyediakan banyak kebutuhan tersebut. Ketika hutan terbakar, satwa dapat kehilangan makanan, tempat berlindung, dan lokasi untuk membesarkan anak-anaknya.',
+        'Asap juga dapat mengganggu kesehatan satwa. Hewan yang menghirup asap bisa mengalami gangguan pernapasan, sedangkan panas api dapat menyebabkan luka. Satwa yang ketakutan mungkin bergerak menjauhi kebakaran dan memasuki kebun atau permukiman. Mereka bisa terlihat kebingungan karena tempat yang biasanya mereka kenal sudah berubah.',
+        'Jika bertemu satwa liar, jangan mencoba menyentuh, memberi makan, mengejar, atau menangkapnya. Hewan yang ketakutan dapat bereaksi untuk melindungi diri. Jangan pula melempar batu atau menggunakan petasan untuk mengusirnya. Jika satwa berada dekat rumah, segera masuk ke tempat yang aman dan beri tahu orang dewasa.',
+        'Jika menemukan satwa yang tampak terluka, jangan mencoba mengobatinya sendiri. Catat lokasinya dari jarak aman jika memungkinkan, lalu minta orang dewasa menghubungi petugas konservasi atau penyelamat satwa yang berwenang. Petugas memiliki pengetahuan dan peralatan untuk memeriksa, merawat, dan memindahkan satwa dengan aman.',
+        'Cara terbaik melindungi satwa adalah menjaga hutan tempat mereka hidup. Kita dapat ikut membantu dengan tidak membakar lahan, tidak membeli satwa liar hasil tangkapan ilegal, dan tidak merusak tempat hidup hewan. Ketika hutan terjaga, satwa memiliki kesempatan lebih besar untuk mencari makan, berkembang biak, dan hidup dengan aman.'
+      ],
+      funFact:
+        'Orangutan membantu hutan tumbuh kembali dengan menyebarkan biji dari buah yang dimakannya. Biji tersebut dapat tumbuh menjadi tanaman baru jika mendapatkan kondisi yang sesuai.'
+    },
+    interactiveCheck: {
+      prompt: 'Ayo Periksa Pemahamanmu!',
+      instruction: 'Apa yang harus dilakukan jika melihat satwa liar yang terluka?',
+      options: [
+        {
+          id: 'a',
+          text: 'Menjaga jarak, tidak menyentuhnya, dan segera memberi tahu orang dewasa atau petugas.',
+          isCorrect: true,
+          feedback:
+            'Benar! Satwa yang terluka bisa merasa takut. Petugas yang terlatih dapat membantu tanpa membahayakan hewan maupun manusia.'
+        },
+        {
+          id: 'b',
+          text: 'Membawa pulang satwa tersebut untuk dijadikan hewan peliharaan.',
+          isCorrect: false,
+          feedback:
+            'Belum tepat. Satwa liar membutuhkan penanganan khusus. Memeliharanya tanpa izin dan pengetahuan yang sesuai dapat membahayakan satwa maupun manusia.'
+        },
+        {
+          id: 'c',
+          text: 'Mengejar satwa tersebut supaya cepat kembali ke hutan.',
+          isCorrect: false,
+          feedback:
+            'Jangan lakukan itu. Mengejar dapat membuat satwa semakin ketakutan atau terluka. Jaga jarak dan minta bantuan petugas.'
+        }
+      ]
+    }
+  },
+
+  // ==========================================
+  // BAB 7: MEMBUAT KOMPOS
+  // ==========================================
+  {
+    id: '7',
+    level: 7,
+    slug: 'membuat-kompos-pekarangan',
+    title: 'Membuat Kompos dari Daun Kering',
+    subtitle: 'Belajar mengolah daun gugur menjadi pupuk tanpa membakarnya.',
+    heroBadge: 'Aksi Ramah Lingkungan',
+    readTime: '7 Menit',
+    introText:
+      'Setiap hari, pohon menggugurkan sebagian daunnya. Daun-daun itu sering dikumpulkan ketika halaman rumah atau sekolah dibersihkan. Namun, daun kering tidak harus dibakar. Kita bisa mengolahnya menjadi kompos, yaitu bahan yang membantu menyuburkan tanah. Dengan cara ini, sampah daun dapat dimanfaatkan kembali dan kita tidak perlu menghasilkan asap dari pembakaran.',
+    keyPoints: [
+      {
+        title: 'Daun Kering Bisa Dimanfaatkan',
+        desc:
+          'Daun yang gugur dapat diolah menjadi kompos. Bahan ini membantu menambah bahan organik pada tanah dan mendukung pertumbuhan tanaman.',
+        iconName: 'Trash'
+      },
+      {
+        title: 'Makhluk Kecil Membantu Penguraian',
+        desc:
+          'Jamur, bakteri, dan organisme pengurai membantu memecah daun menjadi bahan yang lebih sederhana selama proses pengomposan.',
+        iconName: 'Trees'
+      },
+      {
+        title: 'Kompos Menyuburkan Tanah',
+        desc:
+          'Kompos yang sudah matang dapat dicampurkan ke tanah untuk membantu memperbaiki kondisi tanah dan mendukung pertumbuhan tanaman.',
+        iconName: 'CloudRain'
+      }
+    ],
+    deepDive: {
+      heading: 'Bagaimana Cara Membuat Kompos Sederhana?',
+      paragraphs: [
+        'Daun yang gugur sebenarnya masih memiliki manfaat. Daun mengandung bahan organik yang dapat dikembalikan ke tanah. Di alam, daun yang jatuh ke lantai hutan akan diuraikan sedikit demi sedikit oleh jamur, bakteri, dan organisme lain. Setelah waktu tertentu, bahan tersebut berubah menjadi bagian dari tanah dan membantu mendukung kehidupan tumbuhan.',
+        'Kita bisa meniru proses alami itu dengan membuat kompos. Siapkan wadah yang memiliki lubang udara atau tempat pengomposan di halaman. Masukkan daun kering yang sudah dikumpulkan. Daun yang berukuran besar boleh dipotong menjadi bagian yang lebih kecil agar lebih mudah terurai. Tambahkan sedikit air jika bahan terlalu kering, tetapi jangan sampai wadah dipenuhi air.',
+        'Agar proses berjalan baik, bahan kompos perlu memiliki kelembapan dan udara yang cukup. Jika terlalu kering, proses penguraian berjalan lambat. Jika terlalu basah dan kekurangan udara, kompos dapat berbau tidak sedap. Daun juga dapat dicampur dengan sedikit bahan hijau, seperti sisa sayuran mentah, sesuai petunjuk orang dewasa. Hindari memasukkan plastik, kaca, logam, daging, atau minyak ke dalam kompos sederhana.',
+        'Aduk atau balik bahan kompos secara berkala dengan bantuan orang dewasa agar udara dapat masuk. Lama penguraian bergantung pada jenis bahan, ukuran daun, kelembapan, dan kondisi lingkungan. Karena itu, kompos tidak selalu siap dalam waktu yang sama. Kompos yang matang biasanya berwarna cokelat gelap, bertekstur remah, dan berbau seperti tanah. Jika masih banyak bahan yang terlihat utuh, biarkan proses penguraian berlanjut.',
+        'Setelah matang, kompos dapat dicampurkan ke tanah di sekitar tanaman sesuai kebutuhan. Dengan begitu, daun yang semula dianggap sampah berubah menjadi sesuatu yang berguna. Yang paling penting, kita tidak perlu membakar daun tersebut. Membakar sampah menghasilkan asap dan dapat memicu kebakaran jika api menyebar ke rumput atau benda yang mudah terbakar.'
+      ],
+      funFact:
+        'Di lantai hutan, daun yang jatuh tidak selalu menjadi sampah. Daun tersebut menjadi makanan bagi organisme pengurai dan akhirnya membantu mengembalikan bahan organik ke tanah.'
+    },
+    interactiveCheck: {
+      prompt: 'Ayo Periksa Pemahamanmu!',
+      instruction: 'Apa manfaat mengolah daun kering menjadi kompos?',
+      options: [
+        {
+          id: 'a',
+          text: 'Daun dapat dimanfaatkan kembali untuk membantu menyuburkan tanah tanpa menghasilkan asap dari pembakaran.',
+          isCorrect: true,
+          feedback:
+            'Benar! Kompos membantu mengembalikan bahan organik ke tanah dan menjadi pilihan yang lebih ramah lingkungan daripada membakar daun.'
+        },
+        {
+          id: 'b',
+          text: 'Daun harus dibakar sampai menjadi abu agar bisa tumbuh kembali menjadi pohon.',
+          isCorrect: false,
+          feedback:
+            'Belum tepat. Daun dapat diuraikan menjadi kompos tanpa dibakar. Abu bukanlah pengganti kompos yang lengkap.'
+        },
+        {
+          id: 'c',
+          text: 'Kompos dibuat dengan mencampurkan daun dan plastik.',
+          isCorrect: false,
+          feedback:
+            'Belum tepat. Plastik tidak dapat terurai seperti daun dalam pengomposan biasa. Pisahkan sampah plastik dari bahan kompos.'
+        }
+      ]
+    }
+  },
+
+  // ==========================================
+  // BAB 8: MEMULIHKAN HUTAN
+  // ==========================================
+  {
+    id: '8',
+    level: 8,
+    slug: 'menanam-kembali-rimba',
+    title: 'Memulihkan Hutan yang Terbakar',
+    subtitle: 'Belajar bagaimana hutan dapat pulih dan bagaimana kita bisa ikut menjaganya.',
+    heroBadge: 'Memulihkan Hutan',
+    readTime: '7 Menit',
+    introText:
+      'Setelah kebakaran berhasil dipadamkan, hutan tidak langsung kembali seperti semula. Banyak tumbuhan yang rusak, tanah bisa kehilangan kelembapan, dan satwa mungkin belum bisa kembali. Hutan memerlukan waktu untuk pulih. Manusia dapat membantu proses ini dengan menjaga kondisi tanah dan air, menanam tumbuhan yang sesuai, serta melindungi bibit agar bisa tumbuh dengan baik.',
+    keyPoints: [
+      {
+        title: 'Hutan Membutuhkan Waktu untuk Pulih',
+        desc:
+          'Setelah kebakaran, tumbuhan harus tumbuh kembali dan hewan perlu menemukan makanan serta tempat berlindung. Pemulihan hutan dapat memerlukan waktu yang lama.',
+        iconName: 'Trees'
+      },
+      {
+        title: 'Pilih Tanaman yang Sesuai',
+        desc:
+          'Jenis pohon yang ditanam perlu disesuaikan dengan kondisi tanah, air, dan lingkungan setempat. Kawasan gambut membutuhkan jenis tumbuhan yang cocok dengan habitatnya.',
+        iconName: 'CloudRain'
+      },
+      {
+        title: 'Rawat dan Lindungi Bibit',
+        desc:
+          'Bibit yang baru ditanam perlu dirawat dan dilindungi dari gangguan. Menanam pohon saja tidak cukup jika setelah itu pohon dibiarkan mati atau lahannya kembali terbakar.',
+        iconName: 'Shield'
+      }
+    ],
+    deepDive: {
+      heading: 'Apa yang Bisa Kita Lakukan untuk Memulihkan Hutan?',
+      paragraphs: [
+        'Kebakaran dapat merusak daun, batang, akar, dan tempat hidup berbagai makhluk. Setelah api padam, lahan yang terbakar mungkin terlihat hitam dan sepi. Namun, pemulihan bisa dimulai secara perlahan. Beberapa tumbuhan dapat tumbuh kembali dari bagian yang masih hidup atau dari biji yang tersisa. Hewan juga dapat kembali ketika makanan dan tempat berlindung mulai tersedia.',
+        'Walaupun begitu, tidak semua hutan dapat pulih dengan cepat. Kebakaran yang berat dan terjadi berulang kali dapat merusak tanah, membunuh banyak tumbuhan, serta mengganggu kehidupan satwa. Di lahan gambut, kebakaran juga dapat membuat tanah semakin kering dan meningkatkan risiko kebakaran berikutnya. Karena itu, memadamkan api dan mencegah kebakaran berulang sama pentingnya dengan menanam kembali pohon.',
+        'Salah satu cara membantu pemulihan hutan adalah melakukan penanaman kembali dengan jenis tumbuhan yang sesuai. Petugas dan ahli lingkungan perlu memeriksa kondisi lahan sebelum menentukan jenis pohon. Di kawasan rawa gambut, misalnya, pohon seperti jelutung rawa dan belangeran dapat menjadi pilihan pada lokasi yang sesuai. Kita tidak boleh menganggap semua jenis pohon cocok ditanam di semua tempat, karena setiap tumbuhan memiliki kebutuhan air, tanah, dan cahaya yang berbeda.',
+        'Bibit yang ditanam perlu dirawat. Tanaman muda dapat rusak karena kekeringan, gulma, hewan, atau kebakaran baru. Petugas mungkin perlu melindungi bibit, menjaga kondisi air, dan memeriksa pertumbuhannya secara berkala. Pemulihan hutan juga perlu memperhatikan tumbuhan yang tumbuh secara alami, sehingga penanaman tidak merusak ekosistem yang masih bertahan.',
+        'Anak-anak juga bisa ikut menjaga lingkungan. Kita dapat merawat tanaman di sekolah, mengikuti kegiatan penanaman yang aman bersama guru, tidak membuang sampah sembarangan, dan mengingatkan keluarga agar tidak membakar sampah di dekat lahan kering. Jika melihat kebakaran atau asap dari kawasan hutan, segera beri tahu orang dewasa. Langkah kecil yang dilakukan bersama-sama dapat membantu menjaga hutan untuk masa depan.'
+      ],
+      funFact:
+        'Pohon yang ditanam hari ini mungkin membutuhkan waktu bertahun-tahun untuk tumbuh besar. Karena itu, menjaga pohon yang sudah ada sama pentingnya dengan menanam pohon baru.'
+    },
+    interactiveCheck: {
+      prompt: 'Ayo Periksa Pemahamanmu!',
+      instruction: 'Apa yang perlu dilakukan setelah kebakaran hutan berhasil dipadamkan?',
+      options: [
+        {
+          id: 'a',
+          text: 'Membantu pemulihan hutan dengan menjaga lahan, memilih tumbuhan yang sesuai, merawat bibit, dan mencegah kebakaran berulang.',
+          isCorrect: true,
+          feedback:
+            'Benar! Pemulihan hutan tidak berhenti ketika api padam. Lingkungan perlu dirawat dan dilindungi agar tumbuhan serta satwa dapat kembali hidup dengan baik.'
+        },
+        {
+          id: 'b',
+          text: 'Menanam pohon apa saja lalu meninggalkannya tanpa perawatan.',
+          isCorrect: false,
+          feedback:
+            'Belum tepat. Jenis pohon harus sesuai dengan kondisi lingkungan, dan bibit perlu dirawat agar dapat tumbuh.'
+        },
+        {
+          id: 'c',
+          text: 'Membakar sisa daun dan ranting agar lahan cepat terlihat bersih.',
+          isCorrect: false,
+          feedback:
+            'Belum tepat. Membakar sisa tumbuhan dapat memicu kebakaran lagi. Gunakan cara pengelolaan bahan tumbuhan yang lebih aman.'
+        }
+      ]
+    }
+  }
 ];
