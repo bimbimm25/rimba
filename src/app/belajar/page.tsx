@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { DETAILED_LESSONS } from '@/data/lessons';
 import { RpgForestAdventure } from '@/components/learning/RpgForestAdventure';
+import { ScenarioChoiceCard } from '@/components/learning/ScenarioChoiceCard';
 
 export default function BelajarHubPage() {
     const [completedSlugs, setCompletedSlugs] = useState<string[]>([]);
@@ -74,36 +75,40 @@ export default function BelajarHubPage() {
                         </div>
 
                         <h1 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-rimba-950 tracking-tight leading-tight">
-                            Mari Belajar Menjaga Hutan & Udara Bersih!
+                            Yuk, Kenali Hutan dan Belajar Mencegah Karhutla!
                         </h1>
 
                         <p className="text-rimba-800 text-sm sm:text-base leading-relaxed font-medium">
-                            Selamat datang di petualangan seru Sahabat Rimba! Di sini kamu tidak hanya membaca materi, tapi juga mencoba eksperimen kalkulator lingkungan, mini game interaktif, dan aksi kreatif menjaga bumi bebas asap.
+                            Halo, Sahabat Rimba! Ayo belajar mengenal hutan, memahami bahaya kebakaran hutan dan lahan, serta mencari tahu cara mencegahnya. Kamu juga bisa bermain kuis, mencoba kegiatan seru, dan belajar menjaga lingkungan agar tetap sehat dan nyaman.
                         </p>
 
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 text-left">
                             <div className="p-3.5 rounded-2xl bg-white border border-rimba-100 shadow-2xs">
                                 <Trees className="w-5 h-5 text-rimba-600 mb-1" />
                                 <h2 className="font-bold text-xs text-rimba-950">Kenali Hutan</h2>
-                                <p className="text-[11px] text-rimba-700 leading-snug">Rahasia paru-paru bumi & rawa gambut.</p>
+                                <p className="text-[11px] text-rimba-700 leading-snug">Kenali manfaat hutan dan pentingnya menjaga lahan gambut.</p>
                             </div>
+
                             <div className="p-3.5 rounded-2xl bg-white border border-rimba-100 shadow-2xs">
                                 <Flame className="w-5 h-5 text-accent-flame mb-1" />
-                                <h2 className="font-bold text-xs text-rimba-950">Cegah Api Liar</h2>
-                                <p className="text-[11px] text-rimba-700 leading-snug">Hentikan kebiasaan bakar sampah.</p>
+                                <h2 className="font-bold text-xs text-rimba-950">Cegah Kebakaran</h2>
+                                <p className="text-[11px] text-rimba-700 leading-snug">Ketahui bahaya membakar sampah dan cara mencegah kebakaran.</p>
                             </div>
+
                             <div className="p-3.5 rounded-2xl bg-white border border-rimba-100 shadow-2xs">
                                 <Wind className="w-5 h-5 text-accent-sky mb-1" />
-                                <h2 className="font-bold text-xs text-rimba-950">Siaga Asap</h2>
-                                <p className="text-[11px] text-rimba-700 leading-snug">Lindungi pernapasan & mata.</p>
+                                <h2 className="font-bold text-xs text-rimba-950">Lindungi Diri</h2>
+                                <p className="text-[11px] text-rimba-700 leading-snug">Pelajari cara melindungi mata dan pernapasan saat ada asap.</p>
                             </div>
+
                             <div className="p-3.5 rounded-2xl bg-white border border-rimba-100 shadow-2xs">
                                 <Leaf className="w-5 h-5 text-leaf-dark mb-1" />
-                                <h2 className="font-bold text-xs text-rimba-950">Aksi Kompos</h2>
-                                <p className="text-[11px] text-rimba-700 leading-snug">Ubah daun gugur jadi pupuk subur.</p>
+                                <h2 className="font-bold text-xs text-rimba-950">Manfaatkan Daun</h2>
+                                <p className="text-[11px] text-rimba-700 leading-snug">Belajar mengolah daun kering menjadi kompos untuk tanaman.</p>
                             </div>
                         </div>
                     </section>
+                    
 
                     {/* 2. JALUR MODUL BELAJAR */}
                     <section className="bg-white rounded-3xl p-6 sm:p-10 border border-rimba-100 shadow-sm space-y-6">
@@ -135,7 +140,7 @@ export default function BelajarHubPage() {
 
                         <div className="w-full h-3 bg-rimba-50 rounded-full overflow-hidden p-0.5 border border-rimba-100">
                             <div
-                                className="h-full bg-gradient-to-r from-leaf to-rimba-500 rounded-full transition-all duration-500 ease-out"
+                                className="h-full bg-linear-to-r from-leaf to-rimba-500 rounded-full transition-all duration-500 ease-out"
                                 style={{ width: `${progressPercent}%` }}
                             />
                         </div>
@@ -188,6 +193,12 @@ export default function BelajarHubPage() {
                                 );
                             })}
                         </div>
+                    </section>
+                    {/* ============================================================== */}
+                    {/* SECTION SKENARIO: PILIH TINDAKAN AMAN                          */}
+                    {/* ============================================================== */}
+                    <section className="my-10">
+                        <ScenarioChoiceCard />
                     </section>
 
                     {/* ============================================================== */}
@@ -242,26 +253,26 @@ export default function BelajarHubPage() {
 
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div className="p-5 rounded-3xl bg-white border border-rimba-100 shadow-2xs space-y-2">
-                                <span className="font-display font-extrabold text-2xl text-rimba-600 block">120 Juta Ha</span>
-                                <h3 className="font-bold text-sm text-rimba-950">Hutan Hujan Indonesia</h3>
+                                <span className="font-display font-extrabold text-2xl text-rimba-600 block">Peringkat Dunia</span>
+                                <h3 className="font-bold text-sm text-rimba-950">Hutan Indonesia</h3>
                                 <p className="text-xs text-rimba-800 leading-relaxed">
-                                    Indonesia memiliki hutan hujan tropis terluas ketiga di dunia setelah Hutan Amazon dan Kongo.
+                                    Indonesia memiliki hutan hujan tropis terbesar ketiga di dunia setelah Brasil dan Republik Demokratik Kongo, yang tersebar di Kalimantan, Sumatra, dan Papua. Informasi lengkap dapat dilihat melalui <a href="https://environesia.co.id/blog/10-Fakta-Menakjubkan-tentang-Hutan-Hujan-Tropis-Indonesia" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Environesia</a>.
                                 </p>
                             </div>
 
                             <div className="p-5 rounded-3xl bg-white border border-rimba-100 shadow-2xs space-y-2">
-                                <span className="font-display font-extrabold text-2xl text-accent-flame block">10x Lipat</span>
-                                <h3 className="font-bold text-sm text-rimba-950">Bahaya Asap Karhutla</h3>
+                                <span className="font-display font-extrabold text-2xl text-accent-flame block">Kekayaan Spesies</span>
+                                <h3 className="font-bold text-sm text-rimba-950">Keanekaragaman Spesies</h3>
                                 <p className="text-xs text-rimba-800 leading-relaxed">
-                                    Partikel abu kebakaran hutan mengandung debu halus PM2.5 yang 10 kali lebih berbahaya dibanding debu jalanan.
+                                    Hutan hujan tropis Indonesia adalah rumah bagi lebih dari 10% spesies tumbuhan dan hewan di dunia, termasuk spesies endemik yang hanya ditemukan di wilayah ini. Informasi lengkap dapat dilihat melalui <a href="https://www.worldatlas.com/articles/which-countries-have-the-most-biodiversity.html" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">World Atlas</a>.
                                 </p>
                             </div>
 
                             <div className="p-5 rounded-3xl bg-white border border-rimba-100 shadow-2xs space-y-2">
-                                <span className="font-display font-extrabold text-2xl text-accent-sky block">Spons Air Alami</span>
-                                <h3 className="font-bold text-sm text-rimba-950">Tanah Rawa Gambut</h3>
+                                <span className="font-display font-extrabold text-2xl text-accent-sky block">Penyerapan Karbon</span>
+                                <h3 className="font-bold text-sm text-rimba-950">Fungsi Hutan dalam Menyerap Karbon</h3>
                                 <p className="text-xs text-rimba-800 leading-relaxed">
-                                    Lahan gambut basah dapat menyimpan cadangan air hingga 800% dari berat keringnya, menahan banjir secara alami.
+                                    Setiap tahun, pohon-pohon di hutan mampu menyerap sekitar 20 kg karbon dioksida (CO₂) per pohon, membantu menurunkan suhu udara, dan menjaga keseimbangan siklus air
                                 </p>
                             </div>
                         </div>
@@ -269,34 +280,34 @@ export default function BelajarHubPage() {
 
                     {/* 5. ECO TIMELINE */}
                     <section className="bg-white rounded-3xl p-6 sm:p-9 border border-rimba-100 shadow-sm space-y-6">
-                        <div className="flex items-center gap-2 border-b border-rimba-100 pb-4">
-                            <History className="w-5 h-5 text-rimba-600" />
-                            <div>
-                                <h2 className="font-display font-extrabold text-xl text-rimba-950">Garis Waktu Peduli Rimba</h2>
-                                <p className="text-xs text-rimba-800 font-medium">Bagaimana kesadaran menjaga hutan berkembang dari masa ke masa</p>
+                        <div className="flex items-start gap-3 border-b border-rimba-100 pb-4">
+                            <History className="w-5 h-5 text-rimba-600 shrink-0 mt-0.5" />
+                            <div className="min-w-0 space-y-1">
+                                <h2 className="font-display font-extrabold text-lg sm:text-xl leading-tight text-rimba-950">Sejarah Hutan dan Upaya Pelestariannya</h2>
+                                <p className="text-xs text-rimba-800 font-medium leading-relaxed">Perjalanan hutan dan cara manusia menjaganya dari masa ke masa.</p>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div className="p-4 rounded-2xl bg-earth-soft border border-rimba-100">
-                                <span className="text-xs font-extrabold text-rimba-600 block">Era 1980-an</span>
-                                <h3 className="font-bold text-sm text-rimba-950 mt-1">Hutan Tanpa Batas</h3>
-                                <p className="text-xs text-rimba-800 mt-1 leading-relaxed">Pemanfaatan kayu besar-besaran sebelum aturan perlindungan hutan diperketat.</p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 items-stretch">
+                            <div className="h-full p-4 rounded-2xl bg-earth-soft border border-rimba-100 flex flex-col">
+                                <span className="text-xs font-extrabold text-rimba-600 block min-h-8">385 Juta Tahun Lalu</span>
+                                <h3 className="font-bold text-sm text-rimba-950 mt-1 min-h-10 leading-snug">Hutan Pertama Terbentuk</h3>
+                                <p className="text-xs text-rimba-800 mt-2 leading-relaxed">Pada Periode Devon, pohon purba <i>Archaeopteris</i> mulai menyerap karbon dioksida dan mengubah atmosfer bumi.</p>
                             </div>
-                            <div className="p-4 rounded-2xl bg-earth-soft border border-rimba-100">
-                                <span className="text-xs font-extrabold text-accent-flame block">Tahun 1997</span>
-                                <h3 className="font-bold text-sm text-rimba-950 mt-1">Kebakaran Hebat El Niño</h3>
-                                <p className="text-xs text-rimba-800 mt-1 leading-relaxed">Kemarau panjang memicu karhutla luas dan menyadarkan pentingnya menjaga gambut.</p>
+                            <div className="h-full p-4 rounded-2xl bg-earth-soft border border-rimba-100 flex flex-col">
+                                <span className="text-xs font-extrabold text-accent-flame block min-h-8">300 Juta Tahun Lalu</span>
+                                <h3 className="font-bold text-sm text-rimba-950 mt-1 min-h-10 leading-snug">Hutan Rawa Menutupi Dunia</h3>
+                                <p className="text-xs text-rimba-800 mt-2 leading-relaxed">Pada Periode Karbon, hutan dipenuhi pakis raksasa. Sisa tumbuhannya kemudian membentuk banyak cadangan batu bara.</p>
                             </div>
-                            <div className="p-4 rounded-2xl bg-earth-soft border border-rimba-100">
-                                <span className="text-xs font-extrabold text-accent-sky block">Tahun 2016</span>
-                                <h3 className="font-bold text-sm text-rimba-950 mt-1">Restorasi Gambut</h3>
-                                <p className="text-xs text-rimba-800 mt-1 leading-relaxed">Dibentuk badan khusus untuk menyekat kanal dan membasahi kembali rawa gambut.</p>
+                            <div className="h-full p-4 rounded-2xl bg-earth-soft border border-rimba-100 flex flex-col">
+                                <span className="text-xs font-extrabold text-accent-sky block min-h-8">10.000 SM · Neolitikum</span>
+                                <h3 className="font-bold text-sm text-rimba-950 mt-1 min-h-10 leading-snug">Pembukaan Hutan oleh Manusia</h3>
+                                <p className="text-xs text-rimba-800 mt-2 leading-relaxed">Penebangan dan pembakaran hutan mulai dilakukan untuk membuka lahan pertanian serta permukiman.</p>
                             </div>
-                            <div className="p-4 rounded-2xl bg-rimba-50 border border-rimba-200">
-                                <span className="text-xs font-extrabold text-rimba-800 block">Era Sekarang</span>
-                                <h3 className="font-bold text-sm text-rimba-950 mt-1">Generasi Sahabat Rimba</h3>
-                                <p className="text-xs text-rimba-800 mt-1 leading-relaxed">Anak-anak belajar lewat teknologi interaktif dan tidak lagi membakar sampah.</p>
+                            <div className="h-full p-4 rounded-2xl bg-rimba-50 border border-rimba-200 flex flex-col">
+                                <span className="text-xs font-extrabold text-rimba-800 block min-h-8">Abad ke-21 · Masa Kini</span>
+                                <h3 className="font-bold text-sm text-rimba-950 mt-1 min-h-10 leading-snug">Restorasi dan Pemantauan Hutan</h3>
+                                <p className="text-xs text-rimba-800 mt-2 leading-relaxed">Pemantauan satelit dan reboisasi membantu melindungi hutan dari kebakaran serta mengurangi emisi karbon.</p>
                             </div>
                         </div>
                     </section>

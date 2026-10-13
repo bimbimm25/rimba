@@ -12,7 +12,8 @@ import {
     Award,
     ShieldAlert,
     Flame,
-    Trees
+    Trees,
+    Trophy
 } from 'lucide-react';
 import { MISSIONS } from '@/data/missions';
 import { CertificateModal } from '@/components/certificate/CertificateModal';
@@ -85,6 +86,14 @@ export default function MisiListPage() {
                         </div>
                     </section>
 
+                    <Link
+                        href="/misi/hasil"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 font-bold text-xs hover:bg-amber-100 transition-colors"
+                    >
+                        <Trophy className="w-4 h-4 text-amber-600" />
+                        <span>Lihat Lembar Prestasi & Lencana</span>
+                    </Link>
+                    
                     {/* Bar Kemajuan Level */}
                     <div className="w-full h-3.5 bg-rimba-100/70 rounded-full overflow-hidden p-0.5 border border-rimba-200">
                         <div
@@ -103,19 +112,19 @@ export default function MisiListPage() {
                                 <div
                                     key={mission.id}
                                     className={`p-5 sm:p-6 rounded-3xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 ${isCompleted
-                                            ? 'bg-emerald-50/70 border-emerald-200 shadow-xs'
-                                            : unlocked
-                                                ? 'bg-white border-rimba-200 hover:border-rimba-400 shadow-sm'
-                                                : 'bg-slate-100/80 border-slate-200 opacity-65 select-none'
+                                        ? 'bg-emerald-50/70 border-emerald-200 shadow-xs'
+                                        : unlocked
+                                            ? 'bg-white border-rimba-200 hover:border-rimba-400 shadow-sm'
+                                            : 'bg-slate-100/80 border-slate-200 opacity-65 select-none'
                                         }`}
                                 >
                                     {/* Info Misi */}
                                     <div className="flex items-start gap-4">
                                         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-display font-black text-sm shrink-0 border mt-0.5 ${isCompleted
-                                                ? 'bg-emerald-100 border-emerald-300 text-emerald-900'
-                                                : unlocked
-                                                    ? 'bg-amber-100 border-amber-300 text-amber-950'
-                                                    : 'bg-slate-200 border-slate-300 text-slate-500'
+                                            ? 'bg-emerald-100 border-emerald-300 text-emerald-900'
+                                            : unlocked
+                                                ? 'bg-amber-100 border-amber-300 text-amber-950'
+                                                : 'bg-slate-200 border-slate-300 text-slate-500'
                                             }`}>
                                             {isCompleted ? <CheckCircle2 className="w-6 h-6 text-emerald-600" /> : unlocked ? `LV ${mission.level}` : <Lock className="w-5 h-5 text-slate-500" />}
                                         </div>
@@ -153,8 +162,8 @@ export default function MisiListPage() {
                                             <Link href={`/misi/${mission.id}`} className="block w-full sm:w-auto">
                                                 <button
                                                     className={`w-full sm:w-auto px-6 py-3 rounded-2xl font-display font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer ${isCompleted
-                                                            ? 'bg-emerald-100 hover:bg-emerald-200 text-emerald-950 border border-emerald-300'
-                                                            : 'bg-amber-500 hover:bg-amber-600 text-white active:scale-95'
+                                                        ? 'bg-emerald-100 hover:bg-emerald-200 text-emerald-950 border border-emerald-300'
+                                                        : 'bg-amber-500 hover:bg-amber-600 text-white active:scale-95'
                                                         }`}
                                                 >
                                                     <span>{isCompleted ? 'Mainkan Ulang' : 'Mulai Misi'}</span>

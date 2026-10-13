@@ -151,6 +151,12 @@ export default function MissionRunnerPage() {
 
     const totalSteps = scenarios.length;
     const currentScenario = scenarios[currentStep];
+    const saved = localStorage.getItem('rimba_completed_missions');
+    const current = saved ? JSON.parse(saved) : [];
+    if (!current.includes(missionId)) {
+        current.push(missionId);
+        localStorage.setItem('rimba_completed_missions', JSON.stringify(current));
+    }
 
     // Simpan progres kelulusan ke localStorage saat kuis tuntas dengan skor >= 80
     useEffect(() => {
@@ -388,8 +394,8 @@ export default function MissionRunnerPage() {
                         {isAnswerSubmitted && selectedOption && (
                             <div
                                 className={`p-4 rounded-2xl text-xs sm:text-sm font-medium flex items-start gap-3 animate-in fade-in duration-200 ${selectedOption.isCorrect
-                                        ? 'bg-emerald-100 text-emerald-950 border border-emerald-200'
-                                        : 'bg-rose-100 text-rose-950 border border-rose-200'
+                                    ? 'bg-emerald-100 text-emerald-950 border border-emerald-200'
+                                    : 'bg-rose-100 text-rose-950 border border-rose-200'
                                     }`}
                             >
                                 {selectedOption.isCorrect ? (

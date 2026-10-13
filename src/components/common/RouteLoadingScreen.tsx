@@ -8,7 +8,6 @@ export const RouteLoadingScreen: React.FC = () => {
     const pathname = usePathname();
     const [isLoading, setIsLoading] = useState(true);
     const [isFadingOut, setIsFadingOut] = useState(false);
-    const [progress, setProgress] = useState(0);
     const prevPathnameRef = useRef(pathname);
 
     // Menentukan label teks berdasarkan URL tujuan
@@ -19,6 +18,8 @@ export const RouteLoadingScreen: React.FC = () => {
         if (path.startsWith('/lab')) return 'Arcade Lab';
         if (path.startsWith('/kit')) return 'Kit Siaga';
         if (path.startsWith('/kontak') || path.startsWith('/contact')) return 'Kontak';
+        if (path.startsWith('/tentang')) return 'Tentang R.I.M.B.A';
+        if (path.startsWith('/panduan')) return 'Panduan Belajar';
         return 'Halaman';
     };
 
@@ -35,54 +36,56 @@ export const RouteLoadingScreen: React.FC = () => {
         }
     }, [isLoading]);
 
-    // Fungsi pengatur durasi 4.5 detik dan animasi pembuka halus
+    // Pengatur durasi transisi
     const triggerLoading = () => {
         setIsLoading(true);
         setIsFadingOut(false);
-        setProgress(0);
 
-        const duration = 4500; // 4.5 detik
-        const intervalTime = 45;
-        const step = 100 / (duration / intervalTime);
+        const duration = 1350;
 
-        const timer = setInterval(() => {
-            setProgress((prev) => {
-                if (prev + step >= 100) {
-                    clearInterval(timer);
-                    return 100;
-                }
-                return prev + step;
-            });
-        }, intervalTime);
-
-        // Saat mencapai 4.5 detik, aktifkan fade-out halus (500ms) sebelum komponen ditutup
-        const finishTimeout = setTimeout(() => {
-            clearInterval(timer);
-            setProgress(100);
+        const exitTimeout = setTimeout(() => {
             setIsFadingOut(true);
 
+            // Waktu tunggu swipe ke atas selesai (650ms) sebelum komponen di-unmount
             setTimeout(() => {
                 setIsLoading(false);
                 setIsFadingOut(false);
-            }, 500);
+            }, 650);
         }, duration);
 
         return () => {
-            clearInterval(timer);
-            clearTimeout(finishTimeout);
+            clearTimeout(exitTimeout);
         };
     };
 
     // Pemicu saat pertama kali website dibuka
     useEffect(() => {
+        const pathSegments = pathname.split('/').filter(Boolean);
+        const isSubPage = pathSegments.length > 1;
+
+        if (isSubPage) {
+            setIsLoading(false);
+            return;
+        }
+
         const cleanup = triggerLoading();
         return () => cleanup && cleanup();
     }, []);
 
-    // Pemicu saat berpindah rute di navbar
+    // Pemicu saat berpindah rute utama di navbar
     useEffect(() => {
         if (prevPathnameRef.current !== pathname) {
             prevPathnameRef.current = pathname;
+
+            const pathSegments = pathname.split('/').filter(Boolean);
+            const isSubPage = pathSegments.length > 1;
+
+            if (isSubPage) {
+                setIsLoading(false);
+                setIsFadingOut(false);
+                return;
+            }
+
             const cleanup = triggerLoading();
             return () => cleanup && cleanup();
         }
@@ -91,44 +94,73 @@ export const RouteLoadingScreen: React.FC = () => {
     if (!isLoading) return null;
 
     return (
-        <div
-            className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#072415] text-white select-none transition-all duration-500 ease-in-out ${isFadingOut ? 'opacity-0 scale-102 pointer-events-none' : 'opacity-100 scale-100'
-                }`}
-            onWheel={(e) => e.stopPropagation()}
-            onTouchMove={(e) => e.stopPropagation()}
-        >
-            <div className="flex flex-col items-center text-center px-6 max-w-sm space-y-6">
+        <>
+            {/* Animasi Masuk Staggered */}
+            <style jsx>{`
+                @keyframes entranceSlideUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(22px) scale(0.95);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                    }
+                }
 
-                {/* Ikon Logo Sederhana */}
-                <div className="w-16 h-16 rounded-2xl bg-emerald-800/60 border border-emerald-600/30 flex items-center justify-center text-amber-300 shadow-sm animate-pulse">
-                    <Trees className="w-8 h-8" />
-                </div>
+                .animate-enter-logo {
+                    animation: entranceSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                }
 
-                {/* Teks Status Halaman Dinamis */}
-                <div className="space-y-1">
-                    <h2 className="font-display font-bold text-lg sm:text-xl text-white tracking-wide">
-                        Membuka Halaman {pageTitle}
-                    </h2>
-                    <p className="text-xs text-emerald-200/70 font-medium">
-                        Mohon tunggu sebentar...
-                    </p>
-                </div>
+                .animate-enter-spinner {
+                    animation: entranceSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+                }
 
-                {/* Progress Bar Minimalis */}
-                <div className="w-56 space-y-2">
-                    <div className="w-full h-1.5 rounded-full bg-emerald-950 border border-emerald-800/60 overflow-hidden">
-                        <div
-                            className="h-full rounded-full bg-amber-400 transition-all duration-75 ease-out"
-                            style={{ width: `${Math.min(progress, 100)}%` }}
-                        />
+                .animate-enter-text {
+                    animation: entranceSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.22s both;
+                }
+            `}</style>
+
+            <div
+                className={`fixed inset-0 z-50 flex items-center justify-center bg-[#2BB673] text-white select-none will-change-transform transition-transform duration-650 ease-[cubic-bezier(0.7,0,0.3,1)] ${isFadingOut
+                        ? '-translate-y-full pointer-events-none'
+                        : 'translate-y-0'
+                    }`}
+                onWheel={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
+            >
+                <div
+                    className={`flex flex-col items-center justify-center text-center px-6 space-y-6 transition-all duration-400 ${isFadingOut ? 'opacity-80 -translate-y-8' : 'opacity-100 translate-y-0'
+                        }`}
+                >
+                    {/* 1. Logo & Judul R.I.M.B.A (Masuk Pertama) */}
+                    <div className="flex flex-col items-center space-y-2.5 animate-enter-logo">
+                        <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-lg shadow-black/5">
+                            <Trees className="w-7 h-7" />
+                        </div>
+                        <span className="font-display font-extrabold text-lg tracking-widest text-white drop-shadow-sm">
+                            R.I.M.B.A
+                        </span>
                     </div>
 
-                    <div className="text-right text-[11px] font-mono font-medium text-emerald-300/80">
-                        {Math.round(progress)}%
+                    {/* 2. Spinner Lingkaran Halus (Masuk Kedua) */}
+                    <div className="relative w-8 h-8 animate-enter-spinner">
+                        <div className="w-full h-full rounded-full border-2 border-white/25" />
+                        <div className="absolute inset-0 w-full h-full rounded-full border-2 border-white border-t-transparent animate-spin" />
                     </div>
-                </div>
 
+                    {/* 3. Teks Keterangan Halaman Dinamis (Masuk Ketiga) */}
+                    <div className="space-y-1 animate-enter-text">
+                        <p className="text-xs sm:text-sm font-medium text-white tracking-wide">
+                            Memuat ke halaman <span className="text-amber-200 font-bold">{pageTitle}</span>...
+                        </p>
+                        <p className="text-[11px] text-white/80 font-normal">
+                            Mohon tunggu sebentar
+                        </p>
+                    </div>
+
+                </div>
             </div>
-        </div>
+        </>
     );
 };

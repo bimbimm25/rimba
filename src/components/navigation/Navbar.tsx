@@ -7,6 +7,8 @@ import {
     Trees,
     Home,
     BookOpen,
+    Info,
+    BookOpenCheck,
     Target,
     Gamepad2,
     PackageCheck,
@@ -21,6 +23,18 @@ const NAV_ITEMS = [
         href: '/',
         icon: Home,
         desc: 'Halaman Utama Rimba'
+    },
+    {
+        label: 'Tentang',
+        href: '/tentang',
+        icon: Info,
+        desc: 'Tentang R.I.M.B.A'
+    },
+    {
+        label: 'Panduan',
+        href: '/panduan',
+        icon: BookOpenCheck,
+        desc: 'Panduan Pendamping Belajar'
     },
     {
         label: 'Belajar',
@@ -80,7 +94,7 @@ export const Navbar: React.FC = () => {
             >
                 {/* Logo R.I.M.B.A */}
                 <Link href="/" className="flex items-center gap-2.5 group">
-                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-600 to-rimba-800 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-300">
+                    <div className="w-10 h-10 rounded-2xl bg-linear-to-br from-emerald-600 to-rimba-800 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-300">
                         <Trees className="w-5 h-5 text-amber-300" />
                     </div>
                     <div>

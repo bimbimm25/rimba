@@ -38,19 +38,14 @@ interface QuestZone {
     completed: boolean;
 }
 
-// Dimensi Peta RPG
 const WORLD_WIDTH = 2400;
 const WORLD_HEIGHT = 1600;
 
-// Ukuran Layar Tampilan (Kamera)
 const VIEWPORT_WIDTH = 800;
 const VIEWPORT_HEIGHT = 500;
 
-// 10 Titik Cerita (Bahasa Ramah Anak SD & Tidak Berbelit)
 const INITIAL_QUESTS: QuestZone[] = [
-    // ==========================================
-    // 5 POS MATERI (BACAAN RINGKAS & JELAS)
-    // ==========================================
+    // 5 POS MATERI
     {
         id: 'mat-1',
         type: 'MATERIAL',
@@ -137,9 +132,7 @@ const INITIAL_QUESTS: QuestZone[] = [
         completed: false
     },
 
-    // ==========================================
-    // 5 POS KUIS (PILIHAN BERSIH & JELAS)
-    // ==========================================
+    // 5 POS KUIS
     {
         id: 'quiz-1',
         type: 'QUIZ',
@@ -298,13 +291,18 @@ export const RpgForestAdventure: React.FC = () => {
 
     const cooldownZoneIdRef = useRef<string | null>(null);
 
-    const [joystickVector, setJoystickVector] = useState({ x: 0, y: 0 });
-    const [isJoystickDragging, setIsJoystickDragging] = useState(false);
+    // KONTROL ANALOG REF & STATE
+    const [joystickThumb, setJoystickThumb] = useState({ x: 0, y: 0 });
+    const [isDragging, setIsDragging] = useState(false);
+    const joystickVectorRef = useRef({ x: 0, y: 0 });
+    const isDraggingRef = useRef(false);
     const joystickBaseRef = useRef<HTMLDivElement | null>(null);
+    const activeTouchIdRef = useRef<number | null>(null);
 
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const modalScrollRef = useRef<HTMLDivElement | null>(null);
 
+    // Kunci scroll halaman saat modal aktif
     useEffect(() => {
         if (activeZone) {
             const originalOverflow = document.body.style.overflow;
@@ -315,21 +313,29 @@ export const RpgForestAdventure: React.FC = () => {
         }
     }, [activeZone]);
 
+    // ANIMASI GERAK MULUS (requestAnimationFrame 60 FPS)
     useEffect(() => {
-        if (!isJoystickDragging || activeZone) return;
+        let animId: number;
 
-        const interval = setInterval(() => {
-            setPlayerPos((prev) => {
-                const speed = 5.5;
-                const nextX = Math.max(40, Math.min(WORLD_WIDTH - 40, prev.x + joystickVector.x * speed));
-                const nextY = Math.max(40, Math.min(WORLD_HEIGHT - 40, prev.y + joystickVector.y * speed));
-                return { x: nextX, y: nextY };
-            });
-        }, 16);
+        const gameLoop = () => {
+            if (isDraggingRef.current && !activeZone) {
+                const { x: vx, y: vy } = joystickVectorRef.current;
+                if (vx !== 0 || vy !== 0) {
+                    const speed = 6;
+                    setPlayerPos((prev) => ({
+                        x: Math.max(40, Math.min(WORLD_WIDTH - 40, prev.x + vx * speed)),
+                        y: Math.max(40, Math.min(WORLD_HEIGHT - 40, prev.y + vy * speed))
+                    }));
+                }
+            }
+            animId = requestAnimationFrame(gameLoop);
+        };
 
-        return () => clearInterval(interval);
-    }, [isJoystickDragging, joystickVector, activeZone]);
+        animId = requestAnimationFrame(gameLoop);
+        return () => cancelAnimationFrame(animId);
+    }, [activeZone]);
 
+    // Cek deteksi jarak ke pos interaksi
     useEffect(() => {
         if (activeZone) return;
 
@@ -342,13 +348,16 @@ export const RpgForestAdventure: React.FC = () => {
                 setActiveZone(q);
                 setSelectedAnswerIdx(null);
                 setIsAnswerSubmitted(false);
-                setIsJoystickDragging(false);
-                setJoystickVector({ x: 0, y: 0 });
+                isDraggingRef.current = false;
+                setIsDragging(false);
+                joystickVectorRef.current = { x: 0, y: 0 };
+                setJoystickThumb({ x: 0, y: 0 });
                 break;
             }
         }
     }, [playerPos, quests, activeZone]);
 
+    // Kontrol Keyboard Desktop
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (activeZone) return;
@@ -374,7 +383,7 @@ export const RpgForestAdventure: React.FC = () => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [activeZone]);
 
-    // Render Dunia MMORPG
+    // Render Peta Dunia
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -392,7 +401,7 @@ export const RpgForestAdventure: React.FC = () => {
         ctx.save();
         ctx.translate(-cameraX, -cameraY);
 
-        // Rumput Hutan
+        // Latar Rumput
         ctx.fillStyle = '#1b3b17';
         ctx.fillRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 
@@ -421,19 +430,19 @@ export const RpgForestAdventure: React.FC = () => {
         ctx.fillRect(1175, 150, 50, 1300);
         ctx.fillRect(1820, 150, 45, 1300);
 
-        // Lapangan Bundar Tengah
+        // Lapangan Tengah
         ctx.beginPath();
         ctx.arc(1200, 800, 85, 0, Math.PI * 2);
         ctx.fill();
 
-        // Kolam Rawa Hijau Zamrud
+        // Rawa Zamrud
         ctx.fillStyle = '#1d483f';
         ctx.beginPath();
         ctx.arc(750, 800, 65, 0, Math.PI * 2);
         ctx.arc(1650, 800, 65, 0, Math.PI * 2);
         ctx.fill();
 
-        // Pepohonan Kanopi
+        // Pohon
         const clusterPositions = [
             { x: 120, y: 120 }, { x: 700, y: 140 }, { x: 1550, y: 130 }, { x: 2280, y: 120 },
             { x: 120, y: 1480 }, { x: 800, y: 1490 }, { x: 1450, y: 1480 }, { x: 2280, y: 1480 },
@@ -501,7 +510,7 @@ export const RpgForestAdventure: React.FC = () => {
             ctx.fillText(label, q.x, q.y - 26);
         });
 
-        // Karakter Ranger Kiko
+        // Ranger Kiko
         ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
         ctx.beginPath();
         ctx.ellipse(playerPos.x, playerPos.y + 16, 15, 7, 0, 0, Math.PI * 2);
@@ -581,41 +590,77 @@ export const RpgForestAdventure: React.FC = () => {
         ctx.fillText('RADAR HUTAN', mmX + 6, mmY + 12);
     }, [playerPos, quests]);
 
-    // Touch Virtual Joystick
-    const handleTouchMove = useCallback((e: TouchEvent | React.TouchEvent) => {
-        if (!joystickBaseRef.current || activeZone) return;
-
-        const touch = 'touches' in e ? e.touches[0] : (e as unknown as React.TouchEvent).touches[0];
-        if (!touch) return;
-
+    // SISTEM TOUCH ANALOG MULUS (GLOBAL WINDOW TRACKING)
+    const updateTouchPosition = useCallback((clientX: number, clientY: number) => {
+        if (!joystickBaseRef.current) return;
         const rect = joystickBaseRef.current.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
 
-        const deltaX = touch.clientX - centerX;
-        const deltaY = touch.clientY - centerY;
-        const maxRadius = rect.width / 2;
+        const deltaX = clientX - centerX;
+        const deltaY = clientY - centerY;
+        const maxRadius = rect.width / 2 - 8;
 
         const distance = Math.hypot(deltaX, deltaY);
         const angle = Math.atan2(deltaY, deltaX);
 
         const clampedDist = Math.min(distance, maxRadius);
-        const normX = (clampedDist * Math.cos(angle)) / maxRadius;
-        const normY = (clampedDist * Math.sin(angle)) / maxRadius;
+        const thumbX = clampedDist * Math.cos(angle);
+        const thumbY = clampedDist * Math.sin(angle);
 
-        setJoystickVector({ x: normX, y: normY });
-    }, [activeZone]);
+        const normX = thumbX / maxRadius;
+        const normY = thumbY / maxRadius;
+
+        joystickVectorRef.current = { x: normX, y: normY };
+        setJoystickThumb({ x: thumbX, y: thumbY });
+    }, []);
 
     const handleTouchStart = (e: React.TouchEvent) => {
         if (activeZone) return;
-        setIsJoystickDragging(true);
-        handleTouchMove(e);
+        const touch = e.changedTouches[0];
+        if (!touch) return;
+
+        activeTouchIdRef.current = touch.identifier;
+        isDraggingRef.current = true;
+        setIsDragging(true);
+        updateTouchPosition(touch.clientX, touch.clientY);
     };
 
-    const handleTouchEnd = () => {
-        setIsJoystickDragging(false);
-        setJoystickVector({ x: 0, y: 0 });
-    };
+    useEffect(() => {
+        const handleGlobalTouchMove = (e: TouchEvent) => {
+            if (!isDraggingRef.current) return;
+            for (let i = 0; i < e.touches.length; i++) {
+                if (e.touches[i].identifier === activeTouchIdRef.current) {
+                    updateTouchPosition(e.touches[i].clientX, e.touches[i].clientY);
+                    break;
+                }
+            }
+        };
+
+        const handleGlobalTouchEnd = (e: TouchEvent) => {
+            if (!isDraggingRef.current) return;
+            for (let i = 0; i < e.changedTouches.length; i++) {
+                if (e.changedTouches[i].identifier === activeTouchIdRef.current) {
+                    activeTouchIdRef.current = null;
+                    isDraggingRef.current = false;
+                    setIsDragging(false);
+                    joystickVectorRef.current = { x: 0, y: 0 };
+                    setJoystickThumb({ x: 0, y: 0 });
+                    break;
+                }
+            }
+        };
+
+        window.addEventListener('touchmove', handleGlobalTouchMove, { passive: true });
+        window.addEventListener('touchend', handleGlobalTouchEnd, { passive: true });
+        window.addEventListener('touchcancel', handleGlobalTouchEnd, { passive: true });
+
+        return () => {
+            window.removeEventListener('touchmove', handleGlobalTouchMove);
+            window.removeEventListener('touchend', handleGlobalTouchEnd);
+            window.removeEventListener('touchcancel', handleGlobalTouchEnd);
+        };
+    }, [updateTouchPosition]);
 
     const handleSelectQuizAnswer = (idx: number) => {
         if (isAnswerSubmitted || !activeZone || activeZone.type !== 'QUIZ') return;
@@ -691,19 +736,15 @@ export const RpgForestAdventure: React.FC = () => {
                         <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 tracking-wider">
                             Petualangan Keliling Hutan
                         </span>
-                        <span className="text-xs text-amber-600 font-bold flex items-center gap-1">
-                            <Sparkles className="w-3.5 h-3.5" /> 10 Pos Sahabat Alam
-                        </span>
                     </div>
                     <h2 className="font-display font-extrabold text-xl sm:text-2xl text-rimba-950 mt-1">
-                        Jelajah Rimba Bersama Ranger Kiko
+                        Jelajah Hutan Bersama Ranger Kiko
                     </h2>
                     <p className="text-xs text-rimba-700 font-medium">
-                        Ayo kelilingi hutan yang luas ini! Temukan <strong>5 Pos Cerita Seru (📘)</strong> dan selesaikan <strong>5 Teka-Teki Kuis (⚡)</strong> agar alam bebas asap.
+                        Ayo kelilingi hutan yang luas ini! Temukan <strong>5 Pos Materi (📘)</strong> dan selesaikan <strong>5 Soal Kuis (⚡)</strong> agar alam bebas asap.
                     </p>
                 </div>
 
-                {/* Skor Progres */}
                 <div className="flex items-center gap-3 bg-earth-soft px-4 py-2.5 rounded-2xl border border-rimba-200 self-start sm:self-auto">
                     <Compass className="w-5 h-5 text-rimba-600" />
                     <div>
@@ -720,23 +761,22 @@ export const RpgForestAdventure: React.FC = () => {
                 </div>
             </div>
 
-            {/* Petunjuk Arah Simpel */}
             <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-semibold text-rimba-900 bg-earth-soft/60 p-3 rounded-2xl border border-rimba-100">
                 <div className="flex items-center gap-2">
                     <MapPin className="w-4 h-4 text-emerald-600" />
-                    <span className="text-slate-600 text-xs font-medium">Jalan terus ke ujung layar, kameranya akan ikut bergeser mengikutimu!</span>
+                    <span className="text-slate-600 text-xs font-medium">Jelajahi map dan temukan pos serta kerjakan soal dan pahami materi!</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-sky-100 text-sky-900 text-[11px] font-bold">
-                        📘 Pos Bacaan Seru
+                        📘 5 Pos Materi
                     </span>
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 text-[11px] font-bold">
-                        ⚡ Pos Kuis Tantangan
+                        ⚡ 5 Pos Soal Kuis
                     </span>
                 </div>
             </div>
 
-            {/* Layar Game RPG MMORPG */}
+            {/* Layar Game RPG */}
             <div className="relative rounded-3xl overflow-hidden border-4 border-rimba-900 shadow-2xl bg-[#1b3b17] flex justify-center items-center">
                 <canvas
                     ref={canvasRef}
@@ -746,7 +786,7 @@ export const RpgForestAdventure: React.FC = () => {
                 />
 
                 <div className="absolute top-3 left-3 bg-rimba-950/85 backdrop-blur-xs text-white px-3.5 py-2 rounded-xl text-[11px] font-medium border border-rimba-700 pointer-events-none hidden sm:block">
-                    Gunakan tombol <strong>W, A, S, D</strong> atau <strong>Panah Keyboard</strong> untuk berjalan
+                    Gunakan keyboard <strong>W, A, S, D</strong> untuk berjalan
                 </div>
 
                 {/* MODAL DIALOG POS */}
@@ -761,8 +801,6 @@ export const RpgForestAdventure: React.FC = () => {
                             onClick={(e) => e.stopPropagation()}
                             onWheel={(e) => e.stopPropagation()}
                         >
-
-                            {/* Header Modal */}
                             <div className="flex items-center justify-between p-4 sm:p-5 border-b border-rimba-100 bg-earth-soft shrink-0">
                                 <div className="flex items-center gap-3">
                                     <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${activeZone.type === 'MATERIAL'
@@ -794,7 +832,6 @@ export const RpgForestAdventure: React.FC = () => {
                                 </button>
                             </div>
 
-                            {/* Isi Dialog */}
                             <div
                                 ref={modalScrollRef}
                                 className="p-5 sm:p-6 overflow-y-auto overscroll-contain space-y-4 flex-1 min-h-0"
@@ -803,7 +840,6 @@ export const RpgForestAdventure: React.FC = () => {
                                     {activeZone.lore}
                                 </div>
 
-                                {/* KONTEN POS CERITA (MATERI) */}
                                 {activeZone.type === 'MATERIAL' && (
                                     <div className="space-y-3.5">
                                         <div className="space-y-2.5 text-xs sm:text-sm text-rimba-950 leading-relaxed font-normal">
@@ -830,7 +866,6 @@ export const RpgForestAdventure: React.FC = () => {
                                     </div>
                                 )}
 
-                                {/* KONTEN POS TEKA-TEKI (KUIS) */}
                                 {activeZone.type === 'QUIZ' && (
                                     <div className="space-y-3">
                                         <p className="font-display font-bold text-xs sm:text-sm text-rimba-950">
@@ -893,10 +928,8 @@ export const RpgForestAdventure: React.FC = () => {
                                         )}
                                     </div>
                                 )}
-
                             </div>
 
-                            {/* Tombol Bawah */}
                             <div className="p-4 border-t border-rimba-100 bg-earth-soft flex items-center justify-between gap-3 shrink-0">
                                 <button
                                     type="button"
@@ -934,12 +967,11 @@ export const RpgForestAdventure: React.FC = () => {
                                     </button>
                                 )}
                             </div>
-
                         </div>
                     </div>
                 )}
 
-                {/* Layar Menang 10 Pos */}
+                {/* Layar Menang */}
                 {isAllQuestCleared && !activeZone && (
                     <div className="absolute inset-0 bg-rimba-950/85 backdrop-blur-xs flex items-center justify-center p-4 z-10 text-center animate-in fade-in zoom-in-95 duration-300">
                         <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full border border-amber-300 shadow-2xl space-y-4">
@@ -969,75 +1001,40 @@ export const RpgForestAdventure: React.FC = () => {
 
             </div>
 
-            {/* Kontrol Gamepad Virtual untuk Layar Sentuh */}
-            <div className="pt-2 flex flex-col items-center select-none">
-                <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-3 sm:hidden">
-                    🎮 Stik Pengendali Ranger
+            {/* KONTROL JOYSTICK ANALOG TUNGGAL (MULUS & KHUSUS TABLET/HP) */}
+            <div className="pt-2 flex flex-col items-center select-none sm:hidden">
+                <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-3">
+                    🕹️ Kemudi Ranger Kiko
                 </span>
 
-                <div className="w-full max-w-md bg-earth-soft/80 p-4 rounded-3xl border border-rimba-200/80 flex items-center justify-around gap-6 shadow-inner">
+                <div className="bg-earth-soft/90 px-8 py-5 rounded-3xl border border-rimba-200/90 shadow-sm flex flex-col items-center gap-2">
 
-                    {/* Joystick Analog */}
-                    <div className="flex flex-col items-center gap-1.5">
+                    <div
+                        ref={joystickBaseRef}
+                        onTouchStart={handleTouchStart}
+                        className="relative w-32 h-32 rounded-full bg-slate-900 border-4 border-slate-700 shadow-xl flex items-center justify-center touch-none"
+                        style={{ touchAction: 'none' }}
+                    >
+                        {/* Garis Arah Sumbu */}
+                        <div className="absolute inset-x-4 h-0.5 bg-slate-800 pointer-events-none" />
+                        <div className="absolute inset-y-4 w-0.5 bg-slate-800 pointer-events-none" />
+                        <div className="w-16 h-16 rounded-full border border-slate-800/80 pointer-events-none" />
+
+                        {/* Thumb Stick Mengikuti Jari Secara Halus */}
                         <div
-                            ref={joystickBaseRef}
-                            onTouchStart={handleTouchStart}
-                            onTouchMove={handleTouchMove}
-                            onTouchEnd={handleTouchEnd}
-                            onTouchCancel={handleTouchEnd}
-                            className="relative w-28 h-28 rounded-full bg-slate-900 border-4 border-slate-700/80 shadow-2xl flex items-center justify-center touch-none cursor-pointer"
+                            className={`absolute w-14 h-14 rounded-full bg-linear-to-b from-slate-600 to-slate-800 border-2 border-amber-400 shadow-md flex items-center justify-center pointer-events-none transition-transform duration-75 ${isDragging ? 'scale-95 border-amber-300' : 'scale-100'
+                                }`}
+                            style={{
+                                transform: `translate(${joystickThumb.x}px, ${joystickThumb.y}px)`
+                            }}
                         >
-                            <div className="absolute inset-x-0 h-0.5 bg-slate-700/60 pointer-events-none" />
-                            <div className="absolute inset-y-0 w-0.5 bg-slate-700/60 pointer-events-none" />
-
-                            <div
-                                className={`w-12 h-12 rounded-full bg-linear-to-b from-slate-600 to-slate-800 border-2 border-slate-400/90 shadow-lg flex items-center justify-center transition-transform ${isJoystickDragging ? 'scale-95' : 'scale-100'
-                                    }`}
-                                style={{
-                                    transform: `translate(${joystickVector.x * 28}px, ${joystickVector.y * 28}px)`
-                                }}
-                            >
-                                <div className="w-5 h-5 rounded-full border border-slate-500/70 bg-slate-700/50 shadow-inner" />
-                            </div>
+                            <div className="w-5 h-5 rounded-full border border-slate-400/80 bg-slate-700 shadow-inner" />
                         </div>
-                        <span className="text-[10px] font-bold text-slate-600">Geser Stik</span>
                     </div>
 
-                    {/* Tombol Panah PS */}
-                    <div className="flex flex-col items-center gap-1.5">
-                        <div className="relative w-28 h-28 flex items-center justify-center">
-                            <button
-                                type="button"
-                                onClick={() => setPlayerPos(p => ({ ...p, y: Math.max(40, p.y - 45) }))}
-                                className="absolute top-0 w-9 h-9 rounded-full bg-slate-900 border-2 border-emerald-500 text-emerald-400 font-black text-xs shadow-md active:scale-90 flex items-center justify-center cursor-pointer"
-                            >
-                                ▲
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setPlayerPos(p => ({ ...p, x: Math.max(40, p.x - 45) }))}
-                                className="absolute left-0 w-9 h-9 rounded-full bg-slate-900 border-2 border-rose-500 text-rose-400 font-black text-xs shadow-md active:scale-90 flex items-center justify-center cursor-pointer"
-                            >
-                                ■
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setPlayerPos(p => ({ ...p, x: Math.min(WORLD_WIDTH - 40, p.x + 45) }))}
-                                className="absolute right-0 w-9 h-9 rounded-full bg-slate-900 border-2 border-amber-400 text-amber-400 font-black text-xs shadow-md active:scale-90 flex items-center justify-center cursor-pointer"
-                            >
-                                ●
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setPlayerPos(p => ({ ...p, y: Math.min(WORLD_HEIGHT - 40, p.y + 45) }))}
-                                className="absolute bottom-0 w-9 h-9 rounded-full bg-slate-900 border-2 border-sky-400 text-sky-400 font-black text-xs shadow-md active:scale-90 flex items-center justify-center cursor-pointer"
-                            >
-                                ✖
-                            </button>
-                        </div>
-                        <span className="text-[10px] font-bold text-slate-600">Tombol Aksi</span>
-                    </div>
-
+                    <p className="text-[11px] font-semibold text-slate-500 text-center">
+                        Sentuh dan geser lingkaran stik untuk berjalan 360°
+                    </p>
                 </div>
             </div>
 

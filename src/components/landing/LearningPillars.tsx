@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/Card';
 const pillars = [
     {
         icon: Trees,
-        title: 'Kenali Rimba',
+        title: 'Kenali Hutan',
         desc: 'Mengetahui pentingnya peran pohon dan hutan bagi udara segar kita.',
         color: 'text-rimba-600',
         bg: 'bg-rimba-50',
@@ -17,7 +17,7 @@ const pillars = [
     {
         icon: Flame,
         title: 'Kenali Karhutla',
-        desc: 'Memahami apa itu kebakaran lahan dan penyebab utamanya dengan tenang.',
+        desc: 'Memahami apa itu kebakaran hutan dan lahan dan penyebab utamanya.',
         color: 'text-accent-flame',
         bg: 'bg-accent-flameLight',
         hoverBorder: 'hover:border-accent-flame/50',
@@ -28,7 +28,7 @@ const pillars = [
     {
         icon: Shield,
         title: 'Belajar Mencegah',
-        desc: 'Langkah sederhana sehari-hari agar kebakaran tidak terjadi di sekitar kita.',
+        desc: 'Mengenali langkah sederhana sehari-hari agar kebakaran tidak terjadi di sekitar kita.',
         color: 'text-leaf-dark',
         bg: 'bg-leaf-light',
         hoverBorder: 'hover:border-leaf/50',
@@ -39,7 +39,7 @@ const pillars = [
     {
         icon: CheckCircle2,
         title: 'Pilih Tindakan Aman',
-        desc: 'Melatih respon yang tepat: hindari bahaya dan laporkan pada orang dewasa.',
+        desc: 'Belajar melatih respon yang tepat untuk mengindari bahaya dan melaporkan ke orang dewasa.',
         color: 'text-accent-sky',
         bg: 'bg-accent-skyLight',
         hoverBorder: 'hover:border-accent-sky/50',
@@ -50,7 +50,7 @@ const pillars = [
     {
         icon: Award,
         title: 'Selesaikan Misi',
-        desc: 'Uji wawasan melalui kuis dan jadilah Sahabat Rimba yang membanggakan.',
+        desc: 'Uji wawasan yang sudah di pelajari melalui kuis dan dapatkan e-certificate.',
         color: 'text-accent-sun',
         bg: 'bg-accent-sunLight',
         hoverBorder: 'hover:border-accent-sun/60',
@@ -67,9 +67,6 @@ export const LearningPillars = () => {
 
                 {/* Header Section */}
                 <div className="text-center max-w-2xl mx-auto mb-14">
-                    <div className="inline-block px-3.5 py-1 rounded-full bg-rimba-50 border border-rimba-100 text-rimba-800 text-xs font-bold uppercase tracking-wider mb-3">
-                        Fokus Pembelajaran
-                    </div>
                     <h2 className="font-display font-extrabold text-2xl sm:text-3xl lg:text-4xl text-rimba-950 tracking-tight">
                         Apa yang Akan Kamu Pelajari?
                     </h2>
@@ -79,17 +76,17 @@ export const LearningPillars = () => {
                 </div>
 
                 {/* Pillars Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 lg:gap-6 items-stretch">
                     {pillars.map((item, index) => {
                         const Icon = item.icon;
                         return (
                             <Card
                                 key={index}
-                                className={`group relative flex flex-col items-center text-center p-6 sm:p-7 rounded-3xl border border-rimba-100 bg-white cursor-pointer overflow-hidden transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-xl ${item.hoverBorder} ${item.hoverShadow}`}
+                                className={`group relative flex h-full flex-col items-center justify-between text-center p-5 sm:p-6 rounded-[28px] border border-rimba-100 bg-white cursor-pointer overflow-hidden transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-xl ${item.hoverBorder} ${item.hoverShadow}`}
                             >
                                 {/* Visual Icon Container */}
                                 <div
-                                    className={`w-14 h-14 rounded-2xl ${item.bg} ${item.color} flex items-center justify-center mb-5 transition-transform duration-300 ease-out shadow-xs`}
+                                    className={`w-16 h-16 rounded-2xl ${item.bg} ${item.color} flex items-center justify-center mb-5 transition-transform duration-300 ease-out shadow-sm`}
                                 >
                                     <Icon
                                         className={`w-7 h-7 transition-all duration-300 ease-out ${item.iconHoverAnim}`}
@@ -97,12 +94,14 @@ export const LearningPillars = () => {
                                 </div>
 
                                 {/* Konten Teks: Tajam dan Jelas */}
-                                <h3 className="font-display font-bold text-rimba-950 text-base mb-2 group-hover:text-rimba-700 transition-colors duration-200">
-                                    {item.title}
-                                </h3>
-                                <p className="text-xs text-rimba-800 leading-relaxed font-normal">
-                                    {item.desc}
-                                </p>
+                                <div className="flex w-full flex-1 flex-col items-center justify-start">
+                                    <h3 className="font-display font-bold text-rimba-950 text-base leading-snug mb-2 min-h-11 flex items-center justify-center group-hover:text-rimba-700 transition-colors duration-200">
+                                        {item.title}
+                                    </h3>
+                                    <p className="text-xs text-rimba-800 leading-relaxed font-normal max-w-[18rem] min-h-19 flex items-start justify-center text-center">
+                                        {item.desc}
+                                    </p>
+                                </div>
 
                                 {/* Garis Aksen Bawah */}
                                 <span

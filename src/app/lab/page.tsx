@@ -149,7 +149,7 @@ export default function GameLabHubPage() {
                                                 )}
                                             </div>
 
-                                            <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${mod.accentColor} text-white flex items-center justify-center mb-4 shadow-sm`}>
+                                            <div className={`w-14 h-14 rounded-2xl bg-linear-to-br ${mod.accentColor} text-white flex items-center justify-center mb-4 shadow-sm`}>
                                                 <Icon className="w-7 h-7" />
                                             </div>
 
@@ -334,7 +334,7 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
             </div>
 
             {/* Arena Langit & Hutan */}
-            <div className="relative h-64 sm:h-76 w-full rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-rimba-200 bg-gradient-to-b from-sky-400 via-sky-200 to-amber-100 select-none shadow-inner">
+            <div className="relative h-64 sm:h-76 w-full rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-rimba-200 bg-linear-to-b from-sky-400 via-sky-200 to-amber-100 select-none shadow-inner">
 
                 {/* Pesawat Emoji dengan Transform Arah Balik */}
                 <div
@@ -366,7 +366,7 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
                     >
                         <div className="relative flex flex-col items-center">
                             <Droplets className="w-6 h-6 sm:w-7 sm:h-7 text-blue-600 fill-blue-500 filter drop-shadow-[0_2px_6px_rgba(37,99,235,0.7)] animate-pulse" />
-                            <div className="w-1 h-3 bg-gradient-to-t from-sky-400 to-transparent rounded-full opacity-60" />
+                            <div className="w-1 h-3 bg-linear-to-t from-sky-400 to-transparent rounded-full opacity-60" />
                         </div>
                     </div>
                 )}
@@ -397,7 +397,7 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
                 )}
 
                 {/* Lapisan Tanah & Hutan Bawah */}
-                <div className="absolute bottom-0 inset-x-0 h-14 sm:h-16 bg-gradient-to-t from-emerald-800 to-emerald-700 border-t-4 border-emerald-600 flex items-center justify-around z-15">
+                <div className="absolute bottom-0 inset-x-0 h-14 sm:h-16 bg-linear-to-t from-emerald-800 to-emerald-700 border-t-4 border-emerald-600 flex items-center justify-around z-15">
 
                     {/* Titik Api Presisi */}
                     <div
@@ -515,17 +515,17 @@ function PeatBlasterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                 </div>
             </div>
 
-            <div className="relative h-72 rounded-3xl overflow-hidden border-2 border-amber-950 bg-gradient-to-b from-amber-900 via-stone-900 to-black p-4 select-none shadow-inner flex flex-col justify-between">
+            <div className="relative h-72 rounded-3xl overflow-hidden border-2 border-amber-950 bg-linear-to-b from-amber-900 via-stone-900 to-black p-4 select-none shadow-inner flex flex-col justify-between">
                 <div className="flex items-center justify-between text-[11px] font-bold text-amber-200 bg-black/60 backdrop-blur-xs px-3 py-1.5 rounded-full border border-amber-800/60 w-fit z-10">
                     <span>Kedalaman Nozzle Suntik: {peatDepth} cm</span>
                 </div>
 
                 <div
-                    className="absolute left-1/2 -translate-x-1/2 w-5 bg-gradient-to-r from-slate-300 via-slate-100 to-slate-400 border border-slate-600 rounded-b-lg shadow-xl transition-all duration-75 flex flex-col items-center justify-end z-10"
+                    className="absolute left-1/2 -translate-x-1/2 w-5 bg-linear-to-r from-slate-300 via-slate-100 to-slate-400 border border-slate-600 rounded-b-lg shadow-xl transition-all duration-75 flex flex-col items-center justify-end z-10"
                     style={{ top: 0, height: `${peatDepth * 2.5}px` }}
                 >
                     {isShooting && (
-                        <div className="w-8 h-8 rounded-full bg-sky-400/80 animate-ping mb-[-12px]" />
+                        <div className="w-8 h-8 rounded-full bg-sky-400/80 animate-ping -mb-3" />
                     )}
                 </div>
 
@@ -797,7 +797,7 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
                     e.preventDefault();
                     triggerInstantJump();
                 }}
-                className="relative h-64 sm:h-76 w-full rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-rimba-200 bg-gradient-to-b from-amber-100 via-emerald-50 to-emerald-200 select-none shadow-inner cursor-pointer active:brightness-95 transition-all touch-none"
+                className="relative h-64 sm:h-76 w-full rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-rimba-200 bg-linear-to-b from-amber-100 via-emerald-50 to-emerald-200 select-none shadow-inner cursor-pointer active:brightness-95 transition-all touch-none"
                 title="Ketuk layar untuk lompat"
             >
                 <div className="absolute inset-0 opacity-15 flex items-end justify-around pb-6 pointer-events-none">
@@ -1065,7 +1065,7 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
                 ref={arenaRef}
                 onPointerDown={handlePointerDown}
                 onPointerMove={handlePointerMove}
-                className="relative h-80 sm:h-96 w-full rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-rimba-200 bg-gradient-to-b from-sky-100 via-emerald-50 to-amber-100 select-none shadow-inner cursor-ew-resize touch-none"
+                className="relative h-80 sm:h-96 w-full rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-rimba-200 bg-linear-to-b from-sky-100 via-emerald-50 to-amber-100 select-none shadow-inner cursor-ew-resize touch-none"
                 title="Geser jari atau kursor untuk memindahkan tong"
             >
                 {/* Dekorasi Langit Dedaunan */}
@@ -1139,7 +1139,7 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
                         </div>
 
                         {/* Badan Tong Silinder Melengkung Semi-3D */}
-                        <div className={`w-24 sm:w-28 h-18 sm:h-20 bg-gradient-to-b from-emerald-600 via-emerald-700 to-emerald-900 rounded-b-[2rem] border-x-2 border-b-2 border-emerald-400 shadow-2xl flex flex-col items-center justify-between py-1.5 relative overflow-hidden transition-all ${hitEffect === 'success' ? 'scale-105 brightness-110' : hitEffect === 'danger' ? 'bg-gradient-to-b from-rose-700 to-rose-950 border-rose-400' : ''
+                        <div className={`w-24 sm:w-28 h-18 sm:h-20 bg-linear-to-b from-emerald-600 via-emerald-700 to-emerald-900 rounded-b-4xl border-x-2 border-b-2 border-emerald-400 shadow-2xl flex flex-col items-center justify-between py-1.5 relative overflow-hidden transition-all ${hitEffect === 'success' ? 'scale-105 brightness-110' : hitEffect === 'danger' ? 'bg-linear-to-b from-rose-700 to-rose-950 border-rose-400' : ''
                             }`}>
 
                             {/* Garis-Garis Ventilasi Kayu / Plastik Tong Komposter */}
@@ -1727,7 +1727,7 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                         updatePlayerPosition(e.clientX);
                     }
                 }}
-                className="relative h-96 sm:h-[440px] w-full rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-stone-800 bg-gradient-to-b from-stone-950 via-emerald-950 to-stone-900 select-none shadow-2xl cursor-crosshair touch-none"
+                className="relative h-96 sm:h-110 w-full rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-stone-800 bg-linear-to-b from-stone-950 via-emerald-950 to-stone-900 select-none shadow-2xl cursor-crosshair touch-none"
             >
                 {/* Latar Belakang Pohon Hutan Terbakar */}
                 <div className="absolute inset-0 opacity-10 flex flex-col justify-around pointer-events-none text-2xl">
@@ -1752,7 +1752,7 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                         className="absolute -translate-x-1/2 will-change-transform pointer-events-none z-15"
                         style={{ left: `${b.x}%`, top: `${b.y}%` }}
                     >
-                        <div className="w-2.5 h-6 rounded-full bg-gradient-to-t from-sky-400 to-blue-500 shadow-[0_0_8px_#38bdf8] animate-pulse" />
+                        <div className="w-2.5 h-6 rounded-full bg-linear-to-t from-sky-400 to-blue-500 shadow-[0_0_8px_#38bdf8] animate-pulse" />
                     </div>
                 ))}
 
@@ -1828,7 +1828,7 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                 </div>
 
                 {/* Garis Batas Tanah Rimba Terbakar Bawah */}
-                <div className="absolute bottom-0 inset-x-0 h-4 bg-gradient-to-t from-amber-950 to-transparent border-t border-rose-500/40 pointer-events-none" />
+                <div className="absolute bottom-0 inset-x-0 h-4 bg-linear-to-t from-amber-950 to-transparent border-t border-rose-500/40 pointer-events-none" />
 
                 {/* Overlay Game Over */}
                 {isGameOver && (

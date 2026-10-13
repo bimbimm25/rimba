@@ -378,7 +378,7 @@ export default function KitSiagaPage() {
                         {/* Progress Bar */}
                         <div className="w-full sm:w-72 h-3 bg-earth-soft rounded-full overflow-hidden p-0.5 border border-rimba-200">
                             <div
-                                className="h-full bg-gradient-to-r from-leaf to-rimba-600 rounded-full transition-all duration-500 ease-out"
+                                className="h-full bg-linear-to-r from-leaf to-rimba-600 rounded-full transition-all duration-500 ease-out"
                                 style={{ width: `${totalProgress}%` }}
                             />
                         </div>
