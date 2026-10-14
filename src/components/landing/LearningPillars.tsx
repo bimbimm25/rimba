@@ -42,7 +42,7 @@ const pillars = [
     {
         icon: CheckCircle2,
         title: 'Pilih Tindakan Aman',
-        desc: 'Belajar melatih respon yang tepat untuk mengindari bahaya dan melaporkan ke orang dewasa.',
+        desc: 'Belajar melatih respons yang tepat untuk menghindari bahaya dan melaporkan ke orang dewasa.',
         color: 'text-accent-sky',
         bg: 'bg-accent-skyLight',
         hoverBorder: 'hover:border-accent-sky/50',

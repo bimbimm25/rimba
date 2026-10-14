@@ -10,35 +10,62 @@ export const SmoothScroll = ({ children }: { children: React.ReactNode }) => {
 
     // 1. Inisialisasi Lenis dengan konfigurasi performa 60-120fps tanpa patah-patah
     useEffect(() => {
-        // Matikan mekanisme scroll bawaan browser saat navigasi rute
-        if ('scrollRestoration' in window.history) {
-            window.history.scrollRestoration = 'manual';
-        }
+        const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+        let lenis: Lenis | null = null;
+        let rafId: number | null = null;
 
-        const lenis = new Lenis({
-            duration: 1.1,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            orientation: 'vertical',
-            gestureOrientation: 'vertical',
-            smoothWheel: true,
-            wheelMultiplier: 1,
-            touchMultiplier: 1.5,
-            infinite: false,
-        });
+        const stopSmoothScroll = () => {
+            if (rafId !== null) {
+                cancelAnimationFrame(rafId);
+                rafId = null;
+            }
+            lenis?.destroy();
+            lenis = null;
+            lenisRef.current = null;
+        };
 
-        lenisRef.current = lenis;
+        const startSmoothScroll = () => {
+            if (motionPreference.matches || lenis) return;
 
-        let rafId: number;
-        function raf(time: number) {
-            lenis.raf(time);
+            // Matikan mekanisme scroll bawaan browser saat navigasi rute
+            if ('scrollRestoration' in window.history) {
+                window.history.scrollRestoration = 'manual';
+            }
+
+            lenis = new Lenis({
+                duration: 1.1,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                orientation: 'vertical',
+                gestureOrientation: 'vertical',
+                smoothWheel: true,
+                wheelMultiplier: 1,
+                touchMultiplier: 1.5,
+                infinite: false,
+            });
+            lenisRef.current = lenis;
+
+            function raf(time: number) {
+                if (!lenis) return;
+                lenis.raf(time);
+                rafId = requestAnimationFrame(raf);
+            }
             rafId = requestAnimationFrame(raf);
-        }
-        rafId = requestAnimationFrame(raf);
+        };
+
+        const handleMotionPreferenceChange = () => {
+            if (motionPreference.matches) {
+                stopSmoothScroll();
+            } else {
+                startSmoothScroll();
+            }
+        };
+
+        startSmoothScroll();
+        motionPreference.addEventListener('change', handleMotionPreferenceChange);
 
         return () => {
-            cancelAnimationFrame(rafId);
-            lenis.destroy();
-            lenisRef.current = null;
+            motionPreference.removeEventListener('change', handleMotionPreferenceChange);
+            stopSmoothScroll();
         };
     }, []);
 
