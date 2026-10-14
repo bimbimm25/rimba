@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import {
     ArrowLeft,
     ArrowRight,
@@ -13,172 +13,52 @@ import {
     ShieldAlert,
     Sparkles,
     HelpCircle,
-    Award,
     Flame,
     Check,
     X
 } from 'lucide-react';
-import * as MissionsData from '@/data/missions';
-
-interface ScenarioQuestion {
-    id: string;
-    situation: string;
-    question: string;
-    options: {
-        id: string;
-        text: string;
-        isCorrect: boolean;
-        explanation: string;
-    }[];
-}
-
-interface MissionDetail {
-    id: string;
-    title: string;
-    categoryTitle?: string;
-    badge?: string;
-    description: string;
-    difficulty?: string;
-    scenarios: ScenarioQuestion[];
-}
-
-// Helper untuk mengekstrak array misi secara fleksibel dari namespace data
-function getMissionsList(): MissionDetail[] {
-    for (const key of Object.keys(MissionsData)) {
-        const val = (MissionsData as Record<string, unknown>)[key];
-        if (Array.isArray(val) && val.length > 0) {
-            return val as MissionDetail[];
-        }
-    }
-    return [];
-}
+import { MISSIONS, Mission, MissionQuestion } from '@/data/missions';
 
 export default function MissionRunnerPage() {
     const params = useParams();
-    const router = useRouter();
     const missionId = params?.id as string;
 
-    const missions = getMissionsList();
-    const currentMission = missions.find((m) => m.id === missionId);
+    // Ambil data modul misi yang sedang dibuka
+    const currentMission: Mission | undefined = MISSIONS.find((m) => m.id === missionId);
 
     const [currentStep, setCurrentStep] = useState(0);
-    const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
+    const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(null);
     const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
     const [score, setScore] = useState(0);
     const [isQuizCompleted, setIsQuizCompleted] = useState(false);
-    const [isPassedSaved, setIsPassedSaved] = useState(false);
 
-    // Fallback skenario bawaan jika data skenario di file misi berformat ringkas
-    const scenarios: ScenarioQuestion[] = currentMission?.scenarios && currentMission.scenarios.length > 0
-        ? currentMission.scenarios
-        : [
-            {
-                id: 's1',
-                situation: 'Patroli drone mendeteksi kepulan asap putih tebal di pinggiran lahan gambut kering.',
-                question: 'Langkah taktis pertama apa yang wajib dilakukan oleh regu penyelamat?',
-                options: [
-                    {
-                        id: 'a',
-                        text: 'Membakar sekeliling semak agar api cepat padam sendiri',
-                        isCorrect: false,
-                        explanation: 'Membakar semak tambahan justru mempercepat penjalaran kobaran api karhutla!'
-                    },
-                    {
-                        id: 'b',
-                        text: 'Segera melapor ke Posko Damkar 113 dan menyekat bara dengan pipa suntik air',
-                        isCorrect: true,
-                        explanation: 'Tepat! Laporan dini dan penyuntikan air ke dalam tanah gambut mematikan bara sebelum merambat luas.'
-                    },
-                    {
-                        id: 'c',
-                        text: 'Menunggu hujan turun beberapa hari ke depan',
-                        isCorrect: false,
-                        explanation: 'Bara gambut di bawah tanah bisa bertahan berminggu-minggu jika tidak segera dibasahi intensif.'
-                    }
-                ]
-            },
-            {
-                id: 's2',
-                situation: 'Angin kencang bertiup ke arah permukiman warga dan indeks kualitas udara (ISPU) masuk kategori Berbahaya.',
-                question: 'Apa instruksi prioritas keselamatan bagi warga dan anak-anak?',
-                options: [
-                    {
-                        id: 'a',
-                        text: 'Tetap berolahraga di luar rumah tanpa masker pelindung',
-                        isCorrect: false,
-                        explanation: 'Paparan partikel debu halus PM2.5 sangat berbahaya bagi saluran paru-paru dan memicu ISPA akut.'
-                    },
-                    {
-                        id: 'b',
-                        text: 'Menutup celah jendela dengan kain basah, memakai masker N95, dan mengungsi ke posko ramah anak',
-                        isCorrect: true,
-                        explanation: 'Sempurna! Masker standar N95 dan penyekatan ruang meminimalkan masuknya gas racun karbon monoksida.'
-                    },
-                    {
-                        id: 'c',
-                        text: 'Membuka semua ventilasi rumah lebar-lebar',
-                        isCorrect: false,
-                        explanation: 'Membuka ventilasi justru mengalirkan asap pekat masuk ke seluruh kamar tidur.'
-                    }
-                ]
-            },
-            {
-                id: 's3',
-                situation: 'Seekor satwa endemik (orangutan/burung enggang) terjebak di pohon yang terkepung asap panas.',
-                question: 'Bagaimana tindakan evakuasi satwa yang tepat dan aman?',
-                options: [
-                    {
-                        id: 'a',
-                        text: 'Membuat jalur koridor basah dan menghubungi tim BKSDA / penyelamat satwa liar berwenang',
-                        isCorrect: true,
-                        explanation: 'Benar sekali! Penyelamatan satwa liar membutuhkan penanganan terstandar agar satwa tidak panik atau terluka.'
-                    },
-                    {
-                        id: 'b',
-                        text: 'Melempar ranting api ke arah satwa agar ia segera turun melompat',
-                        isCorrect: false,
-                        explanation: 'Tindakan ini sangat berbahaya dan bisa mencederai satwa yang sedang ketakutan.'
-                    },
-                    {
-                        id: 'c',
-                        text: 'Membiarkannya karena satwa pasti tahan terhadap panas api',
-                        isCorrect: false,
-                        explanation: 'Satwa liar rentan mati lemas akibat menghirup asap pekat karhutla.'
-                    }
-                ]
-            }
-        ];
+    // Ambil daftar 10 soal dari modul misi
+    const questions: MissionQuestion[] = currentMission?.questions || [];
+    const totalSteps = questions.length;
+    const currentQuestion = questions[currentStep];
 
-    const totalSteps = scenarios.length;
-    const currentScenario = scenarios[currentStep];
-    const saved = localStorage.getItem('rimba_completed_missions');
-    const current = saved ? JSON.parse(saved) : [];
-    if (!current.includes(missionId)) {
-        current.push(missionId);
-        localStorage.setItem('rimba_completed_missions', JSON.stringify(current));
-    }
-
-    // Simpan progres kelulusan ke localStorage saat kuis tuntas dengan skor >= 80
+    // HANYA simpan ke localStorage jika kuis selesai dan nilai kelulusan >= 70%
     useEffect(() => {
-        if (isQuizCompleted && missionId) {
-            const finalScorePercent = Math.round((score / totalSteps) * 100);
-            if (finalScorePercent >= 70) {
+        if (isQuizCompleted && missionId && totalSteps > 0) {
+            const finalPercentage = Math.round((score / totalSteps) * 100);
+            if (finalPercentage >= 70) {
                 try {
                     const saved = localStorage.getItem('rimba_completed_missions');
-                    const currentArr: string[] = saved ? JSON.parse(saved) : [];
-                    if (!currentArr.includes(missionId)) {
-                        const updated = [...currentArr, missionId];
-                        localStorage.setItem('rimba_completed_missions', JSON.stringify(updated));
+                    const completedList: string[] = saved ? JSON.parse(saved) : [];
+
+                    if (!completedList.includes(missionId)) {
+                        completedList.push(missionId);
+                        localStorage.setItem('rimba_completed_missions', JSON.stringify(completedList));
                     }
-                    setIsPassedSaved(true);
-                } catch {
-                    // Abaikan jika storage dibatasi browser
+                } catch (err) {
+                    console.error('Gagal menyimpan progres kelulusan:', err);
                 }
             }
         }
-    }, [isQuizCompleted, score, totalSteps, missionId]);
+    }, [isQuizCompleted, missionId, score, totalSteps]);
 
-    if (!currentMission) {
+    // Tampilan jika ID misi tidak valid
+    if (!currentMission || totalSteps === 0) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-earth-cream px-4">
                 <div className="text-center bg-white p-8 rounded-3xl border border-rimba-100 max-w-md shadow-sm space-y-4">
@@ -196,13 +76,12 @@ export default function MissionRunnerPage() {
         );
     }
 
-    const handleSelectOption = (optionId: string) => {
+    const handleSelectOption = (index: number) => {
         if (isAnswerSubmitted) return;
-        setSelectedOptionId(optionId);
+        setSelectedOptionIndex(index);
         setIsAnswerSubmitted(true);
 
-        const chosen = currentScenario.options.find((opt) => opt.id === optionId);
-        if (chosen?.isCorrect) {
+        if (index === currentQuestion.correctAnswer) {
             setScore((prev) => prev + 1);
         }
     };
@@ -210,7 +89,7 @@ export default function MissionRunnerPage() {
     const handleNextStep = () => {
         if (currentStep < totalSteps - 1) {
             setCurrentStep((prev) => prev + 1);
-            setSelectedOptionId(null);
+            setSelectedOptionIndex(null);
             setIsAnswerSubmitted(false);
         } else {
             setIsQuizCompleted(true);
@@ -219,13 +98,13 @@ export default function MissionRunnerPage() {
 
     const handleRestartQuiz = () => {
         setCurrentStep(0);
-        setSelectedOptionId(null);
+        setSelectedOptionIndex(null);
         setIsAnswerSubmitted(false);
         setScore(0);
         setIsQuizCompleted(false);
     };
 
-    const selectedOption = currentScenario?.options.find((opt) => opt.id === selectedOptionId);
+    const isCurrentCorrect = selectedOptionIndex === currentQuestion?.correctAnswer;
     const finalPercentage = Math.round((score / totalSteps) * 100);
     const isPassed = finalPercentage >= 70;
 
@@ -244,7 +123,7 @@ export default function MissionRunnerPage() {
                     </Link>
 
                     <span className="text-xs font-extrabold uppercase tracking-wider text-rimba-800 bg-rimba-100 px-3.5 py-1.5 rounded-full border border-rimba-200">
-                        Simulasi Taktis Karhutla
+                        {currentMission.category}
                     </span>
                 </div>
 
@@ -266,8 +145,8 @@ export default function MissionRunnerPage() {
                             </h1>
                             <p className="text-xs sm:text-sm text-rimba-700 max-w-md mx-auto leading-relaxed">
                                 {isPassed
-                                    ? 'Skor simulasi kamu memenuhi standar kelulusan. Status misi ini resmi dicatat sebagai syarat penerbitan Piagam Duta Rimba.'
-                                    : 'Skor minimal kelulusan adalah 70%. Ulangi simulasi untuk memperbaiki koordinasi taktis dan menyelamatkan hutan.'}
+                                    ? 'Skor simulasi kamu memenuhi standar kelulusan. Status misi ini resmi dicatat untuk membuka level berikutnya.'
+                                    : 'Skor minimal kelulusan adalah 70%. Ulangi simulasi untuk memperbaiki koordinasi taktis dan membuka level selanjutnya.'}
                             </p>
                         </div>
 
@@ -300,23 +179,23 @@ export default function MissionRunnerPage() {
                                 href="/misi"
                                 className="w-full sm:w-auto px-7 py-3 rounded-2xl bg-rimba-600 hover:bg-rimba-700 text-white font-display font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
                             >
-                                <span>Pilih Misi Berikutnya</span>
+                                <span>Kembali ke Daftar Misi</span>
                                 <ArrowRight className="w-4 h-4" />
                             </Link>
                         </div>
                     </div>
                 ) : (
-                    /* TAMPILAN 2: RUNNER SKENARIO PER TAHAP */
+                    /* TAMPILAN 2: RUNNER PERTANYAAN/SKENARIO PER TAHAP */
                     <div className="bg-white rounded-3xl p-6 sm:p-10 border border-rimba-100 shadow-sm space-y-8">
 
                         {/* Header Misi & Step Bar */}
                         <div className="space-y-4 border-b border-rimba-100 pb-6">
                             <div className="flex items-center justify-between">
                                 <span className="text-[10px] font-extrabold uppercase px-3 py-1 rounded-full bg-rimba-100 text-rimba-900">
-                                    {currentMission.badge || 'Skenario Tanggap Karhutla'}
+                                    {currentMission.subtitle}
                                 </span>
                                 <span className="text-xs font-bold text-rimba-700">
-                                    Tahap {currentStep + 1} dari {totalSteps}
+                                    Soal {currentStep + 1} dari {totalSteps}
                                 </span>
                             </div>
 
@@ -333,36 +212,26 @@ export default function MissionRunnerPage() {
                             </div>
                         </div>
 
-                        {/* Kotak Deskripsi Situasi di Lapangan */}
-                        <div className="p-5 rounded-2xl bg-earth-soft/70 border border-rimba-100 space-y-2">
-                            <span className="text-[10px] font-black uppercase text-rimba-700 flex items-center gap-1.5">
-                                <Sparkles className="w-3.5 h-3.5 text-accent-sun" />
-                                <span>Situasi Darurat di Lokasi:</span>
-                            </span>
-                            <p className="text-xs sm:text-sm text-rimba-950 font-medium leading-relaxed">
-                                {currentScenario.situation}
-                            </p>
-                        </div>
-
-                        {/* Pertanyaan Taktis */}
+                        {/* Pertanyaan */}
                         <div className="space-y-4">
                             <div className="flex items-start gap-2.5">
                                 <HelpCircle className="w-5 h-5 text-rimba-600 shrink-0 mt-0.5" />
                                 <h2 className="font-display font-bold text-sm sm:text-base text-rimba-950 leading-snug">
-                                    {currentScenario.question}
+                                    {currentQuestion.question}
                                 </h2>
                             </div>
 
                             {/* Pilihan Jawaban */}
                             <div className="space-y-3 pt-1">
-                                {currentScenario.options.map((option) => {
-                                    const isSelected = selectedOptionId === option.id;
+                                {currentQuestion.options.map((optionText, index) => {
+                                    const isSelected = selectedOptionIndex === index;
+                                    const isCorrect = index === currentQuestion.correctAnswer;
                                     let cardStyle = 'bg-white border-rimba-100 hover:border-rimba-300 text-rimba-950';
 
                                     if (isAnswerSubmitted) {
-                                        if (option.isCorrect) {
+                                        if (isCorrect) {
                                             cardStyle = 'bg-emerald-50 border-emerald-400 text-emerald-950 shadow-xs';
-                                        } else if (isSelected && !option.isCorrect) {
+                                        } else if (isSelected && !isCorrect) {
                                             cardStyle = 'bg-rose-50 border-rose-400 text-rose-950 shadow-xs';
                                         } else {
                                             cardStyle = 'bg-white/60 border-slate-200 text-slate-400 opacity-60';
@@ -371,19 +240,25 @@ export default function MissionRunnerPage() {
 
                                     return (
                                         <button
-                                            key={option.id}
-                                            onClick={() => handleSelectOption(option.id)}
+                                            key={index}
+                                            onClick={() => handleSelectOption(index)}
                                             disabled={isAnswerSubmitted}
                                             className={`w-full text-left p-4 rounded-2xl border text-xs sm:text-sm font-semibold transition-all flex items-start gap-3 cursor-pointer ${cardStyle}`}
                                         >
                                             <span className="w-6 h-6 rounded-lg bg-earth-soft border border-rimba-100 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                                                 {isAnswerSubmitted ? (
-                                                    option.isCorrect ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : isSelected ? <X className="w-3.5 h-3.5 text-rose-600" /> : '-'
+                                                    isCorrect ? (
+                                                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                                                    ) : isSelected ? (
+                                                        <X className="w-3.5 h-3.5 text-rose-600" />
+                                                    ) : (
+                                                        String.fromCharCode(65 + index)
+                                                    )
                                                 ) : (
-                                                    option.id.toUpperCase()
+                                                    String.fromCharCode(65 + index)
                                                 )}
                                             </span>
-                                            <span className="flex-1 leading-relaxed">{option.text}</span>
+                                            <span className="flex-1 leading-relaxed">{optionText}</span>
                                         </button>
                                     );
                                 })}
@@ -391,23 +266,23 @@ export default function MissionRunnerPage() {
                         </div>
 
                         {/* Kotak Feedback Penjelasan */}
-                        {isAnswerSubmitted && selectedOption && (
+                        {isAnswerSubmitted && (
                             <div
-                                className={`p-4 rounded-2xl text-xs sm:text-sm font-medium flex items-start gap-3 animate-in fade-in duration-200 ${selectedOption.isCorrect
-                                    ? 'bg-emerald-100 text-emerald-950 border border-emerald-200'
-                                    : 'bg-rose-100 text-rose-950 border border-rose-200'
+                                className={`p-4 rounded-2xl text-xs sm:text-sm font-medium flex items-start gap-3 animate-in fade-in duration-200 ${isCurrentCorrect
+                                        ? 'bg-emerald-100 text-emerald-950 border border-emerald-200'
+                                        : 'bg-rose-100 text-rose-950 border border-rose-200'
                                     }`}
                             >
-                                {selectedOption.isCorrect ? (
+                                {isCurrentCorrect ? (
                                     <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
                                 ) : (
                                     <XCircle className="w-5 h-5 text-rose-700 shrink-0 mt-0.5" />
                                 )}
                                 <div className="flex-1 space-y-0.5">
                                     <p className="font-bold">
-                                        {selectedOption.isCorrect ? 'Keputusan Tepat!' : 'Analisis Taktis Kurang Sesuai:'}
+                                        {isCurrentCorrect ? 'Jawaban Benar!' : 'Jawaban Kurang Tepat:'}
                                     </p>
-                                    <p className="leading-relaxed font-normal">{selectedOption.explanation}</p>
+                                    <p className="leading-relaxed font-normal">{currentQuestion.explanation}</p>
                                 </div>
                             </div>
                         )}
@@ -415,7 +290,7 @@ export default function MissionRunnerPage() {
                         {/* Footer Tombol Lanjut */}
                         <div className="pt-4 border-t border-rimba-100 flex items-center justify-between">
                             <span className="text-xs text-rimba-700 font-semibold">
-                                Pilih opsi di atas untuk mengonfirmasi tindakan
+                                {isAnswerSubmitted ? 'Pilihan tersimpan' : 'Pilih salah satu jawaban di atas'}
                             </span>
 
                             <button
@@ -423,7 +298,7 @@ export default function MissionRunnerPage() {
                                 disabled={!isAnswerSubmitted}
                                 className="px-7 py-3 rounded-2xl bg-rimba-600 hover:bg-rimba-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-display font-bold text-xs sm:text-sm shadow-md transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
                             >
-                                <span>{currentStep < totalSteps - 1 ? 'Tahap Selanjutnya' : 'Lihat Hasil Evaluasi'}</span>
+                                <span>{currentStep < totalSteps - 1 ? 'Soal Selanjutnya' : 'Lihat Hasil Evaluasi'}</span>
                                 <ArrowRight className="w-4 h-4" />
                             </button>
                         </div>

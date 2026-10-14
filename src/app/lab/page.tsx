@@ -14,19 +14,40 @@ import {
     Plane
 } from 'lucide-react';
 import { LAB_GAME_MODULES, GameId } from '@/data/lab-games';
+import { AnimatedItem } from '@/components/common/AnimatedItem';
 
 export default function GameLabHubPage() {
     const [activeGame, setActiveGame] = useState<GameId | null>(null);
     const [highScores, setHighScores] = useState<Record<string, number>>({});
+    const [hasEnteredGameOnce, setHasEnteredGameOnce] = useState(false);
 
     useEffect(() => {
         try {
             const saved = localStorage.getItem('rimba_lab_high_scores');
             if (saved) setHighScores(JSON.parse(saved));
         } catch {
-            // Abaikan jika storage dibatasi browser
+            // Abaikan batasan storage
         }
     }, []);
+
+    // Scroll instan ke atas saat game dibuka atau ditutup
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'auto' // 'auto' instan tanpa jeda animasi scroll
+        });
+    };
+
+    const handleSelectGame = (id: GameId) => {
+        setHasEnteredGameOnce(true);
+        setActiveGame(id);
+        scrollToTop();
+    };
+
+    const handleBackToHub = () => {
+        setActiveGame(null);
+        scrollToTop();
+    };
 
     const handleUpdateHighScore = (id: GameId, score: number) => {
         setHighScores((prev) => {
@@ -44,30 +65,54 @@ export default function GameLabHubPage() {
         });
     };
 
+    // Helper kondisional: Hanya animasikan saat first-load, render instan jika kembali dari game
+    const ConditionalAnimatedItem = ({
+        children,
+        variant = 'fade-up',
+        delay = 0,
+        className = ''
+    }: {
+        children: React.ReactNode;
+        variant?: 'fade-up' | 'fade-scale' | 'fade-left' | 'fade-right';
+        delay?: number;
+        className?: string;
+    }) => {
+        if (hasEnteredGameOnce) {
+            return <div className={className}>{children}</div>;
+        }
+        return (
+            <AnimatedItem variant={variant} delay={delay} className={className}>
+                {children}
+            </AnimatedItem>
+        );
+    };
+
     return (
-        <div className="min-h-screen bg-earth-cream pb-28 pt-28 sm:pt-32">
+        <div className="min-h-screen bg-earth-cream pb-28 pt-28 sm:pt-32 overflow-hidden">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-10">
 
                 {/* Header Navigasi */}
-                <div className="flex items-center justify-between gap-4">
-                    <Link
-                        href="/belajar"
-                        className="inline-flex items-center gap-2 text-xs font-bold text-rimba-800 hover:text-rimba-950 bg-white px-4 py-2 rounded-full border border-rimba-100 shadow-2xs transition-colors"
-                    >
-                        <ArrowLeft className="w-4 h-4 text-rimba-600" />
-                        <span>Kembali ke Belajar</span>
-                    </Link>
+                <ConditionalAnimatedItem variant="fade-up" delay={0}>
+                    <div className="flex items-center justify-between gap-4">
+                        <Link
+                            href="/belajar"
+                            className="inline-flex items-center gap-2 text-xs font-bold text-rimba-800 hover:text-rimba-950 bg-white px-4 py-2 rounded-full border border-rimba-100 shadow-2xs transition-colors"
+                        >
+                            <ArrowLeft className="w-4 h-4 text-rimba-600" />
+                            <span>Kembali ke Belajar</span>
+                        </Link>
 
-                    <span className="text-xs font-extrabold uppercase tracking-wider text-rimba-800 bg-rimba-100 px-3.5 py-1.5 rounded-full border border-rimba-200">
-                        Arcade Sahabat Rimba
-                    </span>
-                </div>
+                        <span className="text-xs font-extrabold uppercase tracking-wider text-rimba-800 bg-rimba-100 px-3.5 py-1.5 rounded-full border border-rimba-200">
+                            Arcade Sahabat Rimba
+                        </span>
+                    </div>
+                </ConditionalAnimatedItem>
 
-                {/* TAMPILAN 1: GAME AKTIF */}
+                {/* TAMPILAN 1: GAME AKTIF (LANGSUNG TAMPIL INSTAN) */}
                 {activeGame ? (
                     <div className="space-y-6">
                         <button
-                            onClick={() => setActiveGame(null)}
+                            onClick={handleBackToHub}
                             className="text-xs font-bold text-rimba-800 hover:text-rimba-950 bg-white px-4 py-2 rounded-full border border-rimba-200 transition-colors shadow-2xs cursor-pointer flex items-center gap-1.5"
                         >
                             &larr; <span>Pilih Modul Game Lain</span>
@@ -111,69 +156,80 @@ export default function GameLabHubPage() {
                         )}
                     </div>
                 ) : (
-                    /* TAMPILAN 2: HUB PEMILIHAN 5 MODUL GAME */
+                    /* TAMPILAN 2: HUB PEMILIHAN GAME */
                     <div className="space-y-10">
+                        {/* Header Judul Utama */}
                         <div className="text-center max-w-2xl mx-auto space-y-3">
-                            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rimba-100 border border-rimba-200 text-rimba-900 text-xs font-bold uppercase tracking-wider">
-                                <Gamepad2 className="w-4 h-4 text-rimba-600" />
-                                <span>Pusat Arcade & Simulasi Karhutla</span>
-                            </div>
-                            <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-rimba-950 tracking-tight">
-                                Arena Mini-Game Penjaga Rimba
-                            </h1>
-                            <p className="text-sm sm:text-base text-rimba-800 font-medium leading-relaxed">
-                                Mainkan <strong>5 game aksi tanpa batas skor</strong>! Latih kecepatan refleksmu memadamkan api, melindungi gambut, dan menyelamatkan satwa rimba untuk mencetak rekor tertinggi!
-                            </p>
+                            <ConditionalAnimatedItem variant="fade-up" delay={0}>
+                                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rimba-100 border border-rimba-200 text-rimba-900 text-xs font-bold uppercase tracking-wider">
+                                    <Gamepad2 className="w-4 h-4 text-rimba-600" />
+                                    <span>Pusat Arcade & Simulasi Karhutla</span>
+                                </div>
+                            </ConditionalAnimatedItem>
+
+                            <ConditionalAnimatedItem variant="fade-up" delay={120}>
+                                <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-rimba-950 tracking-tight">
+                                    Arena Mini-Game Penjaga Rimba
+                                </h1>
+                            </ConditionalAnimatedItem>
+
+                            <ConditionalAnimatedItem variant="fade-up" delay={220}>
+                                <p className="text-sm sm:text-base text-rimba-800 font-medium leading-relaxed">
+                                    Mainkan <strong>game aksi tanpa batas skor</strong>! Latih kecepatan refleksmu memadamkan api, melindungi gambut, dan menyelamatkan satwa rimba untuk mencetak rekor tertinggi!
+                                </p>
+                            </ConditionalAnimatedItem>
                         </div>
 
-                        {/* Grid 5 Modul Game */}
+                        {/* Grid Modul Game */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {LAB_GAME_MODULES.map((mod) => {
+                            {LAB_GAME_MODULES.map((mod, idx) => {
                                 const Icon = mod.icon;
                                 const best = highScores[mod.id] || 0;
 
                                 return (
-                                    <div
+                                    <ConditionalAnimatedItem
                                         key={mod.id}
-                                        className="bg-white rounded-3xl p-6 border border-rimba-100 shadow-sm flex flex-col justify-between hover:shadow-md hover:-translate-y-1 transition-all duration-200"
+                                        variant="fade-scale"
+                                        delay={120 + (idx % 3) * 80}
+                                        className="h-full"
                                     >
-                                        <div>
-                                            <div className="flex items-center justify-between mb-4">
-                                                <span className="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full bg-earth-soft text-rimba-800">
-                                                    {mod.badge}
-                                                </span>
-                                                {best > 0 && (
-                                                    <span className="flex items-center gap-1 text-[11px] font-extrabold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
-                                                        <Trophy className="w-3.5 h-3.5" /> Rekor: {best}
+                                        <div className="h-full bg-white rounded-3xl p-6 border border-rimba-100 shadow-sm flex flex-col justify-between hover:shadow-md hover:-translate-y-1 transition-all duration-200">
+                                            <div>
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <span className="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full bg-earth-soft text-rimba-800">
+                                                        {mod.badge}
                                                     </span>
-                                                )}
+                                                    {best > 0 && (
+                                                        <span className="flex items-center gap-1 text-[11px] font-extrabold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
+                                                            <Trophy className="w-3.5 h-3.5" /> Rekor: {best}
+                                                        </span>
+                                                    )}
+                                                </div>
+
+                                                <div className={`w-14 h-14 rounded-2xl bg-linear-to-br ${mod.accentColor} text-white flex items-center justify-center mb-4 shadow-sm`}>
+                                                    <Icon className="w-7 h-7" />
+                                                </div>
+
+                                                <h2 className="font-display font-extrabold text-lg text-rimba-950 mb-1">
+                                                    {mod.title}
+                                                </h2>
+                                                <p className="text-xs text-rimba-800 leading-relaxed font-normal">
+                                                    {mod.subtitle}
+                                                </p>
                                             </div>
 
-                                            <div className={`w-14 h-14 rounded-2xl bg-linear-to-br ${mod.accentColor} text-white flex items-center justify-center mb-4 shadow-sm`}>
-                                                <Icon className="w-7 h-7" />
+                                            <div className="mt-6 pt-4 border-t border-rimba-50 flex items-center justify-between">
+                                                
+                                                <button
+                                                    onClick={() => handleSelectGame(mod.id)}
+                                                    className="px-5 py-2.5 rounded-xl bg-rimba-500 hover:bg-rimba-600 text-white font-display font-bold text-xs flex items-center gap-1.5 shadow-2xs transition-all active:scale-95 cursor-pointer"
+                                                >
+                                                    <Play className="w-3.5 h-3.5 fill-current" />
+                                                    <span>Mulai Game</span>
+                                                </button>
                                             </div>
-
-                                            <h2 className="font-display font-extrabold text-lg text-rimba-950 mb-1">
-                                                {mod.title}
-                                            </h2>
-                                            <p className="text-xs text-rimba-800 leading-relaxed font-normal">
-                                                {mod.subtitle}
-                                            </p>
                                         </div>
-
-                                        <div className="mt-6 pt-4 border-t border-rimba-50 flex items-center justify-between">
-                                            <span className="text-[11px] font-bold text-rimba-600">
-                                                Mode: Tanpa Batas
-                                            </span>
-                                            <button
-                                                onClick={() => setActiveGame(mod.id)}
-                                                className="px-5 py-2.5 rounded-xl bg-rimba-500 hover:bg-rimba-600 text-white font-display font-bold text-xs flex items-center gap-1.5 shadow-2xs transition-all active:scale-95 cursor-pointer"
-                                            >
-                                                <Play className="w-3.5 h-3.5 fill-current" />
-                                                <span>Mulai Game</span>
-                                            </button>
-                                        </div>
-                                    </div>
+                                    </ConditionalAnimatedItem>
                                 );
                             })}
                         </div>
@@ -185,8 +241,12 @@ export default function GameLabHubPage() {
     );
 }
 
+// (Komponen modul game 1–6 di bawahnya tetap sama persis)
+
+// (Sisa implementasi komponen modul game 1–6 tetap sama persis seperti sebelumnya)
+
 // =========================================================================
-// MODUL GAME 1: WATER BOMBING RESCUE (PRECISION & DYNAMIC DIFFICULTY)
+// MODUL GAME 1: WATER BOMBING RESCUE
 // =========================================================================
 function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScoreChange: (s: number) => void }) {
     const [score, setScore] = useState(0);
@@ -200,28 +260,22 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
     const [splash, setSplash] = useState(false);
     const [missEffect, setMissEffect] = useState(false);
 
-    // Basis kecepatan & referensi fisika
     const planePosRef = useRef(15);
-    const directionRef = useRef(1); // 1 = Kanan, -1 = Kiri
+    const directionRef = useRef(1);
 
-    // Hitung tingkat kesulitan (scaling kecepatan bertahap ala Dino Chrome)
-    // Kecepatan meningkat dari 0.45 hingga batas maksimum 1.85
     const currentSpeed = Math.min(1.85, 0.45 + (score / 10) * 0.12);
 
-    // Kirim skor ke parent component setelah perubahan state
     useEffect(() => {
         if (score > 0) {
             onScoreChange(score);
         }
     }, [score, onScoreChange]);
 
-    // Game Loop Pesawat 60 FPS
     useEffect(() => {
         let animId: number;
         const loop = () => {
             planePosRef.current += currentSpeed * directionRef.current;
 
-            // Balik arah di batas tepi arena (8% s/d 92%)
             if (planePosRef.current >= 90) {
                 directionRef.current = -1;
             } else if (planePosRef.current <= 10) {
@@ -236,18 +290,15 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
         return () => cancelAnimationFrame(animId);
     }, [currentSpeed]);
 
-    // Animasi Jatuhnya Bom Air (Presisi Tinggi)
     useEffect(() => {
         if (!isWaterFalling) return;
         let animId: number;
 
         const fallLoop = () => {
             setWaterY((prevY) => {
-                // Posisi permukaan tanah adalah 75%
                 if (prevY >= 75) {
                     setIsWaterFalling(false);
 
-                    // Presisi Hitbox: Jarak maksimum hanya 4.5% dari titik tengah api
                     const distance = Math.abs(waterX - firePos);
                     const isDirectHit = distance <= 4.5;
 
@@ -258,7 +309,6 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
                         setTimeout(() => setSplash(false), 500);
                         setFeedback('🎯 TEPAT SASARAN! Api padam sempurna. Kecepatan pesawat bertambah!');
 
-                        // Pindahkan titik api ke posisi acak baru yang tidak terlalu dekat dengan posisi saat ini
                         setFirePos(() => {
                             let newPos;
                             do {
@@ -275,7 +325,6 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
                     return 24;
                 }
 
-                // Kecepatan jatuh air sedikit dipercepat seiring kecepatan game
                 return prevY + (2.6 + Math.min(1.2, (score / 10) * 0.08));
             });
 
@@ -286,7 +335,6 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
         return () => cancelAnimationFrame(animId);
     }, [isWaterFalling, waterX, firePos, combo, score]);
 
-    // Eksekusi pelepasan air tepat di posisi tengah pesawat saat ini
     const handleDrop = () => {
         if (isWaterFalling) return;
         setWaterX(planePosRef.current);
@@ -296,8 +344,6 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
 
     return (
         <div className="bg-white rounded-3xl p-4 sm:p-7 border border-rimba-100 shadow-sm space-y-4 sm:space-y-6">
-
-            {/* Header Info Game */}
             <div className="flex items-center justify-between border-b border-rimba-100 pb-3 sm:pb-4 gap-2">
                 <div>
                     <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-sky-100 text-sky-800">
@@ -318,7 +364,6 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
                 </div>
             </div>
 
-            {/* Indikator Status & Tingkat Kecepatan */}
             <div className="flex items-center justify-between text-[11px] font-bold text-rimba-800 px-1">
                 <span className="flex items-center gap-1">
                     <span>⚡ Kecepatan Terbang:</span>
@@ -333,10 +378,7 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
                 )}
             </div>
 
-            {/* Arena Langit & Hutan */}
             <div className="relative h-64 sm:h-76 w-full rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-rimba-200 bg-linear-to-b from-sky-400 via-sky-200 to-amber-100 select-none shadow-inner">
-
-                {/* Pesawat Emoji dengan Transform Arah Balik */}
                 <div
                     className="absolute will-change-transform z-20 flex flex-col items-center pointer-events-none"
                     style={{
@@ -348,17 +390,14 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
                     <span className="text-4xl sm:text-5xl filter drop-shadow-md select-none leading-none">
                         ✈️
                     </span>
-                    {/* Titik indikator bidikan tengah pesawat */}
                     <div className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-0.5 opacity-75" />
                 </div>
 
-                {/* Garis Bantu Panduan Vertikal Samar (Membantu Anak Menembak Presisi) */}
                 <div
                     className="absolute top-0 bottom-14 w-px border-l border-dashed border-sky-600/30 pointer-events-none -translate-x-1/2 z-10"
                     style={{ left: `${planePos}%` }}
                 />
 
-                {/* Kapsul Bom Air yang Meluncur Lurus ke Bawah */}
                 {isWaterFalling && (
                     <div
                         className="absolute will-change-transform -translate-x-1/2 z-20 pointer-events-none"
@@ -371,7 +410,6 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
                     </div>
                 )}
 
-                {/* Efek Kena Air (Splash) */}
                 {splash && (
                     <div
                         className="absolute bottom-12 -translate-x-1/2 text-center animate-in zoom-in-75 duration-200 z-30"
@@ -384,7 +422,6 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
                     </div>
                 )}
 
-                {/* Efek Meleset (Miss) */}
                 {missEffect && (
                     <div
                         className="absolute bottom-12 -translate-x-1/2 text-center animate-in fade-in duration-150 z-30"
@@ -396,10 +433,7 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
                     </div>
                 )}
 
-                {/* Lapisan Tanah & Hutan Bawah */}
                 <div className="absolute bottom-0 inset-x-0 h-14 sm:h-16 bg-linear-to-t from-emerald-800 to-emerald-700 border-t-4 border-emerald-600 flex items-center justify-around z-15">
-
-                    {/* Titik Api Presisi */}
                     <div
                         className="absolute -top-7 sm:-top-8 -translate-x-1/2 flex flex-col items-center transition-all duration-300"
                         style={{ left: `${firePos}%` }}
@@ -409,22 +443,18 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
                             <span className="absolute -inset-1 bg-amber-400/40 rounded-full blur-xs -z-10" />
                         </div>
 
-                        {/* Target Ring Presisi */}
                         <div className="w-7 h-1.5 bg-rose-950/80 rounded-full border border-rose-400 flex items-center justify-center mt-0.5">
                             <div className="w-1.5 h-1.5 rounded-full bg-amber-300" />
                         </div>
                     </div>
                 </div>
-
             </div>
 
-            {/* Kotak Feedback Teks */}
             <div className="p-3.5 sm:p-4 rounded-2xl bg-earth-soft border border-rimba-200 text-xs sm:text-sm text-rimba-900 font-medium flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-accent-sun shrink-0" />
                 <span className="leading-snug">{feedback}</span>
             </div>
 
-            {/* Kontrol Aksi Layar Bawah */}
             <div className="flex items-center gap-2 sm:gap-3">
                 <button
                     onClick={() => {
@@ -448,7 +478,6 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
                     <span>JATUHKAN AIR SEKARANG!</span>
                 </button>
             </div>
-
         </div>
     );
 }
@@ -592,7 +621,7 @@ function PeatBlasterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
 }
 
 // =========================================================================
-// MODUL GAME 3: ANIMAL RESCUE ESCAPE (ZERO-DELAY JUMP & 12.8 VELOCITY)
+// MODUL GAME 3: ANIMAL RESCUE ESCAPE
 // =========================================================================
 interface Obstacle {
     id: number;
@@ -608,10 +637,8 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
         { id: 2, x: 165, type: 'smoke' },
     ]);
 
-    // DOM Ref untuk bypass delay re-render React pada karakter Kiko
     const kikoElementRef = useRef<HTMLDivElement | null>(null);
 
-    // Referensi Fisika Real-Time
     const isJumpingRef = useRef(false);
     const jumpVelocityRef = useRef(0);
     const kikoYRef = useRef(0);
@@ -623,7 +650,6 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
     const isGameOverRef = useRef(false);
     const nextObstacleIdRef = useRef(3);
 
-    // Kecepatan awal = 0.85 (100%), maksimal 1.70 (200%)
     const BASE_SPEED = 0.85;
     const MAX_SPEED = BASE_SPEED * 2.0;
     const currentSpeed = Math.min(MAX_SPEED, BASE_SPEED + (distance / 200) * 0.15);
@@ -635,22 +661,18 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
         }
     }, [distance, onScoreChange]);
 
-    // Eksekusi Lompat Instan (0ms latency)
     const triggerInstantJump = () => {
-        // Pastikan Kiko sedang di tanah dan game tidak over
         if (isGameOverRef.current || isJumpingRef.current || kikoYRef.current > 0.5) return;
 
         isJumpingRef.current = true;
-        jumpVelocityRef.current = 12.8; // Set velocity tepat 12.8
+        jumpVelocityRef.current = 12.8;
 
-        // Langsung dorong posisi Kiko di frame ini tanpa menunggu re-render
         kikoYRef.current += 1.5;
         if (kikoElementRef.current) {
             kikoElementRef.current.style.transform = `translate3d(0, -${kikoYRef.current}px, 0)`;
         }
     };
 
-    // Listener Keyboard (Spasi atau Panah Atas)
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.code === 'Space' || e.code === 'ArrowUp') {
@@ -662,7 +684,6 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, []);
 
-    // Main 60 FPS Game Loop
     useEffect(() => {
         if (isGameOver) return;
         isGameOverRef.current = false;
@@ -672,10 +693,9 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
         const loop = () => {
             if (isGameOverRef.current) return;
 
-            // 1. Fisika Lompat Langsung ke DOM Transform (Mencegah Delay Render)
             if (isJumpingRef.current) {
                 kikoYRef.current += jumpVelocityRef.current;
-                jumpVelocityRef.current -= 0.88; // Gravitasi terukur agar lompatan 12.8 pas & tidak melayang lama
+                jumpVelocityRef.current -= 0.88;
 
                 if (kikoYRef.current <= 0) {
                     kikoYRef.current = 0;
@@ -687,7 +707,6 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
                 }
             }
 
-            // 2. Gerakkan Rintangan
             const updatedObstacles = obstaclesRef.current
                 .map((obs) => ({
                     ...obs,
@@ -695,7 +714,6 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
                 }))
                 .filter((obs) => obs.x > -15);
 
-            // 3. Spawn Rintangan Baru dengan Jarak Aman
             const lastObs = updatedObstacles[updatedObstacles.length - 1];
             if (!lastObs || lastObs.x < 75) {
                 const gap = Math.max(52, 75 - Math.min(20, (distanceRef.current / 120) * 2));
@@ -712,7 +730,6 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
             obstaclesRef.current = updatedObstacles;
             setObstacles(updatedObstacles);
 
-            // 4. Deteksi Tabrakan
             for (const obs of updatedObstacles) {
                 const isNearX = obs.x > 13 && obs.x < 22;
                 const isLowEnough = kikoYRef.current < 28;
@@ -724,7 +741,6 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
                 }
             }
 
-            // 5. Tambah Jarak
             distanceRef.current += 1;
             setDistance(distanceRef.current);
 
@@ -757,8 +773,6 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
 
     return (
         <div className="bg-white rounded-3xl p-4 sm:p-7 border border-rimba-100 shadow-sm space-y-4 sm:space-y-6">
-
-            {/* Header Info Game */}
             <div className="flex items-center justify-between border-b border-rimba-100 pb-3 sm:pb-4 gap-2">
                 <div>
                     <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-900">
@@ -778,7 +792,6 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
                 </div>
             </div>
 
-            {/* Indikator Status & Kecepatan */}
             <div className="flex items-center justify-between text-[11px] font-bold text-rimba-800 px-1">
                 <span className="flex items-center gap-1.5">
                     <span>⚡ Kecepatan Lari:</span>
@@ -791,7 +804,6 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
                 </span>
             </div>
 
-            {/* Arena Lintasan Hutan (Tap to Jump Instan) */}
             <div
                 onPointerDown={(e) => {
                     e.preventDefault();
@@ -807,7 +819,6 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
                     <span className="text-6xl">🌲</span>
                 </div>
 
-                {/* Karakter Kiko (Diposisikan dengan transform hardware-accelerated tanpa delay) */}
                 <div
                     ref={kikoElementRef}
                     className="absolute left-[16%] bottom-6 will-change-transform flex flex-col items-center pointer-events-none z-20"
@@ -821,7 +832,6 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
                     </span>
                 </div>
 
-                {/* Rintangan-Rintangan Dinamis */}
                 {obstacles.map((obs) => (
                     <div
                         key={obs.id}
@@ -839,7 +849,6 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
 
                 <div className="absolute bottom-0 inset-x-0 h-6 bg-emerald-800 border-t-2 border-emerald-600 z-15 pointer-events-none" />
 
-                {/* Overlay Game Over */}
                 {isGameOver && (
                     <div
                         onPointerDown={(e) => e.stopPropagation()}
@@ -865,7 +874,6 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
                 )}
             </div>
 
-            {/* Kontrol Bawah */}
             <div className="flex items-center justify-between gap-3">
                 <p className="text-xs text-rimba-700 font-medium leading-snug">
                     📱 <strong>Di HP/Tablet:</strong> Sentuh layar arena di atas.<br className="hidden sm:inline" />
@@ -888,21 +896,19 @@ function AnimalRescueGame({ bestScore, onScoreChange }: { bestScore: number; onS
 }
 
 // =========================================================================
-// MODUL GAME 4: CATCH & COMPOST (CUSTOM 3D CARTOON COMPOST BIN DESIGN)
+// MODUL GAME 4: CATCH & COMPOST
 // =========================================================================
 function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onScoreChange: (s: number) => void }) {
     const [score, setScore] = useState(0);
     const [combo, setCombo] = useState(0);
     const [feedback, setFeedback] = useState('Tangkap dedaunan gugur sebanyak-banyaknya dan hindari puntung rokok berbahaya!');
 
-    // Posisi item dan keranjang
     const [basketX, setBasketX] = useState(50);
     const [itemX, setItemX] = useState(50);
     const [itemY, setItemY] = useState(-8);
     const [itemType, setItemType] = useState<'leaf' | 'cigarette'>('leaf');
     const [hitEffect, setHitEffect] = useState<'success' | 'danger' | null>(null);
 
-    // Referensi status kontinu untuk animasi 60 FPS
     const basketXRef = useRef(50);
     const itemYRef = useRef(-8);
     const itemXRef = useRef(50);
@@ -910,7 +916,6 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
     const arenaRef = useRef<HTMLDivElement | null>(null);
     const keysPressedRef = useRef<{ left: boolean; right: boolean }>({ left: false, right: false });
 
-    // Peningkatan kecepatan dinamis berdasarkan skor
     const currentFallSpeed = Math.min(3.4, 1.25 + (score / 40) * 0.18);
     const speedPercentage = Math.min(220, Math.round((currentFallSpeed / 1.25) * 100));
 
@@ -920,7 +925,6 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
         }
     }, [score, onScoreChange]);
 
-    // Listener Keyboard untuk pergerakan halus (tekan & tahan)
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'ArrowLeft' || e.key === 'KeyA') {
@@ -946,12 +950,10 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
         };
     }, []);
 
-    // Main 60 FPS Game Loop
     useEffect(() => {
         let animId: number;
 
         const loop = () => {
-            // 1. Gerakan Mulus Keranjang saat tombol Keyboard ditahan
             if (keysPressedRef.current.left) {
                 basketXRef.current = Math.max(12, basketXRef.current - 1.4);
                 setBasketX(basketXRef.current);
@@ -961,10 +963,8 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
                 setBasketX(basketXRef.current);
             }
 
-            // 2. Fisika Jatuh Barang (Area Tinggi)
             itemYRef.current += currentFallSpeed;
 
-            // Saat barang mencapai mulut tong (tingkat ketinggian 80%)
             if (itemYRef.current >= 80) {
                 const distance = Math.abs(itemXRef.current - basketXRef.current);
                 const isCaught = distance <= 14;
@@ -984,7 +984,6 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
                     setTimeout(() => setHitEffect(null), 350);
                 }
 
-                // Reset Barang Baru dari Atas Layar (-8%)
                 itemYRef.current = -8;
                 itemXRef.current = Math.floor(Math.random() * 70) + 15;
                 const dangerProbability = Math.min(0.45, 0.25 + (score / 150) * 0.15);
@@ -1002,7 +1001,6 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
         return () => cancelAnimationFrame(animId);
     }, [currentFallSpeed, score]);
 
-    // Handler Kontrol Sentuh/Geser untuk Layar HP & Tablet
     const updateBasketFromClientX = (clientX: number) => {
         if (!arenaRef.current) return;
         const rect = arenaRef.current.getBoundingClientRect();
@@ -1024,8 +1022,6 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
 
     return (
         <div className="bg-white rounded-3xl p-4 sm:p-7 border border-rimba-100 shadow-sm space-y-4 sm:space-y-6">
-
-            {/* Header Info Game */}
             <div className="flex items-center justify-between border-b border-rimba-100 pb-3 sm:pb-4 gap-2">
                 <div>
                     <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-lime-100 text-lime-900">
@@ -1045,7 +1041,6 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
                 </div>
             </div>
 
-            {/* Indikator Status & Kecepatan */}
             <div className="flex items-center justify-between text-[11px] font-bold text-rimba-800 px-1">
                 <span className="flex items-center gap-1.5">
                     <span>⚡ Kecepatan Jatuh:</span>
@@ -1060,7 +1055,6 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
                 )}
             </div>
 
-            {/* Arena Tangkap Tinggi (Touch/Drag Enabled) */}
             <div
                 ref={arenaRef}
                 onPointerDown={handlePointerDown}
@@ -1068,14 +1062,12 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
                 className="relative h-80 sm:h-96 w-full rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-rimba-200 bg-linear-to-b from-sky-100 via-emerald-50 to-amber-100 select-none shadow-inner cursor-ew-resize touch-none"
                 title="Geser jari atau kursor untuk memindahkan tong"
             >
-                {/* Dekorasi Langit Dedaunan */}
                 <div className="absolute top-2 inset-x-0 flex justify-between px-6 opacity-20 pointer-events-none text-3xl">
                     <span>🍃</span>
                     <span>🌿</span>
                     <span>🍂</span>
                 </div>
 
-                {/* Item Jatuh dari Atas */}
                 <div
                     className="absolute -translate-x-1/2 flex flex-col items-center pointer-events-none will-change-transform z-15"
                     style={{ left: `${itemX}%`, top: `${itemY}%` }}
@@ -1097,7 +1089,6 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
                     </span>
                 </div>
 
-                {/* Efek Visual Tangkapan */}
                 {hitEffect === 'success' && (
                     <div
                         className="absolute bottom-28 -translate-x-1/2 text-center animate-in zoom-in-75 duration-200 z-25 pointer-events-none"
@@ -1121,14 +1112,11 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
                     </div>
                 )}
 
-                {/* DESAIN TONG KOMPOS KARAKTER KARTUN 3D */}
                 <div
                     className="absolute bottom-2 -translate-x-1/2 will-change-transform pointer-events-none z-20 transition-transform duration-75"
                     style={{ left: `${basketX}%` }}
                 >
                     <div className="relative flex flex-col items-center">
-
-                        {/* Bibir / Rim Mulut Tong Terbuka */}
                         <div className={`w-28 sm:w-32 h-5 rounded-[50%] bg-emerald-800 border-2 border-emerald-400 shadow-md flex items-center justify-center transition-all ${hitEffect === 'success' ? 'scale-110 bg-emerald-700' : hitEffect === 'danger' ? 'bg-rose-900 border-rose-400' : ''
                             }`}>
                             <div className="w-24 sm:w-28 h-2.5 rounded-[50%] bg-emerald-950/80 shadow-inner flex items-center justify-center">
@@ -1138,19 +1126,14 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
                             </div>
                         </div>
 
-                        {/* Badan Tong Silinder Melengkung Semi-3D */}
                         <div className={`w-24 sm:w-28 h-18 sm:h-20 bg-linear-to-b from-emerald-600 via-emerald-700 to-emerald-900 rounded-b-4xl border-x-2 border-b-2 border-emerald-400 shadow-2xl flex flex-col items-center justify-between py-1.5 relative overflow-hidden transition-all ${hitEffect === 'success' ? 'scale-105 brightness-110' : hitEffect === 'danger' ? 'bg-linear-to-b from-rose-700 to-rose-950 border-rose-400' : ''
                             }`}>
-
-                            {/* Garis-Garis Ventilasi Kayu / Plastik Tong Komposter */}
                             <div className="w-full flex flex-col gap-1.5 px-3 opacity-30 pointer-events-none">
                                 <div className="w-full h-0.5 bg-white rounded-full" />
                                 <div className="w-full h-0.5 bg-white rounded-full" />
                             </div>
 
-                            {/* Muka Kartun Si Tong Kompos */}
                             <div className="flex flex-col items-center z-10 -mt-1">
-                                {/* Mata */}
                                 <div className="flex items-center gap-3">
                                     <div className="w-2.5 h-3.5 bg-white rounded-full shadow-inner flex items-center justify-center">
                                         <div className="w-1.5 h-2 bg-emerald-950 rounded-full" />
@@ -1160,14 +1143,12 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
                                     </div>
                                 </div>
 
-                                {/* Mulut Senyum / Kaget */}
                                 <div className={`mt-1 transition-all ${hitEffect === 'danger'
                                     ? 'w-3 h-2 border-t-2 border-white rounded-t-full'
                                     : 'w-4 h-2 border-b-2 border-white rounded-b-full'
                                     }`} />
                             </div>
 
-                            {/* Lencana Daun Ramah Lingkungan */}
                             <div className="bg-emerald-950/70 border border-emerald-400/50 px-2 py-0.5 rounded-full flex items-center gap-1 z-10 shadow-xs">
                                 <span className="text-[10px]">🌱</span>
                                 <span className="text-[8px] sm:text-[9px] font-black text-emerald-200 uppercase tracking-wider">
@@ -1175,26 +1156,20 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
                                 </span>
                             </div>
 
-                            {/* Highlight Refleksi Cahaya Badan Tong */}
                             <div className="absolute top-0 bottom-0 left-2 w-2 bg-white/20 rounded-full blur-[1px] pointer-events-none" />
                         </div>
 
-                        {/* Gagang Kiri & Kanan */}
                         <div className="absolute top-6 -left-2 w-2.5 h-5 rounded-l-md border-2 border-r-0 border-emerald-400 bg-emerald-800" />
                         <div className="absolute top-6 -right-2 w-2.5 h-5 rounded-r-md border-2 border-l-0 border-emerald-400 bg-emerald-800" />
-
                     </div>
                 </div>
-
             </div>
 
-            {/* Kotak Feedback Teks */}
             <div className="p-3.5 sm:p-4 rounded-2xl bg-earth-soft border border-rimba-200 text-xs sm:text-sm text-rimba-900 font-medium flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-accent-sun shrink-0" />
                 <span className="leading-snug">{feedback}</span>
             </div>
 
-            {/* Tombol Kontrol Alternatif di Layar Bawah */}
             <div className="flex items-center justify-between gap-3">
                 <p className="text-xs text-rimba-700 font-medium leading-snug">
                     💻 <strong>Laptop:</strong> Tombol Panah Kanan & Kiri /<br className="hidden sm:inline" />
@@ -1222,7 +1197,6 @@ function CompostCatchGame({ bestScore, onScoreChange }: { bestScore: number; onS
                     </button>
                 </div>
             </div>
-
         </div>
     );
 }
@@ -1320,26 +1294,26 @@ function RadarPatrolGame({ bestScore, onScoreChange }: { bestScore: number; onSc
 }
 
 // =========================================================================
-// MODUL GAME 6: AERO BLASTER 113 (ARCADE SHOOTER WITH POWER-UPS & ENEMY TIERS)
+// MODUL GAME 6: AERO BLASTER 113
 // =========================================================================
 type FireType = 'ember' | 'whirl' | 'log' | 'boss';
 type PowerUpType = 'triple' | 'rapid' | 'shield';
 
 interface FireTarget {
     id: number;
-    x: number; // 10% - 90%
-    y: number; // 0% - 100%
+    x: number;
+    y: number;
     hp: number;
     maxHp: number;
     type: FireType;
-    zigzagDir?: number; // arah gerak zig-zag
+    zigzagDir?: number;
 }
 
 interface WaterBullet {
     id: number;
     x: number;
     y: number;
-    vx: number; // arah horizontal untuk spread shot
+    vx: number;
 }
 
 interface PowerUpItem {
@@ -1357,13 +1331,11 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
     const [bullets, setBullets] = useState<WaterBullet[]>([]);
     const [powerUps, setPowerUps] = useState<PowerUpItem[]>([]);
 
-    // Power-up active states untuk UI
     const [activeTripleTime, setActiveTripleTime] = useState(0);
     const [activeRapidTime, setActiveRapidTime] = useState(0);
     const [hasShield, setHasShield] = useState(false);
     const [activePowerUpNotice, setActivePowerUpNotice] = useState<string | null>(null);
 
-    // References loop fisika 60 FPS
     const playerXRef = useRef(50);
     const firesRef = useRef<FireTarget[]>([]);
     const bulletsRef = useRef<WaterBullet[]>([]);
@@ -1373,7 +1345,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
     const isGameOverRef = useRef(false);
     const scoreRef = useRef(0);
 
-    // Buff Timers (dalam frame / milidetik)
     const tripleUntilRef = useRef(0);
     const rapidUntilRef = useRef(0);
     const hasShieldRef = useRef(false);
@@ -1384,7 +1355,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
     const lastShootTimeRef = useRef(0);
     const lastSpawnTimeRef = useRef(0);
 
-    // Skala kecepatan turun api meningkat halus seiring skor
     const fireBaseSpeed = Math.min(2.7, 0.9 + (score / 70) * 0.16);
 
     useEffect(() => {
@@ -1393,7 +1363,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
         }
     }, [score, onScoreChange]);
 
-    // Kontrol Keyboard (Panah Kiri/Kanan & A/D)
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'ArrowLeft' || e.key === 'KeyA') keysRef.current.left = true;
@@ -1413,7 +1382,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
         };
     }, []);
 
-    // Main 60 FPS Space-Shooter Loop
     useEffect(() => {
         if (isGameOver) return;
         isGameOverRef.current = false;
@@ -1425,14 +1393,12 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
 
             const now = Date.now();
 
-            // Cek Status Buff Aktif
             const isTripleActive = now < tripleUntilRef.current;
             const isRapidActive = now < rapidUntilRef.current;
             setActiveTripleTime(isTripleActive ? Math.ceil((tripleUntilRef.current - now) / 1000) : 0);
             setActiveRapidTime(isRapidActive ? Math.ceil((rapidUntilRef.current - now) / 1000) : 0);
             setHasShield(hasShieldRef.current);
 
-            // 1. Gerakkan Pesawat Player dengan Keyboard
             if (keysRef.current.left) {
                 playerXRef.current = Math.max(10, playerXRef.current - 1.6);
                 setPlayerX(playerXRef.current);
@@ -1442,20 +1408,17 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                 setPlayerX(playerXRef.current);
             }
 
-            // 2. Tembak Peluru Air Otomatis (Interval lebih cepat jika Rapid Active: 100ms vs 230ms)
             const shootInterval = isRapidActive ? 105 : 230;
             if (time - lastShootTimeRef.current > shootInterval) {
                 lastShootTimeRef.current = time;
 
                 if (isTripleActive) {
-                    // Triple Shot: 3 Peluru Menyebar
                     bulletsRef.current.push(
                         { id: bulletCounterRef.current++, x: playerXRef.current, y: 79, vx: 0 },
                         { id: bulletCounterRef.current++, x: playerXRef.current - 2, y: 80, vx: -0.4 },
                         { id: bulletCounterRef.current++, x: playerXRef.current + 2, y: 80, vx: 0.4 }
                     );
                 } else {
-                    // Single Shot Normal
                     bulletsRef.current.push({
                         id: bulletCounterRef.current++,
                         x: playerXRef.current,
@@ -1465,7 +1428,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                 }
             }
 
-            // 3. Spawn Musuh Berdasarkan Tingkatan Skor
             const spawnInterval = Math.max(650, 1350 - (scoreRef.current / 40) * 80);
             if (time - lastSpawnTimeRef.current > spawnInterval) {
                 lastSpawnTimeRef.current = time;
@@ -1474,7 +1436,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                 let chosenType: FireType = 'ember';
                 let hp = 1;
 
-                // Penentuan jenis musuh berdasarkan skor
                 const rand = Math.random();
                 if (currentS >= 250 && rand < 0.15) {
                     chosenType = 'boss';
@@ -1498,17 +1459,14 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                 });
             }
 
-            // 4. Update Posisi Peluru Air
             bulletsRef.current = bulletsRef.current
                 .map((b) => ({ ...b, x: b.x + b.vx, y: b.y - 4.2 }))
                 .filter((b) => b.y > -5);
 
-            // 5. Update Posisi Api
             firesRef.current = firesRef.current.map((f) => {
                 let newX = f.x;
                 let newDir = f.zigzagDir || 1;
 
-                // Pusaran angin api bergerak zig-zag ke kiri & kanan
                 if (f.type === 'whirl') {
                     newX += newDir * 0.7;
                     if (newX >= 88) newDir = -1;
@@ -1525,12 +1483,10 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                 };
             });
 
-            // 6. Update Posisi Drop Power-Up yang Jatuh Perlahan
             powerUpsRef.current = powerUpsRef.current
                 .map((p) => ({ ...p, y: p.y + 1.2 }))
                 .filter((p) => p.y < 105);
 
-            // 7. Deteksi Pengambilan Power-Up oleh Pesawat Player
             for (const p of [...powerUpsRef.current]) {
                 const catchX = Math.abs(p.x - playerXRef.current) < 9;
                 const catchY = p.y >= 78 && p.y <= 88;
@@ -1539,10 +1495,10 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                     powerUpsRef.current = powerUpsRef.current.filter((item) => item.id !== p.id);
 
                     if (p.type === 'triple') {
-                        tripleUntilRef.current = Date.now() + 8000; // 8 detik
+                        tripleUntilRef.current = Date.now() + 8000;
                         setActivePowerUpNotice('🔱 TRIPLE CANNON DIAKTIFKAN (8 Detik)!');
                     } else if (p.type === 'rapid') {
-                        rapidUntilRef.current = Date.now() + 8000; // 8 detik
+                        rapidUntilRef.current = Date.now() + 8000;
                         setActivePowerUpNotice('⚡ RAPID PUMP SUPER CEPAT (8 Detik)!');
                     } else if (p.type === 'shield') {
                         hasShieldRef.current = true;
@@ -1553,7 +1509,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                 }
             }
 
-            // 8. Deteksi Tabrakan Peluru Air dengan Api
             for (const bullet of [...bulletsRef.current]) {
                 for (const fire of firesRef.current) {
                     const hitRadiusX = fire.type === 'boss' ? 14 : fire.type === 'log' ? 10 : 7.5;
@@ -1566,7 +1521,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                         fire.hp -= 1;
 
                         if (fire.hp <= 0) {
-                            // Musuh Tumbang!
                             firesRef.current = firesRef.current.filter((f) => f.id !== fire.id);
 
                             let addScore = 10;
@@ -1577,7 +1531,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                             scoreRef.current += addScore;
                             setScore(scoreRef.current);
 
-                            // DROP REWARD POWER-UP dari musuh besar atau peluang acak
                             const shouldDrop = fire.type === 'boss' || fire.type === 'log' || Math.random() < 0.22;
                             if (shouldDrop) {
                                 const types: PowerUpType[] = ['triple', 'rapid', 'shield'];
@@ -1595,14 +1548,12 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                 }
             }
 
-            // 9. Deteksi Tabrakan Api dengan Helikopter Player
             for (const fire of firesRef.current) {
                 const hitRadius = fire.type === 'boss' ? 13 : 8.5;
                 const hitPlayerX = Math.abs(fire.x - playerXRef.current) < hitRadius;
                 const hitPlayerY = fire.y >= 78 && fire.y <= 90;
 
                 if (hitPlayerX && hitPlayerY) {
-                    // Jika punya Water Shield, selamat 1 kali benturan
                     if (hasShieldRef.current) {
                         hasShieldRef.current = false;
                         firesRef.current = firesRef.current.filter((f) => f.id !== fire.id);
@@ -1616,7 +1567,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                     return;
                 }
 
-                // Jika api lolos sampai dasar tanah hutan
                 if (fire.y > 96) {
                     isGameOverRef.current = true;
                     setIsGameOver(true);
@@ -1635,7 +1585,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
         return () => cancelAnimationFrame(animId);
     }, [isGameOver, fireBaseSpeed]);
 
-    // Touch / Drag Player untuk Layar HP & Tablet
     const updatePlayerPosition = (clientX: number) => {
         if (!arenaRef.current || isGameOverRef.current) return;
         const rect = arenaRef.current.getBoundingClientRect();
@@ -1669,8 +1618,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
 
     return (
         <div className="bg-white rounded-3xl p-4 sm:p-7 border border-rimba-100 shadow-sm space-y-4 sm:space-y-6">
-
-            {/* Header Info Game */}
             <div className="flex items-center justify-between border-b border-rimba-100 pb-3 sm:pb-4 gap-2">
                 <div>
                     <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-rose-100 text-rose-900">
@@ -1690,7 +1637,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                 </div>
             </div>
 
-            {/* Indikator Buff Aktif */}
             <div className="flex flex-wrap items-center justify-between text-[11px] font-bold text-rimba-800 gap-2 px-1">
                 <div className="flex items-center gap-2">
                     {activeTripleTime > 0 && (
@@ -1718,7 +1664,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                 </span>
             </div>
 
-            {/* Arena Shooter Top-Down */}
             <div
                 ref={arenaRef}
                 onPointerDown={(e) => updatePlayerPosition(e.clientX)}
@@ -1729,14 +1674,12 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                 }}
                 className="relative h-96 sm:h-110 w-full rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-stone-800 bg-linear-to-b from-stone-950 via-emerald-950 to-stone-900 select-none shadow-2xl cursor-crosshair touch-none"
             >
-                {/* Latar Belakang Pohon Hutan Terbakar */}
                 <div className="absolute inset-0 opacity-10 flex flex-col justify-around pointer-events-none text-2xl">
                     <div className="flex justify-around"><span>🌲</span><span>🌳</span><span>🌲</span><span>🌳</span></div>
                     <div className="flex justify-around"><span>🌲</span><span>🌳</span><span>🌲</span><span>🌳</span></div>
                     <div className="flex justify-around"><span>🌲</span><span>🌳</span><span>🌲</span><span>🌳</span></div>
                 </div>
 
-                {/* Notifikasi Pop-up Power-Up */}
                 {activePowerUpNotice && (
                     <div className="absolute top-4 inset-x-0 text-center pointer-events-none z-35 animate-in fade-in zoom-in-95">
                         <span className="bg-white/95 text-sky-950 font-black text-xs px-4 py-1.5 rounded-full shadow-lg border border-sky-400">
@@ -1745,7 +1688,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                     </div>
                 )}
 
-                {/* Peluru-Peluru Air Bertekanan */}
                 {bullets.map((b) => (
                     <div
                         key={b.id}
@@ -1756,7 +1698,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                     </div>
                 ))}
 
-                {/* Kapsul Power-Up yang Jatuh */}
                 {powerUps.map((p) => (
                     <div
                         key={p.id}
@@ -1764,10 +1705,10 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                         style={{ left: `${p.x}%`, top: `${p.y}%` }}
                     >
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm shadow-lg border-2 ${p.type === 'triple'
-                                ? 'bg-sky-500 border-sky-200 text-white'
-                                : p.type === 'rapid'
-                                    ? 'bg-amber-500 border-amber-200 text-white'
-                                    : 'bg-emerald-500 border-emerald-200 text-white'
+                            ? 'bg-sky-500 border-sky-200 text-white'
+                            : p.type === 'rapid'
+                                ? 'bg-amber-500 border-amber-200 text-white'
+                                : 'bg-emerald-500 border-emerald-200 text-white'
                             }`}>
                             {p.type === 'triple' ? '🔱' : p.type === 'rapid' ? '⚡' : '🛡️'}
                         </div>
@@ -1777,22 +1718,19 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                     </div>
                 ))}
 
-                {/* Musuh-Musuh Api Beragam Jenis */}
                 {fires.map((f) => (
                     <div
                         key={f.id}
                         className="absolute -translate-x-1/2 -translate-y-1/2 will-change-transform pointer-events-none z-20 flex flex-col items-center"
                         style={{ left: `${f.x}%`, top: `${f.y}%` }}
                     >
-                        {/* Visual Karakter Musuh */}
                         <span className={`filter drop-shadow-[0_0_14px_rgba(239,68,68,0.95)] ${f.type === 'boss' ? 'text-5xl animate-bounce' :
-                                f.type === 'log' ? 'text-4xl' :
-                                    f.type === 'whirl' ? 'text-4xl animate-spin' : 'text-3xl animate-pulse'
+                            f.type === 'log' ? 'text-4xl' :
+                                f.type === 'whirl' ? 'text-4xl animate-spin' : 'text-3xl animate-pulse'
                             }`} style={{ animationDuration: f.type === 'whirl' ? '3s' : undefined }}>
                             {f.type === 'boss' ? '🌋🔥' : f.type === 'log' ? '🪵🔥' : f.type === 'whirl' ? '🌪️' : '🔥'}
                         </span>
 
-                        {/* Health Bar HP Musuh */}
                         {f.maxHp > 1 && (
                             <div className="w-8 sm:w-10 h-1.5 bg-black/80 rounded-full overflow-hidden border border-rose-500/60 mt-1">
                                 <div
@@ -1804,12 +1742,10 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                     </div>
                 ))}
 
-                {/* Helikopter / Jet Pemadam Player */}
                 <div
                     className="absolute bottom-6 -translate-x-1/2 will-change-transform pointer-events-none z-30 transition-transform duration-75 flex flex-col items-center"
                     style={{ left: `${playerX}%` }}
                 >
-                    {/* Efek Shield Melingkar */}
                     {hasShield && (
                         <div className="w-16 h-16 rounded-full border-2 border-emerald-400 bg-emerald-400/20 absolute -top-3 animate-ping opacity-60 pointer-events-none" />
                     )}
@@ -1827,10 +1763,8 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                     </span>
                 </div>
 
-                {/* Garis Batas Tanah Rimba Terbakar Bawah */}
                 <div className="absolute bottom-0 inset-x-0 h-4 bg-linear-to-t from-amber-950 to-transparent border-t border-rose-500/40 pointer-events-none" />
 
-                {/* Overlay Game Over */}
                 {isGameOver && (
                     <div
                         onPointerDown={(e) => e.stopPropagation()}
@@ -1856,7 +1790,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                 )}
             </div>
 
-            {/* Kontrol & Petunjuk Bawah */}
             <div className="flex items-center justify-between gap-3">
                 <p className="text-xs text-rimba-700 font-medium leading-snug">
                     📱 <strong>HP / Tablet:</strong> Sentuh dan seret layar untuk mengarahkan helikopter.<br className="hidden sm:inline" />
@@ -1884,7 +1817,6 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                     </button>
                 </div>
             </div>
-
         </div>
     );
 }

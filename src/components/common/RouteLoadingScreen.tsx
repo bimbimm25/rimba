@@ -44,12 +44,15 @@ export const RouteLoadingScreen: React.FC = () => {
         const duration = 1350;
 
         const exitTimeout = setTimeout(() => {
-            setIsFadingOut(true);
+            setIsFadingOut(true); // Tirai mulai geser ke atas
 
-            // Waktu tunggu swipe ke atas selesai (650ms) sebelum komponen di-unmount
+            // Tunggu swipe up 650ms selesai penuh, baru picu animasi halaman
             setTimeout(() => {
                 setIsLoading(false);
                 setIsFadingOut(false);
+
+                // Memicu animasi halaman hanya ketika tirai sudah benar-benar hilang dari layar
+                window.dispatchEvent(new Event('rimba_page_ready'));
             }, 650);
         }, duration);
 
@@ -123,8 +126,8 @@ export const RouteLoadingScreen: React.FC = () => {
 
             <div
                 className={`fixed inset-0 z-50 flex items-center justify-center bg-[#2BB673] text-white select-none will-change-transform transition-transform duration-650 ease-[cubic-bezier(0.7,0,0.3,1)] ${isFadingOut
-                        ? '-translate-y-full pointer-events-none'
-                        : 'translate-y-0'
+                    ? '-translate-y-full pointer-events-none'
+                    : 'translate-y-0'
                     }`}
                 onWheel={(e) => e.stopPropagation()}
                 onTouchMove={(e) => e.stopPropagation()}

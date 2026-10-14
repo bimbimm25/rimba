@@ -1,6 +1,9 @@
+'use client';
+
 import React from 'react';
 import { Trees, Flame, Shield, CheckCircle2, Award } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
+import { AnimatedItem } from '@/components/common/AnimatedItem';
 
 const pillars = [
     {
@@ -62,53 +65,64 @@ const pillars = [
 
 export const LearningPillars = () => {
     return (
-        <section className="py-20 bg-white border-y border-rimba-100 relative">
+        <section className="py-20 bg-white border-y border-rimba-100 relative overflow-hidden">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                {/* Header Section */}
-                <div className="text-center max-w-2xl mx-auto mb-14">
-                    <h2 className="font-display font-extrabold text-2xl sm:text-3xl lg:text-4xl text-rimba-950 tracking-tight">
-                        Apa yang Akan Kamu Pelajari?
-                    </h2>
-                    <p className="text-rimba-800 text-sm sm:text-base mt-3 leading-relaxed font-medium">
-                        Materi disusun ringkas dan terfokus agar mudah dipahami langkah demi langkah.
-                    </p>
+                {/* Header Section Muncul Pertama */}
+                <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
+                    <AnimatedItem variant="fade-up" delay={0}>
+                        <h2 className="font-display font-extrabold text-2xl sm:text-3xl lg:text-4xl text-rimba-950 tracking-tight">
+                            Apa yang Akan Kamu Pelajari?
+                        </h2>
+                    </AnimatedItem>
+
+                    <AnimatedItem variant="fade-up" delay={140}>
+                        <p className="text-rimba-800 text-sm sm:text-base leading-relaxed font-medium">
+                            Materi disusun ringkas dan terfokus agar mudah dipahami langkah demi langkah.
+                        </p>
+                    </AnimatedItem>
                 </div>
 
-                {/* Pillars Grid */}
+                {/* Pillars Grid: Masing-masing kartu muncul bertingkat */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 lg:gap-6 items-stretch">
                     {pillars.map((item, index) => {
                         const Icon = item.icon;
                         return (
-                            <Card
+                            <AnimatedItem
                                 key={index}
-                                className={`group relative flex h-full flex-col items-center justify-between text-center p-5 sm:p-6 rounded-[28px] border border-rimba-100 bg-white cursor-pointer overflow-hidden transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-xl ${item.hoverBorder} ${item.hoverShadow}`}
+                                variant="fade-scale"
+                                delay={180 + index * 120} // Kartu 1: 180ms, Kartu 2: 300ms, Kartu 3: 420ms, dst.
+                                className="h-full flex flex-col"
                             >
-                                {/* Visual Icon Container */}
-                                <div
-                                    className={`w-16 h-16 rounded-2xl ${item.bg} ${item.color} flex items-center justify-center mb-5 transition-transform duration-300 ease-out shadow-sm`}
+                                <Card
+                                    className={`group relative flex h-full flex-col items-center justify-between text-center p-5 sm:p-6 rounded-[28px] border border-rimba-100 bg-white cursor-pointer overflow-hidden transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-xl ${item.hoverBorder} ${item.hoverShadow}`}
                                 >
-                                    <Icon
-                                        className={`w-7 h-7 transition-all duration-300 ease-out ${item.iconHoverAnim}`}
+                                    {/* Visual Icon Container */}
+                                    <div
+                                        className={`w-16 h-16 rounded-2xl ${item.bg} ${item.color} flex items-center justify-center mb-5 transition-transform duration-300 ease-out shadow-sm`}
+                                    >
+                                        <Icon
+                                            className={`w-7 h-7 transition-all duration-300 ease-out ${item.iconHoverAnim}`}
+                                        />
+                                    </div>
+
+                                    {/* Konten Teks: Tajam dan Jelas */}
+                                    <div className="flex w-full flex-1 flex-col items-center justify-start">
+                                        <h3 className="font-display font-bold text-rimba-950 text-base leading-snug mb-2 min-h-11 flex items-center justify-center group-hover:text-rimba-700 transition-colors duration-200">
+                                            {item.title}
+                                        </h3>
+                                        <p className="text-xs text-rimba-800 leading-relaxed font-normal max-w-[18rem] min-h-19 flex items-start justify-center text-center">
+                                            {item.desc}
+                                        </p>
+                                    </div>
+
+                                    {/* Garis Aksen Bawah */}
+                                    <span
+                                        className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-1 w-0 group-hover:w-16 rounded-full ${item.indicator} transition-all duration-300 ease-out`}
+                                        aria-hidden="true"
                                     />
-                                </div>
-
-                                {/* Konten Teks: Tajam dan Jelas */}
-                                <div className="flex w-full flex-1 flex-col items-center justify-start">
-                                    <h3 className="font-display font-bold text-rimba-950 text-base leading-snug mb-2 min-h-11 flex items-center justify-center group-hover:text-rimba-700 transition-colors duration-200">
-                                        {item.title}
-                                    </h3>
-                                    <p className="text-xs text-rimba-800 leading-relaxed font-normal max-w-[18rem] min-h-19 flex items-start justify-center text-center">
-                                        {item.desc}
-                                    </p>
-                                </div>
-
-                                {/* Garis Aksen Bawah */}
-                                <span
-                                    className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-1 w-0 group-hover:w-16 rounded-full ${item.indicator} transition-all duration-300 ease-out`}
-                                    aria-hidden="true"
-                                />
-                            </Card>
+                                </Card>
+                            </AnimatedItem>
                         );
                     })}
                 </div>

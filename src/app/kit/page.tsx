@@ -13,6 +13,7 @@ import {
     Calculator,
     RotateCcw
 } from 'lucide-react';
+import { AnimatedItem } from '@/components/common/AnimatedItem';
 
 interface KitItem {
     id: string;
@@ -171,9 +172,6 @@ export default function KitSiagaPage() {
     const waterLitersNeeded = familyMembers * shelterDays * 3;
     const totalProgress = Math.round((checkedIds.length / KIT_ITEMS.length) * 100);
 
-    // ==============================================================
-    // METODE CETAK DEDICATED (DIJAMIN TIDAK KOSONG & HANYA DOKUMEN CETAK)
-    // ==============================================================
     const handlePrintDocument = () => {
         const printWindow = window.open('', '_blank', 'width=850,height=1000');
         if (!printWindow) {
@@ -242,7 +240,6 @@ export default function KitSiagaPage() {
           </style>
         </head>
         <body>
-          <!-- KOP SURAT RESMI -->
           <div style="border-bottom: 2.5px solid #166534; padding-bottom: 12px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: flex-start;">
             <div>
               <div style="display: inline-block; padding: 2px 8px; background-color: #dcfce7; border: 1px solid #86efac; border-radius: 4px; font-size: 10px; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
@@ -262,7 +259,6 @@ export default function KitSiagaPage() {
             </div>
           </div>
 
-          <!-- KOTAK LOGISTIK KELUARGA -->
           <div style="background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 11px;">
             <div style="font-weight: 800; color: #0f172a; margin-bottom: 4px; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px;">
               Estimasi Logistik Rumah Tangga:
@@ -275,7 +271,6 @@ export default function KitSiagaPage() {
             </div>
           </div>
 
-          <!-- TABEL CHECKLIST LENGKAP -->
           <table>
             <thead>
               <tr style="background-color: #f1f5f9; border-top: 1px solid #94a3b8; border-bottom: 2px solid #0f172a; font-size: 10px; text-transform: uppercase; color: #0f172a;">
@@ -291,7 +286,6 @@ export default function KitSiagaPage() {
             </tbody>
           </table>
 
-          <!-- FOOTER LEMBAR CETAK DENGAN KONTAK DARURAT -->
           <div style="margin-top: 18px; padding-top: 12px; border-top: 1.5px dashed #94a3b8; display: flex; justify-content: space-between; align-items: flex-end; font-size: 10px; color: #374151;">
             <div>
               <strong style="color: #991b1b; text-transform: uppercase; font-size: 9px; display: block; margin-bottom: 2px;">
@@ -311,11 +305,9 @@ export default function KitSiagaPage() {
         printWindow.document.write(htmlContent);
         printWindow.document.close();
 
-        // Tunggu dokumen ter-render lalu panggil dialog cetak
         printWindow.onload = () => {
             printWindow.focus();
             printWindow.print();
-            // Jendela pembantu bisa ditutup secara otomatis setelah print dialog selesai jika diinginkan
         };
     };
 
@@ -324,278 +316,292 @@ export default function KitSiagaPage() {
         : KIT_ITEMS.filter((item) => item.category === selectedCategory);
 
     return (
-        <div className="min-h-screen bg-earth-cream pb-28 pt-28 sm:pt-32">
+        <div className="min-h-screen bg-earth-cream pb-28 pt-28 sm:pt-32 overflow-hidden">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-10">
 
                 {/* Navigasi Atas */}
-                <div className="flex items-center justify-between gap-4">
-                    <Link
-                        href="/belajar"
-                        className="inline-flex items-center gap-2 text-xs font-bold text-rimba-800 hover:text-rimba-950 bg-white px-4 py-2 rounded-full border border-rimba-100 shadow-2xs transition-colors"
-                    >
-                        <ArrowLeft className="w-4 h-4 text-rimba-600" />
-                        <span>Kembali ke Belajar</span>
-                    </Link>
+                <AnimatedItem variant="fade-up" delay={0}>
+                    <div className="flex items-center justify-between gap-4">
+                        <Link
+                            href="/belajar"
+                            className="inline-flex items-center gap-2 text-xs font-bold text-rimba-800 hover:text-rimba-950 bg-white px-4 py-2 rounded-full border border-rimba-100 shadow-2xs transition-colors"
+                        >
+                            <ArrowLeft className="w-4 h-4 text-rimba-600" />
+                            <span>Kembali ke Belajar</span>
+                        </Link>
 
-                    <span className="text-xs font-extrabold uppercase tracking-wider text-rimba-800 bg-rimba-100 px-3.5 py-1.5 rounded-full border border-rimba-200">
-                        Kesiapsiagaan Keluarga
-                    </span>
-                </div>
+                        <span className="text-xs font-extrabold uppercase tracking-wider text-rimba-800 bg-rimba-100 px-3.5 py-1.5 rounded-full border border-rimba-200">
+                            Kesiapsiagaan Keluarga
+                        </span>
+                    </div>
+                </AnimatedItem>
 
                 {/* Hero Judul */}
                 <div className="text-center max-w-2xl mx-auto space-y-3">
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rimba-100 border border-rimba-200 text-rimba-900 text-xs font-bold uppercase tracking-wider">
-                        <PackageCheck className="w-4 h-4 text-rimba-600" />
-                        <span>Daftar Siaga Tanggap Bencana</span>
-                    </div>
-                    <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-rimba-950 tracking-tight">
-                        Kit Siaga Bencana Rimba
-                    </h1>
-                    <p className="text-sm sm:text-base text-rimba-800 font-medium leading-relaxed">
-                        Panduan perlengkapan wajib rumah tangga untuk menghadapi ancaman kebakaran lahan dan kabut asap pekat. Centang barang yang sudah siap, lalu cetak lembar periksa resminya!
-                    </p>
-                </div>
-
-                {/* ============================================================== */}
-                {/* STATS PROGRESS & TOMBOL AKSI                                  */}
-                {/* ============================================================== */}
-                <div className="bg-white rounded-3xl p-6 sm:p-8 border border-rimba-100 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-6">
-                    <div className="space-y-2 w-full sm:w-auto">
-                        <div className="flex items-center gap-3">
-                            <span className="font-display font-extrabold text-2xl sm:text-3xl text-rimba-950">
-                                {checkedIds.length} / {KIT_ITEMS.length}
-                            </span>
-                            <span className="text-xs font-bold px-3 py-1 rounded-full bg-rimba-100 text-rimba-800 border border-rimba-200">
-                                {totalProgress}% Siap
-                            </span>
+                    <AnimatedItem variant="fade-up" delay={0}>
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rimba-100 border border-rimba-200 text-rimba-900 text-xs font-bold uppercase tracking-wider">
+                            <PackageCheck className="w-4 h-4 text-rimba-600" />
+                            <span>Daftar Siaga Tanggap Bencana</span>
                         </div>
-                        <p className="text-xs text-rimba-700 font-medium">
-                            {totalProgress === 100
-                                ? 'Luar biasa! Rumah dan keluargamu 100% siap siaga menghadapi situasi darurat!'
-                                : 'Siapkan barang-barang di bawah secara bertahap bersama ayah dan ibu di rumah.'}
+                    </AnimatedItem>
+
+                    <AnimatedItem variant="fade-up" delay={120}>
+                        <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-rimba-950 tracking-tight">
+                            Kit Siaga Bencana Rimba
+                        </h1>
+                    </AnimatedItem>
+
+                    <AnimatedItem variant="fade-up" delay={220}>
+                        <p className="text-sm sm:text-base text-rimba-800 font-medium leading-relaxed">
+                            Panduan perlengkapan wajib rumah tangga untuk menghadapi ancaman kebakaran lahan dan kabut asap pekat. Centang barang yang sudah siap, lalu cetak lembar periksa resminya!
                         </p>
-
-                        {/* Progress Bar */}
-                        <div className="w-full sm:w-72 h-3 bg-earth-soft rounded-full overflow-hidden p-0.5 border border-rimba-200">
-                            <div
-                                className="h-full bg-linear-to-r from-leaf to-rimba-600 rounded-full transition-all duration-500 ease-out"
-                                style={{ width: `${totalProgress}%` }}
-                            />
-                        </div>
-                    </div>
-
-                    {/* Tombol Cetak & Reset */}
-                    <div className="flex items-center gap-3 w-full sm:w-auto">
-                        <button
-                            onClick={handleResetChecklist}
-                            className="p-3 rounded-2xl bg-earth-soft hover:bg-rimba-100 text-rimba-800 border border-rimba-200 transition-colors shadow-2xs cursor-pointer"
-                            title="Reset Checklist"
-                        >
-                            <RotateCcw className="w-4 h-4" />
-                        </button>
-
-                        <button
-                            onClick={handlePrintDocument}
-                            className="flex-1 sm:flex-none px-6 py-3.5 rounded-2xl bg-rimba-600 hover:bg-rimba-700 active:scale-95 text-white font-display font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
-                        >
-                            <Printer className="w-4 h-4" />
-                            <span>Cetak Lembar Siaga (PDF)</span>
-                        </button>
-                    </div>
+                    </AnimatedItem>
                 </div>
 
-                {/* ============================================================== */}
-                {/* KALKULATOR KEBUTUHAN KELUARGA                                 */}
-                {/* ============================================================== */}
-                <div className="bg-white rounded-3xl p-6 sm:p-8 border border-rimba-100 shadow-sm space-y-6">
-                    <div className="flex items-center gap-2.5 border-b border-rimba-100 pb-4">
-                        <div className="w-9 h-9 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center">
-                            <Calculator className="w-5 h-5" />
-                        </div>
-                        <div>
-                            <h2 className="font-display font-extrabold text-lg text-rimba-950">
-                                Kalkulator Kebutuhan Logistik Asap
-                            </h2>
-                            <p className="text-xs text-rimba-700">
-                                Hitung kebutuhan masker dan air minum darurat keluarga untuk bertahan dari kabut asap pekat.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                        <div className="space-y-4">
-                            <div>
-                                <div className="flex justify-between text-xs font-bold text-rimba-950 mb-1">
-                                    <span>Jumlah Anggota Keluarga:</span>
-                                    <strong className="text-rimba-700 font-extrabold">{familyMembers} Orang</strong>
-                                </div>
-                                <input
-                                    type="range"
-                                    min="1"
-                                    max="10"
-                                    value={familyMembers}
-                                    onChange={(e) => setFamilyMembers(Number(e.target.value))}
-                                    className="w-full accent-rimba-600 h-2.5 bg-rimba-100 rounded-lg cursor-pointer"
-                                />
+                {/* STATS PROGRESS & TOMBOL AKSI */}
+                <AnimatedItem variant="fade-scale" delay={150}>
+                    <div className="bg-white rounded-3xl p-6 sm:p-8 border border-rimba-100 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-6">
+                        <div className="space-y-2 w-full sm:w-auto">
+                            <div className="flex items-center gap-3">
+                                <span className="font-display font-extrabold text-2xl sm:text-3xl text-rimba-950">
+                                    {checkedIds.length} / {KIT_ITEMS.length}
+                                </span>
+                                <span className="text-xs font-bold px-3 py-1 rounded-full bg-rimba-100 text-rimba-800 border border-rimba-200">
+                                    {totalProgress}% Siap
+                                </span>
                             </div>
+                            <p className="text-xs text-rimba-700 font-medium">
+                                {totalProgress === 100
+                                    ? 'Luar biasa! Rumah dan keluargamu 100% siap siaga menghadapi situasi darurat!'
+                                    : 'Siapkan barang-barang di bawah secara bertahap bersama ayah dan ibu di rumah.'}
+                            </p>
 
-                            <div>
-                                <div className="flex justify-between text-xs font-bold text-rimba-950 mb-1">
-                                    <span>Durasi Siaga Bertahan di Rumah:</span>
-                                    <strong className="text-rimba-700 font-extrabold">{shelterDays} Hari</strong>
-                                </div>
-                                <input
-                                    type="range"
-                                    min="1"
-                                    max="7"
-                                    value={shelterDays}
-                                    onChange={(e) => setShelterDays(Number(e.target.value))}
-                                    className="w-full accent-rimba-600 h-2.5 bg-rimba-100 rounded-lg cursor-pointer"
+                            {/* Progress Bar */}
+                            <div className="w-full sm:w-72 h-3 bg-earth-soft rounded-full overflow-hidden p-0.5 border border-rimba-200">
+                                <div
+                                    className="h-full bg-linear-to-r from-leaf to-rimba-600 rounded-full transition-all duration-500 ease-out"
+                                    style={{ width: `${totalProgress}%` }}
                                 />
                             </div>
                         </div>
 
-                        {/* Hasil Estimasi */}
-                        <div className="p-5 rounded-2xl bg-earth-soft border border-rimba-100 space-y-3">
-                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-rimba-700 block">
-                                Estimasi Kebutuhan Minimum:
-                            </span>
-                            <div className="flex items-center justify-between text-xs sm:text-sm">
-                                <span className="text-rimba-800 font-medium">Masker N95/KF94:</span>
-                                <strong className="text-sky-800 font-extrabold">{maskNeeded} Buah</strong>
-                            </div>
-                            <div className="flex items-center justify-between text-xs sm:text-sm">
-                                <span className="text-rimba-800 font-medium">Cadangan Air Minum Bersih:</span>
-                                <strong className="text-emerald-800 font-extrabold">{waterLitersNeeded} Liter (~{Math.ceil(waterLitersNeeded / 19)} Galon)</strong>
-                            </div>
-                            <p className="text-[11px] text-rimba-700 pt-2 border-t border-rimba-200 leading-relaxed">
-                                💡 Saat indeks kualitas udara menunjukkan level bahaya, jangan keluar rumah tanpa masker N95 dan perbanyak minum air hangat.
-                            </p>
+                        {/* Tombol Cetak & Reset */}
+                        <div className="flex items-center gap-3 w-full sm:w-auto">
+                            <button
+                                onClick={handleResetChecklist}
+                                className="p-3 rounded-2xl bg-earth-soft hover:bg-rimba-100 text-rimba-800 border border-rimba-200 transition-colors shadow-2xs cursor-pointer"
+                                title="Reset Checklist"
+                            >
+                                <RotateCcw className="w-4 h-4" />
+                            </button>
+
+                            <button
+                                onClick={handlePrintDocument}
+                                className="flex-1 sm:flex-none px-6 py-3.5 rounded-2xl bg-rimba-600 hover:bg-rimba-700 active:scale-95 text-white font-display font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                            >
+                                <Printer className="w-4 h-4" />
+                                <span>Cetak Lembar Siaga (PDF)</span>
+                            </button>
                         </div>
                     </div>
-                </div>
+                </AnimatedItem>
 
-                {/* ============================================================== */}
-                {/* TAB FILTER KATEGORI                                           */}
-                {/* ============================================================== */}
-                <div className="flex flex-wrap items-center gap-2">
-                    <button
-                        onClick={() => setSelectedCategory('all')}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${selectedCategory === 'all'
+                {/* KALKULATOR KEBUTUHAN KELUARGA */}
+                <AnimatedItem variant="fade-scale" delay={180}>
+                    <div className="bg-white rounded-3xl p-6 sm:p-8 border border-rimba-100 shadow-sm space-y-6">
+                        <div className="flex items-center gap-2.5 border-b border-rimba-100 pb-4">
+                            <div className="w-9 h-9 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center">
+                                <Calculator className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <h2 className="font-display font-extrabold text-lg text-rimba-950">
+                                    Kalkulator Kebutuhan Logistik Asap
+                                </h2>
+                                <p className="text-xs text-rimba-700">
+                                    Hitung kebutuhan masker dan air minum darurat keluarga untuk bertahan dari kabut asap pekat.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
+                            <div className="space-y-4">
+                                <div>
+                                    <div className="flex justify-between text-xs font-bold text-rimba-950 mb-1">
+                                        <span>Jumlah Anggota Keluarga:</span>
+                                        <strong className="text-rimba-700 font-extrabold">{familyMembers} Orang</strong>
+                                    </div>
+                                    <input
+                                        type="range"
+                                        min="1"
+                                        max="10"
+                                        value={familyMembers}
+                                        onChange={(e) => setFamilyMembers(Number(e.target.value))}
+                                        className="w-full accent-rimba-600 h-2.5 bg-rimba-100 rounded-lg cursor-pointer"
+                                    />
+                                </div>
+
+                                <div>
+                                    <div className="flex justify-between text-xs font-bold text-rimba-950 mb-1">
+                                        <span>Durasi Siaga Bertahan di Rumah:</span>
+                                        <strong className="text-rimba-700 font-extrabold">{shelterDays} Hari</strong>
+                                    </div>
+                                    <input
+                                        type="range"
+                                        min="1"
+                                        max="7"
+                                        value={shelterDays}
+                                        onChange={(e) => setShelterDays(Number(e.target.value))}
+                                        className="w-full accent-rimba-600 h-2.5 bg-rimba-100 rounded-lg cursor-pointer"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Hasil Estimasi */}
+                            <div className="p-5 rounded-2xl bg-earth-soft border border-rimba-100 space-y-3">
+                                <span className="text-[10px] font-extrabold uppercase tracking-wider text-rimba-700 block">
+                                    Estimasi Kebutuhan Minimum:
+                                </span>
+                                <div className="flex items-center justify-between text-xs sm:text-sm">
+                                    <span className="text-rimba-800 font-medium">Masker N95/KF94:</span>
+                                    <strong className="text-sky-800 font-extrabold">{maskNeeded} Buah</strong>
+                                </div>
+                                <div className="flex items-center justify-between text-xs sm:text-sm">
+                                    <span className="text-rimba-800 font-medium">Cadangan Air Minum Bersih:</span>
+                                    <strong className="text-emerald-800 font-extrabold">{waterLitersNeeded} Liter (~{Math.ceil(waterLitersNeeded / 19)} Galon)</strong>
+                                </div>
+                                <p className="text-[11px] text-rimba-700 pt-2 border-t border-rimba-200 leading-relaxed">
+                                    💡 Saat indeks kualitas udara menunjukkan level bahaya, jangan keluar rumah tanpa masker N95 dan perbanyak minum air hangat.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </AnimatedItem>
+
+                {/* TAB FILTER KATEGORI */}
+                <AnimatedItem variant="fade-up" delay={200}>
+                    <div className="flex flex-wrap items-center gap-2">
+                        <button
+                            onClick={() => setSelectedCategory('all')}
+                            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${selectedCategory === 'all'
                                 ? 'bg-rimba-800 text-white shadow-xs'
                                 : 'bg-white text-rimba-800 border border-rimba-200 hover:bg-earth-soft'
-                            }`}
-                    >
-                        Semua Perlengkapan ({KIT_ITEMS.length})
-                    </button>
-                    <button
-                        onClick={() => setSelectedCategory('tas-siaga')}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${selectedCategory === 'tas-siaga'
+                                }`}
+                        >
+                            Semua Perlengkapan ({KIT_ITEMS.length})
+                        </button>
+                        <button
+                            onClick={() => setSelectedCategory('tas-siaga')}
+                            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${selectedCategory === 'tas-siaga'
                                 ? 'bg-sky-600 text-white shadow-xs'
                                 : 'bg-white text-rimba-800 border border-rimba-200 hover:bg-earth-soft'
-                            }`}
-                    >
-                        <Wind className="w-3.5 h-3.5" />
-                        <span>Tas Evakuasi 72 Jam</span>
-                    </button>
-                    <button
-                        onClick={() => setSelectedCategory('p3k')}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${selectedCategory === 'p3k'
+                                }`}
+                        >
+                            <Wind className="w-3.5 h-3.5" />
+                            <span>Tas Evakuasi 72 Jam</span>
+                        </button>
+                        <button
+                            onClick={() => setSelectedCategory('p3k')}
+                            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${selectedCategory === 'p3k'
                                 ? 'bg-rose-600 text-white shadow-xs'
                                 : 'bg-white text-rimba-800 border border-rimba-200 hover:bg-earth-soft'
-                            }`}
-                    >
-                        <HeartPulse className="w-3.5 h-3.5" />
-                        <span>P3K Paru & Mata</span>
-                    </button>
-                    <button
-                        onClick={() => setSelectedCategory('rumah-kebun')}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${selectedCategory === 'rumah-kebun'
+                                }`}
+                        >
+                            <HeartPulse className="w-3.5 h-3.5" />
+                            <span>P3K Paru & Mata</span>
+                        </button>
+                        <button
+                            onClick={() => setSelectedCategory('rumah-kebun')}
+                            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${selectedCategory === 'rumah-kebun'
                                 ? 'bg-emerald-600 text-white shadow-xs'
                                 : 'bg-white text-rimba-800 border border-rimba-200 hover:bg-earth-soft'
-                            }`}
-                    >
-                        <Home className="w-3.5 h-3.5" />
-                        <span>Pekarangan Bebas Api</span>
-                    </button>
-                </div>
+                                }`}
+                        >
+                            <Home className="w-3.5 h-3.5" />
+                            <span>Pekarangan Bebas Api</span>
+                        </button>
+                    </div>
+                </AnimatedItem>
 
-                {/* ============================================================== */}
-                {/* DAFTAR CHECKLIST INTERAKTIF                                   */}
-                {/* ============================================================== */}
+                {/* DAFTAR CHECKLIST INTERAKTIF (STAGGERED ANIMATION) */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {filteredItems.map((item) => {
+                    {filteredItems.map((item, idx) => {
                         const isChecked = checkedIds.includes(item.id);
 
                         return (
-                            <div
+                            <AnimatedItem
                                 key={item.id}
-                                onClick={() => toggleCheck(item.id)}
-                                className={`p-5 rounded-2xl border transition-all cursor-pointer select-none flex items-start gap-4 ${isChecked
+                                variant="fade-up"
+                                delay={80 + (idx % 4) * 70}
+                                className="h-full"
+                            >
+                                <div
+                                    onClick={() => toggleCheck(item.id)}
+                                    className={`h-full p-5 rounded-2xl border transition-all cursor-pointer select-none flex items-start gap-4 ${isChecked
                                         ? 'bg-rimba-50/70 border-rimba-300 shadow-2xs'
                                         : 'bg-white border-rimba-100 hover:border-rimba-300 shadow-2xs'
-                                    }`}
-                            >
-                                {/* Kotak Centang Visual */}
-                                <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 mt-0.5 border-2 transition-all ${isChecked
+                                        }`}
+                                >
+                                    {/* Kotak Centang Visual */}
+                                    <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 mt-0.5 border-2 transition-all ${isChecked
                                         ? 'bg-emerald-600 border-emerald-600 text-white shadow-xs'
                                         : 'bg-white border-slate-300'
-                                    }`}>
-                                    {isChecked && <CheckCircle2 className="w-4 h-4 fill-current" />}
-                                </div>
+                                        }`}>
+                                        {isChecked && <CheckCircle2 className="w-4 h-4 fill-current" />}
+                                    </div>
 
-                                <div className="flex-1 space-y-1">
-                                    <div className="flex items-center justify-between gap-2">
-                                        <h3 className={`font-display font-bold text-sm leading-snug ${isChecked ? 'text-rimba-950 line-through opacity-75' : 'text-rimba-950'
-                                            }`}>
-                                            {item.name}
-                                        </h3>
-                                        <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-md shrink-0 ${item.priority === 'Sangat Penting'
+                                    <div className="flex-1 space-y-1">
+                                        <div className="flex items-center justify-between gap-2">
+                                            <h3 className={`font-display font-bold text-sm leading-snug ${isChecked ? 'text-rimba-950 line-through opacity-75' : 'text-rimba-950'
+                                                }`}>
+                                                {item.name}
+                                            </h3>
+                                            <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-md shrink-0 ${item.priority === 'Sangat Penting'
                                                 ? 'bg-rose-100 text-rose-800 border border-rose-200'
                                                 : item.priority === 'Penting'
                                                     ? 'bg-amber-100 text-amber-800 border border-amber-200'
                                                     : 'bg-slate-100 text-slate-700'
-                                            }`}>
-                                            {item.priority}
-                                        </span>
-                                    </div>
+                                                }`}>
+                                                {item.priority}
+                                            </span>
+                                        </div>
 
-                                    <p className="text-xs text-rimba-700 leading-relaxed font-normal">
-                                        {item.desc}
-                                    </p>
+                                        <p className="text-xs text-rimba-700 leading-relaxed font-normal">
+                                            {item.desc}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
+                            </AnimatedItem>
                         );
                     })}
                 </div>
 
-                {/* ============================================================== */}
-                {/* NOMOR DARURAT DAN POSKO SIAGA                                 */}
-                {/* ============================================================== */}
-                <div className="p-6 rounded-3xl bg-rimba-900 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-md">
-                    <div>
-                        <span className="text-xs font-bold uppercase tracking-wider text-accent-sun">
-                            Kontak Cepat Tanggap 24 Jam
-                        </span>
-                        <h3 className="font-display font-extrabold text-xl text-white mt-1">
-                            Simpan Nomor Posko Bencana di Ponselmu
-                        </h3>
-                        <p className="text-xs text-rimba-200 mt-1 max-w-lg leading-relaxed">
-                            Segera hubungi jika melihat titik kobaran api liar atau tetangga mengalami sesak napas darurat akibat kabut asap.
-                        </p>
-                    </div>
+                {/* NOMOR DARURAT DAN POSKO SIAGA */}
+                <AnimatedItem variant="fade-scale" delay={150}>
+                    <div className="p-6 rounded-3xl bg-rimba-900 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-md">
+                        <div>
+                            <span className="text-xs font-bold uppercase tracking-wider text-accent-sun">
+                                Kontak Cepat Tanggap 24 Jam
+                            </span>
+                            <h3 className="font-display font-extrabold text-xl text-white mt-1">
+                                Simpan Nomor Posko Bencana di Ponselmu
+                            </h3>
+                            <p className="text-xs text-rimba-200 mt-1 max-w-lg leading-relaxed">
+                                Segera hubungi jika melihat titik kobaran api liar atau tetangga mengalami sesak napas darurat akibat kabut asap.
+                            </p>
+                        </div>
 
-                    <div className="flex items-center gap-3 w-full sm:w-auto">
-                        <div className="flex-1 sm:flex-none px-4 py-3 rounded-2xl bg-white/10 border border-white/20 text-center">
-                            <span className="text-[10px] text-rimba-300 uppercase block font-bold">Pemadam Kebakaran</span>
-                            <span className="font-display font-black text-xl text-amber-300">113</span>
-                        </div>
-                        <div className="flex-1 sm:flex-none px-4 py-3 rounded-2xl bg-white/10 border border-white/20 text-center">
-                            <span className="text-[10px] text-rimba-300 uppercase block font-bold">Medis Darurat</span>
-                            <span className="font-display font-black text-xl text-emerald-300">119</span>
+                        <div className="flex items-center gap-3 w-full sm:w-auto">
+                            <div className="flex-1 sm:flex-none px-4 py-3 rounded-2xl bg-white/10 border border-white/20 text-center">
+                                <span className="text-[10px] text-rimba-300 uppercase block font-bold">Pemadam Kebakaran</span>
+                                <span className="font-display font-black text-xl text-amber-300">113</span>
+                            </div>
+                            <div className="flex-1 sm:flex-none px-4 py-3 rounded-2xl bg-white/10 border border-white/20 text-center">
+                                <span className="text-[10px] text-rimba-300 uppercase block font-bold">Medis Darurat</span>
+                                <span className="font-display font-black text-xl text-emerald-300">119</span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </AnimatedItem>
 
             </div>
         </div>
