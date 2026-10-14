@@ -27,15 +27,16 @@ export default function ContactPage() {
     });
 
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [whatsappUrl, setWhatsappUrl] = useState<string | null>(null);
+    const [formError, setFormError] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData.name.trim() || !formData.message.trim()) {
-            alert('Mohon isi nama dan pesan Anda terlebih dahulu.');
+            setFormError('Mohon isi nama dan pesan Anda terlebih dahulu.');
             return;
         }
 
-        // Format pesan WhatsApp otomatis
         const waText = encodeURIComponent(
             `Halo Tim R.I.M.B.A Indonesia!\n\n` +
             `*Nama:* ${formData.name}\n` +
@@ -45,7 +46,10 @@ export default function ContactPage() {
             `*Pesan:*\n${formData.message}`
         );
 
-        window.open(`https://wa.me/6281234567890?text=${waText}`, '_blank');
+        const url = `https://wa.me/6281234567890?text=${waText}`;
+        setFormError('');
+        setWhatsappUrl(url);
+        window.open(url, '_blank', 'noopener,noreferrer');
         setIsSubmitted(true);
     };
 
@@ -177,10 +181,13 @@ export default function ContactPage() {
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div className="space-y-1.5">
-                                        <label className="text-xs font-bold text-rimba-950 block">Nama Lengkap *</label>
+                                        <label htmlFor="contact-name" className="text-xs font-bold text-rimba-950 block">Nama Lengkap *</label>
                                         <input
+                                            id="contact-name"
                                             type="text"
                                             required
+                                            autoComplete="name"
+                                            maxLength={100}
                                             value={formData.name}
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                             placeholder="Contoh: Bima Ardiansyah"
@@ -189,8 +196,9 @@ export default function ContactPage() {
                                     </div>
 
                                     <div className="space-y-1.5">
-                                        <label className="text-xs font-bold text-rimba-950 block">Saya Adalah</label>
+                                        <label htmlFor="contact-role" className="text-xs font-bold text-rimba-950 block">Saya Adalah</label>
                                         <select
+                                            id="contact-role"
                                             value={formData.role}
                                             onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                                             className="w-full px-4 py-3 rounded-2xl border-2 border-rimba-200 focus:border-rimba-600 focus:outline-none text-xs font-medium text-rimba-950 bg-white"
@@ -206,9 +214,13 @@ export default function ContactPage() {
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div className="space-y-1.5">
-                                        <label className="text-xs font-bold text-rimba-950 block">Nomor WhatsApp (Opsional)</label>
+                                        <label htmlFor="contact-phone" className="text-xs font-bold text-rimba-950 block">Nomor WhatsApp (Opsional)</label>
                                         <input
+                                            id="contact-phone"
                                             type="tel"
+                                            autoComplete="tel"
+                                            inputMode="tel"
+                                            maxLength={24}
                                             value={formData.phone}
                                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                             placeholder="0812xxxxxxxx"
@@ -217,9 +229,11 @@ export default function ContactPage() {
                                     </div>
 
                                     <div className="space-y-1.5">
-                                        <label className="text-xs font-bold text-rimba-950 block">Perihal Pesan</label>
+                                        <label htmlFor="contact-subject" className="text-xs font-bold text-rimba-950 block">Perihal Pesan</label>
                                         <input
+                                            id="contact-subject"
                                             type="text"
+                                            maxLength={120}
                                             value={formData.subject}
                                             onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                                             placeholder="Contoh: Klaim Sertifikat / Kunjungan Sekolah"
@@ -229,10 +243,12 @@ export default function ContactPage() {
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-rimba-950 block">Isi Pesan / Pertanyaan *</label>
+                                    <label htmlFor="contact-message" className="text-xs font-bold text-rimba-950 block">Isi Pesan / Pertanyaan *</label>
                                     <textarea
+                                        id="contact-message"
                                         required
                                         rows={4}
+                                        maxLength={2000}
                                         value={formData.message}
                                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                         placeholder="Tuliskan pertanyaanmu dengan jelas di sini..."
@@ -248,10 +264,21 @@ export default function ContactPage() {
                                     <span>Kirim via WhatsApp Resmi</span>
                                 </button>
 
+                                {formError && (
+                                    <p role="alert" className="text-xs font-semibold text-rose-700">
+                                        {formError}
+                                    </p>
+                                )}
+
                                 {isSubmitted && (
-                                    <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center gap-2.5 text-xs text-emerald-900 font-semibold animate-in fade-in duration-200">
+                                    <div role="status" aria-live="polite" className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center gap-2.5 text-xs text-emerald-900 font-semibold animate-in fade-in duration-200">
                                         <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                                        <span>Jendela WhatsApp telah dibuka. Terima kasih telah menghubungi kami!</span>
+                                        <span>
+                                            Pesan siap dikirim. Jika WhatsApp tidak terbuka,{' '}
+                                            <a href={whatsappUrl ?? undefined} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
+                                                buka WhatsApp di sini
+                                            </a>.
+                                        </span>
                                     </div>
                                 )}
                             </form>
@@ -288,9 +315,9 @@ export default function ContactPage() {
                                         </div>
                                         <div>
                                             <h3 className="font-bold text-xs text-rimba-950">Surat Elektronik (Email)</h3>
-                                            <p className="text-xs text-rimba-800 leading-relaxed mt-0.5">
+                                            <a href="mailto:halo@rimba-edukasi.id" className="text-xs text-rimba-800 leading-relaxed mt-0.5 underline underline-offset-2">
                                                 halo@rimba-edukasi.id
-                                            </p>
+                                            </a>
                                         </div>
                                     </div>
 
@@ -300,9 +327,9 @@ export default function ContactPage() {
                                         </div>
                                         <div>
                                             <h3 className="font-bold text-xs text-rimba-950">Layanan Chat WhatsApp</h3>
-                                            <p className="text-xs text-rimba-800 leading-relaxed mt-0.5">
+                                            <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" className="text-xs text-rimba-800 leading-relaxed mt-0.5 underline underline-offset-2">
                                                 +62 812-3456-7890 (Senin - Sabtu, 08.00 - 17.00 WIB)
-                                            </p>
+                                            </a>
                                         </div>
                                     </div>
 

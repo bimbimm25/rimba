@@ -57,6 +57,29 @@ body {
   outline-offset: 2px;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  [data-motion-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+@media (pointer: coarse) {
+  .custom-cursor-overlay {
+    display: none;
+  }
+}
+
 /* Sembunyikan kursor HANYA di area kosong */
 @media (pointer: fine) {
   body.hide-cursor {

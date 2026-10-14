@@ -69,7 +69,7 @@ export const Footer = () => {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/kontak" className="hover:text-gray-900 transition-colors">
+                                    <Link href="/contact" className="hover:text-gray-900 transition-colors">
                                         Kontak Siaga
                                     </Link>
                                 </li>
@@ -113,7 +113,7 @@ export const Footer = () => {
                         <Link href="/tentang" className="hover:text-gray-900 transition-colors">
                             Kebijakan Konten
                         </Link>
-                        <Link href="/kontak" className="hover:text-gray-900 transition-colors">
+                        <Link href="/contact" className="hover:text-gray-900 transition-colors">
                             Bantuan
                         </Link>
                     </div>

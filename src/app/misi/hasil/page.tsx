@@ -113,7 +113,7 @@ export default function HasilMisiPage() {
                     </h1>
 
                     <p className="text-sm sm:text-base text-rimba-800 max-w-xl mx-auto leading-relaxed">
-                        Lihat perolehan lencana penjelajahanmu dan buka piagam penghargaan resmi sebagai pelindung kelestarian alam[cite: 3].
+                        Lihat perolehan lencana penjelajahanmu dan buka piagam penghargaan resmi sebagai pelindung kelestarian alam.
                     </p>
                 </header>
 
@@ -172,7 +172,7 @@ export default function HasilMisiPage() {
                             <span>Koleksi Lencana Rimba</span>
                         </h2>
                         <p className="text-xs text-rimba-700 font-medium mt-0.5">
-                            Lencana otomatis terbuka saat kamu menyelesaikan misi yang diperlukan[cite: 3].
+                            Lencana otomatis terbuka saat kamu menyelesaikan misi yang diperlukan.
                         </p>
                     </div>
 

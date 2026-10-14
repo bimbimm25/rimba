@@ -178,6 +178,7 @@ export default function KitSiagaPage() {
             alert('Mohon izinkan pop-up peramban untuk mencetak lembar siaga.');
             return;
         }
+        printWindow.opener = null;
 
         const rowsHtml = KIT_ITEMS.map((item, idx) => {
             const isChecked = checkedIds.includes(item.id);

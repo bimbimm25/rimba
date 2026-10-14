@@ -21,33 +21,12 @@ export const AnimatedSection: React.FC<AnimatedSectionProps> = ({
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [isVisible, setIsVisible] = useState(false);
-    const [pageReady, setPageReady] = useState(false);
 
     useEffect(() => {
-        // Fungsi pemicu saat loading screen sudah benar-benar lenyap
-        const handleReady = () => {
-            // Beri sedikit jeda napas 100ms agar mata pengguna fokus setelah swipe up
-            setTimeout(() => {
-                setPageReady(true);
-            }, 100);
-        };
-
-        // Jika pengguna reload di tengah halaman atau tanpa loading
-        window.addEventListener('rimba_page_ready', handleReady);
-
-        // Fallback cadangan hanya jika dalam 4 detik tidak ada loading screen sama sekali
-        const fallbackTimer = setTimeout(() => {
-            setPageReady(true);
-        }, 4000);
-
-        return () => {
-            clearTimeout(fallbackTimer);
-            window.removeEventListener('rimba_page_ready', handleReady);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (!pageReady) return;
+        if (typeof IntersectionObserver === 'undefined') {
+            const frame = window.requestAnimationFrame(() => setIsVisible(true));
+            return () => window.cancelAnimationFrame(frame);
+        }
 
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -67,16 +46,14 @@ export const AnimatedSection: React.FC<AnimatedSectionProps> = ({
         }
 
         return () => observer.disconnect();
-    }, [pageReady]);
+    }, []);
 
-    // Pengaturan timing & kehalusan transisi
     const getVariantStyles = (): React.CSSProperties => {
         const baseTransition: React.CSSProperties = {
             transitionProperty: 'opacity, transform',
-            transitionDuration: '1200ms', // Durasi diperpanjang agar lebih sinematis & santai
-            transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)', // Smooth ease-out
-            transitionDelay: `${delay}ms`,
-            willChange: 'opacity, transform'
+            transitionDuration: '500ms',
+            transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            transitionDelay: `${delay}ms`
         };
 
         if (!isVisible) {
@@ -117,7 +94,13 @@ export const AnimatedSection: React.FC<AnimatedSectionProps> = ({
     };
 
     return (
-        <div id={id} ref={ref} style={getVariantStyles()} className={className}>
+        <div
+            id={id}
+            ref={ref}
+            data-motion-reveal
+            style={getVariantStyles()}
+            className={`${className} ${isVisible ? '' : 'will-change-[opacity,transform]'}`}
+        >
             {children}
         </div>
     );

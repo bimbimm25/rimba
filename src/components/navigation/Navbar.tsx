@@ -15,7 +15,6 @@ import {
     Menu,
     X,
     PhoneCall,
-    Sparkles
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -67,6 +66,8 @@ export const Navbar: React.FC = () => {
     const pathname = usePathname();
     const [isScrolled, setIsScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [menuPathname, setMenuPathname] = useState(pathname);
+    const isMobileMenuOpen = mobileMenuOpen && menuPathname === pathname;
 
     useEffect(() => {
         const handleScroll = () => {
@@ -80,20 +81,33 @@ export const Navbar: React.FC = () => {
 
     // Kunci scroll halaman saat menu mobile terbuka
     useEffect(() => {
-        if (mobileMenuOpen) {
+        if (isMobileMenuOpen) {
+            const previousOverflow = document.body.style.overflow;
             document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
+            return () => {
+                document.body.style.overflow = previousOverflow;
+            };
         }
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
-    }, [mobileMenuOpen]);
+    }, [isMobileMenuOpen]);
 
-    // Tutup menu mobile ketika berpindah halaman
     useEffect(() => {
-        setMobileMenuOpen(false);
-    }, [pathname]);
+        if (!isMobileMenuOpen) return;
+
+        const previousFocus = document.activeElement instanceof HTMLElement
+            ? document.activeElement
+            : null;
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                setMobileMenuOpen(false);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            if (previousFocus?.isConnected) previousFocus.focus();
+        };
+    }, [isMobileMenuOpen]);
 
     return (
         <>
@@ -135,6 +149,7 @@ export const Navbar: React.FC = () => {
                                 <Link
                                     key={item.href}
                                     href={item.href}
+                                    aria-current={isActive ? 'page' : undefined}
                                     className={`relative px-3.5 py-2 rounded-2xl text-xs font-bold transition-all duration-300 flex items-center gap-2 ${isActive
                                             ? 'bg-rimba-800 text-white shadow-xs'
                                             : isScrolled
@@ -168,7 +183,12 @@ export const Navbar: React.FC = () => {
 
                     {/* Tombol Hamburger Mobile */}
                     <button
-                        onClick={() => setMobileMenuOpen(true)}
+                        onClick={() => {
+                            setMenuPathname(pathname);
+                            setMobileMenuOpen(true);
+                        }}
+                        aria-expanded={isMobileMenuOpen}
+                        aria-controls="mobile-navigation"
                         className={`md:hidden p-2.5 rounded-2xl text-rimba-800 transition-colors border cursor-pointer ${isScrolled
                                 ? 'bg-white hover:bg-earth-soft border-rimba-100 shadow-2xs'
                                 : 'bg-white/70 hover:bg-white border-rimba-200/60 backdrop-blur-xs'
@@ -182,21 +202,25 @@ export const Navbar: React.FC = () => {
 
             {/* MODAL MENU MOBILE DI TENGAH LAYAR */}
             <div
-                className={`fixed inset-0 z-50 md:hidden flex items-center justify-center p-4 transition-all duration-350 ease-out ${mobileMenuOpen
+                id="mobile-navigation"
+                role="navigation"
+                aria-label="Menu navigasi"
+                aria-hidden={!isMobileMenuOpen}
+                className={`fixed inset-0 z-50 md:hidden flex items-center justify-center p-4 transition-all duration-350 ease-out ${isMobileMenuOpen
                         ? 'opacity-100 pointer-events-auto visible'
                         : 'opacity-0 pointer-events-none invisible'
                     }`}
             >
                 {/* Latar Belakang Gelap (Klik di luar untuk menutup) */}
                 <div
-                    className={`absolute inset-0 bg-rimba-950/60 backdrop-blur-md transition-opacity duration-350 ${mobileMenuOpen ? 'opacity-100' : 'opacity-0'
+                    className={`absolute inset-0 bg-rimba-950/60 backdrop-blur-md transition-opacity duration-350 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'
                         }`}
                     onClick={() => setMobileMenuOpen(false)}
                 />
 
                 {/* Kotak Menu Mengambang di Tengah */}
                 <div
-                    className={`relative z-10 w-full max-w-sm max-h-[88vh] bg-white rounded-3xl border border-rimba-100 shadow-2xl flex flex-col overflow-hidden transition-all duration-350 ${mobileMenuOpen
+                    className={`relative z-10 w-full max-w-sm max-h-[88vh] bg-white rounded-3xl border border-rimba-100 shadow-2xl flex flex-col overflow-hidden transition-all duration-350 ${isMobileMenuOpen
                             ? 'scale-100 translate-y-0 opacity-100'
                             : 'scale-95 translate-y-4 opacity-0'
                         }`}
@@ -240,6 +264,7 @@ export const Navbar: React.FC = () => {
                                 <Link
                                     key={item.href}
                                     href={item.href}
+                                    aria-current={isActive ? 'page' : undefined}
                                     onClick={() => setMobileMenuOpen(false)}
                                     className={`p-3 rounded-2xl flex items-center justify-between transition-all duration-200 ${isActive
                                             ? 'bg-rimba-800 text-white shadow-sm'
@@ -279,7 +304,7 @@ export const Navbar: React.FC = () => {
                     {/* Footer Tombol Kontak */}
                     <div className="p-4 border-t border-rimba-100 bg-earth-cream/30">
                         <Link
-                            href="/kontak"
+                            href="/contact"
                             onClick={() => setMobileMenuOpen(false)}
                             className="w-full py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-colors active:scale-98"
                         >

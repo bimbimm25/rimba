@@ -19,26 +19,12 @@ export const AnimatedItem: React.FC<AnimatedItemProps> = ({
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [isVisible, setIsVisible] = useState(false);
-    const [pageReady, setPageReady] = useState(false);
 
     useEffect(() => {
-        const handleReady = () => {
-            setTimeout(() => setPageReady(true), 120);
-        };
-
-        window.addEventListener('rimba_page_ready', handleReady);
-
-        // Fallback otomatis jika tidak melewati screen loading
-        const timer = setTimeout(() => setPageReady(true), 3500);
-
-        return () => {
-            clearTimeout(timer);
-            window.removeEventListener('rimba_page_ready', handleReady);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (!pageReady) return;
+        if (typeof IntersectionObserver === 'undefined') {
+            const frame = window.requestAnimationFrame(() => setIsVisible(true));
+            return () => window.cancelAnimationFrame(frame);
+        }
 
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -56,15 +42,14 @@ export const AnimatedItem: React.FC<AnimatedItemProps> = ({
         if (ref.current) observer.observe(ref.current);
 
         return () => observer.disconnect();
-    }, [pageReady]);
+    }, []);
 
     const getStyle = (): React.CSSProperties => {
         const base: React.CSSProperties = {
             transitionProperty: 'opacity, transform',
-            transitionDuration: '1100ms',
+            transitionDuration: '450ms',
             transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
-            transitionDelay: `${delay}ms`,
-            willChange: 'opacity, transform'
+            transitionDelay: `${delay}ms`
         };
 
         if (!isVisible) {
@@ -85,7 +70,12 @@ export const AnimatedItem: React.FC<AnimatedItemProps> = ({
     };
 
     return (
-        <div ref={ref} style={getStyle()} className={className}>
+        <div
+            ref={ref}
+            data-motion-reveal
+            style={getStyle()}
+            className={`${className} ${isVisible ? '' : 'will-change-[opacity,transform]'}`}
+        >
             {children}
         </div>
     );

@@ -11,10 +11,11 @@ interface TargetRect {
 }
 
 export const CustomCursor = () => {
-    const [mounted, setMounted] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [isLocked, setIsLocked] = useState(false);
 
+    const isVisibleRef = useRef(false);
+    const isLockedRef = useRef(false);
     const mousePos = useRef({ x: -100, y: -100 });
     const currentPos = useRef({ x: -100, y: -100 });
     const targetBox = useRef<TargetRect | null>(null);
@@ -24,7 +25,49 @@ export const CustomCursor = () => {
         const isTouch = window.matchMedia('(pointer: coarse)').matches;
         if (isTouch) return;
 
-        setMounted(true);
+        let rafId: number | null = null;
+
+        const updateLoop = () => {
+            rafId = null;
+            if (!scopeRef.current) return;
+
+            let distance = 0;
+            if (targetBox.current) {
+                const target = targetBox.current;
+                const deltaX = target.x - currentPos.current.x;
+                const deltaY = target.y - currentPos.current.y;
+                currentPos.current.x += deltaX * 0.25;
+                currentPos.current.y += deltaY * 0.25;
+                distance = Math.max(Math.abs(deltaX), Math.abs(deltaY));
+
+                scopeRef.current.style.width = `${target.width}px`;
+                scopeRef.current.style.height = `${target.height}px`;
+                scopeRef.current.style.borderRadius = target.borderRadius;
+            } else {
+                const targetX = mousePos.current.x - 18;
+                const targetY = mousePos.current.y - 18;
+                const deltaX = targetX - currentPos.current.x;
+                const deltaY = targetY - currentPos.current.y;
+                currentPos.current.x += deltaX * 0.35;
+                currentPos.current.y += deltaY * 0.35;
+                distance = Math.max(Math.abs(deltaX), Math.abs(deltaY));
+
+                scopeRef.current.style.width = '36px';
+                scopeRef.current.style.height = '36px';
+                scopeRef.current.style.borderRadius = '8px';
+            }
+
+            scopeRef.current.style.transform =
+                `translate3d(${currentPos.current.x}px, ${currentPos.current.y}px, 0)`;
+
+            if (distance > 0.5) {
+                rafId = requestAnimationFrame(updateLoop);
+            }
+        };
+
+        const scheduleUpdate = () => {
+            if (rafId === null) rafId = requestAnimationFrame(updateLoop);
+        };
 
         const checkTargetUnderMouse = (x: number, y: number) => {
             const el = document.elementFromPoint(x, y) as HTMLElement | null;
@@ -46,66 +89,48 @@ export const CustomCursor = () => {
                     height: rect.height + padding * 2,
                     borderRadius: style.borderRadius || '16px',
                 };
-                setIsLocked(true);
+                if (!isLockedRef.current) {
+                    isLockedRef.current = true;
+                    setIsLocked(true);
+                }
             } else {
                 document.body.classList.add('hide-cursor');
                 targetBox.current = null;
-                setIsLocked(false);
+                if (isLockedRef.current) {
+                    isLockedRef.current = false;
+                    setIsLocked(false);
+                }
             }
         };
 
         const onMouseMove = (e: MouseEvent) => {
             mousePos.current = { x: e.clientX, y: e.clientY };
 
-            if (!isVisible) {
+            if (!isVisibleRef.current) {
+                isVisibleRef.current = true;
                 setIsVisible(true);
             }
 
             checkTargetUnderMouse(e.clientX, e.clientY);
+            scheduleUpdate();
         };
 
         const onScroll = () => {
             if (mousePos.current.x >= 0 && mousePos.current.y >= 0) {
                 checkTargetUnderMouse(mousePos.current.x, mousePos.current.y);
+                scheduleUpdate();
             }
         };
 
         const onMouseLeave = () => {
+            isVisibleRef.current = false;
             setIsVisible(false);
             document.body.classList.remove('hide-cursor');
         };
 
         const onMouseEnter = () => {
+            isVisibleRef.current = true;
             setIsVisible(true);
-        };
-
-        let rafId: number;
-        const updateLoop = () => {
-            if (scopeRef.current) {
-                if (targetBox.current) {
-                    currentPos.current.x += (targetBox.current.x - currentPos.current.x) * 0.25;
-                    currentPos.current.y += (targetBox.current.y - currentPos.current.y) * 0.25;
-
-                    scopeRef.current.style.transform = `translate3d(${currentPos.current.x}px, ${currentPos.current.y}px, 0)`;
-                    scopeRef.current.style.width = `${targetBox.current.width}px`;
-                    scopeRef.current.style.height = `${targetBox.current.height}px`;
-                    scopeRef.current.style.borderRadius = targetBox.current.borderRadius;
-                } else {
-                    const scopeSize = 36;
-                    const targetX = mousePos.current.x - scopeSize / 2;
-                    const targetY = mousePos.current.y - scopeSize / 2;
-
-                    currentPos.current.x += (targetX - currentPos.current.x) * 0.35;
-                    currentPos.current.y += (targetY - currentPos.current.y) * 0.35;
-
-                    scopeRef.current.style.transform = `translate3d(${currentPos.current.x}px, ${currentPos.current.y}px, 0)`;
-                    scopeRef.current.style.width = `${scopeSize}px`;
-                    scopeRef.current.style.height = `${scopeSize}px`;
-                    scopeRef.current.style.borderRadius = '8px';
-                }
-            }
-
-            rafId = requestAnimationFrame(updateLoop);
         };
 
         window.addEventListener('mousemove', onMouseMove, { passive: true });
@@ -113,23 +138,19 @@ export const CustomCursor = () => {
         document.addEventListener('mouseleave', onMouseLeave);
         document.addEventListener('mouseenter', onMouseEnter);
 
-        rafId = requestAnimationFrame(updateLoop);
-
         return () => {
-            cancelAnimationFrame(rafId);
+            if (rafId !== null) cancelAnimationFrame(rafId);
             document.body.classList.remove('hide-cursor');
             window.removeEventListener('mousemove', onMouseMove);
             window.removeEventListener('scroll', onScroll);
             document.removeEventListener('mouseleave', onMouseLeave);
             document.removeEventListener('mouseenter', onMouseEnter);
         };
-    }, [isVisible]);
-
-    if (!mounted) return null;
+    }, []);
 
     return (
         <div
-            className={`pointer-events-none fixed inset-0 z-[99999] overflow-hidden transition-opacity duration-200 ${isVisible ? 'opacity-100' : 'opacity-0'
+            className={`custom-cursor-overlay pointer-events-none fixed inset-0 z-[99999] overflow-hidden transition-opacity duration-200 ${isVisible ? 'opacity-100' : 'opacity-0'
                 }`}
             aria-hidden="true"
         >

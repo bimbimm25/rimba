@@ -29,6 +29,17 @@ const resolvedMissions: Array<{ id?: string | number; slug?: string }> = (() => 
     return [{ id: '1' }, { id: '2' }, { id: '3' }];
 })();
 
+const HTML_ENTITIES: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+};
+
+const escapeHtml = (value: string) =>
+    value.replace(/[&<>"']/g, (character) => HTML_ENTITIES[character] ?? character);
+
 export const CertificateModal: React.FC<CertificateModalProps> = ({ isOpen, onClose }) => {
     const [studentName, setStudentName] = useState<string>('');
     const [completedLessons, setCompletedLessons] = useState<string[]>([]);
@@ -37,6 +48,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ isOpen, onCl
 
     const scrollPositionRef = useRef<number>(0);
     const modalScrollAreaRef = useRef<HTMLDivElement | null>(null);
+    const dialogRef = useRef<HTMLDivElement | null>(null);
 
     // ==============================================================
     // TEKNIK POSITION FIXED SCROLL LOCK (HALAMAN BELAKANG 100% BEKU)
@@ -133,22 +145,48 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ isOpen, onCl
         } catch { }
     };
 
-    const handleUnlockAll = () => {
-        const allLessonSlugs = DETAILED_LESSONS.map((l) => String(l.slug));
-        const allMissionIds = resolvedMissions.map((m, idx) => String(m.id || m.slug || idx + 1));
+    const handleSyncProgress = () => readStorageProgress();
 
-        ['1', '2', '3', '4', '5'].forEach((id) => {
-            if (!allMissionIds.includes(id)) allMissionIds.push(id);
-        });
+    useEffect(() => {
+        if (!isOpen) return;
 
-        setCompletedLessons(allLessonSlugs);
-        setCompletedMissions(allMissionIds);
+        const previousFocus = document.activeElement instanceof HTMLElement
+            ? document.activeElement
+            : null;
+        const initialFocus = dialogRef.current?.querySelector<HTMLElement>(
+            'button:not([disabled]), a[href], input:not([disabled])'
+        );
+        (initialFocus ?? dialogRef.current)?.focus();
 
-        try {
-            localStorage.setItem('rimba_completed_lessons', JSON.stringify(allLessonSlugs));
-            localStorage.setItem('rimba_completed_missions', JSON.stringify(allMissionIds));
-        } catch { }
-    };
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                onClose();
+                return;
+            }
+
+            if (event.key !== 'Tab' || !dialogRef.current) return;
+
+            const focusableElements = dialogRef.current.querySelectorAll<HTMLElement>(
+                'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+            );
+            const first = focusableElements[0];
+            const last = focusableElements[focusableElements.length - 1];
+
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last?.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first?.focus();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+            if (previousFocus?.isConnected) previousFocus.focus();
+        };
+    }, [isOpen, onClose]);
 
     const handlePrintCertificate = () => {
         const printWindow = window.open('', '_blank', 'width=1000,height=750');
@@ -156,8 +194,9 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ isOpen, onCl
             alert('Mohon izinkan pop-up peramban untuk mencetak sertifikat.');
             return;
         }
+        printWindow.opener = null;
 
-        const recipientName = studentName.trim() || 'Sahabat Cilik Rimba';
+        const recipientName = escapeHtml(studentName.trim() || 'Sahabat Cilik Rimba');
         const certNumber = `RMB-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`;
 
         const certHtml = `
@@ -349,11 +388,16 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ isOpen, onCl
 
     return (
         <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="certificate-dialog-title"
             className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-rimba-950/80 backdrop-blur-sm select-none"
             onClick={onClose}
             onWheel={handleWheel}
         >
             <div
+                ref={dialogRef}
+                tabIndex={-1}
                 className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-rimba-200 overflow-hidden flex flex-col max-h-[85vh] select-text"
                 onClick={(e) => e.stopPropagation()}
                 onWheel={handleWheel}
@@ -366,7 +410,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ isOpen, onCl
                             <Award className="w-5 h-5" />
                         </div>
                         <div>
-                            <h3 className="font-display font-extrabold text-sm sm:text-base text-rimba-950 leading-tight">
+                            <h3 id="certificate-dialog-title" className="font-display font-extrabold text-sm sm:text-base text-rimba-950 leading-tight">
                                 Sertifikat Kelulusan Duta Rimba
                             </h3>
                             <p className="text-[11px] text-rimba-700 leading-tight">
@@ -378,6 +422,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ isOpen, onCl
                     <button
                         onClick={onClose}
                         className="p-2 rounded-xl text-rimba-600 hover:text-rimba-950 hover:bg-rimba-100 transition-colors cursor-pointer"
+                        aria-label="Tutup sertifikat"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -451,13 +496,13 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ isOpen, onCl
                                 </div>
                             </div>
 
-                            {/* Buka Kunci Instan */}
+                            {/* Sinkronkan progres yang tersimpan */}
                             <div className="pt-2 text-center">
                                 <button
-                                    onClick={handleUnlockAll}
+                                    onClick={handleSyncProgress}
                                     className="text-[11px] font-bold text-rimba-700 hover:text-rimba-950 underline cursor-pointer"
                                 >
-                                    ⚡ Klik di sini untuk sinkronkan & buka kunci sertifikat sekarang
+                                    Sinkronkan progres terbaru
                                 </button>
                             </div>
                         </div>
