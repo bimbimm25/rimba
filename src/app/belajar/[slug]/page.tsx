@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import {
@@ -27,11 +27,36 @@ import {
 } from 'lucide-react';
 import { DETAILED_LESSONS, KeyPoint } from '@/data/lessons';
 
+const LESSON_PROGRESS_EVENT = 'rimba:completed-lessons-change';
+
+function subscribeToLessonProgress(onChange: () => void) {
+    window.addEventListener('storage', onChange);
+    window.addEventListener(LESSON_PROGRESS_EVENT, onChange);
+    return () => {
+        window.removeEventListener('storage', onChange);
+        window.removeEventListener(LESSON_PROGRESS_EVENT, onChange);
+    };
+}
+
+function isLessonCompleted(slug: string) {
+    try {
+        const saved = localStorage.getItem('rimba_completed_lessons');
+        const parsed: unknown = saved ? JSON.parse(saved) : [];
+        return Array.isArray(parsed) && parsed.includes(slug);
+    } catch (error) {
+        console.error('Gagal membaca progres belajar:', error);
+        return false;
+    }
+}
+
 export default function DetailModulBelajarPage() {
     const params = useParams();
-    const router = useRouter();
     const slug = params?.slug as string;
+    return <DetailModulBelajarContent key={slug} slug={slug} />;
+}
 
+function DetailModulBelajarContent({ slug }: { slug: string }) {
+    const router = useRouter();
     const currentModule = DETAILED_LESSONS.find((item) => item.slug === slug);
     const currentIndex = DETAILED_LESSONS.findIndex((item) => item.slug === slug);
     const nextModule = currentIndex >= 0 && currentIndex < DETAILED_LESSONS.length - 1
@@ -40,27 +65,18 @@ export default function DetailModulBelajarPage() {
 
     const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+    const [showHint, setShowHint] = useState<boolean>(false);
     const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
-    const [isAlreadyCompleted, setIsAlreadyCompleted] = useState<boolean>(false);
+    const isAlreadyCompleted = useSyncExternalStore(
+        subscribeToLessonProgress,
+        () => isLessonCompleted(slug),
+        () => false
+    );
 
     // Referensi speech synthesis anti-macet
     const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
     const speechQueueRef = useRef<string[]>([]);
     const isPlayingRef = useRef<boolean>(false);
-
-    useEffect(() => {
-        try {
-            const saved = localStorage.getItem('rimba_completed_lessons');
-            if (saved) {
-                const completedArr: string[] = JSON.parse(saved);
-                if (completedArr.includes(slug)) {
-                    setIsAlreadyCompleted(true);
-                }
-            }
-        } catch {
-            // Abaikan jika storage browser dibatasi
-        }
-    }, [slug]);
 
     useEffect(() => {
         return () => {
@@ -178,25 +194,34 @@ export default function DetailModulBelajarPage() {
     };
 
     const handleAnswerClick = (optionId: string) => {
+        if (isSubmitted) return;
         setSelectedOptionId(optionId);
         setIsSubmitted(true);
+    };
+
+    const handleTryAgain = () => {
+        setSelectedOptionId(null);
+        setIsSubmitted(false);
+        setShowHint(true);
     };
 
     const saveCompletionProgress = () => {
         try {
             const saved = localStorage.getItem('rimba_completed_lessons');
-            const currentArr: string[] = saved ? JSON.parse(saved) : [];
+            const parsed: unknown = saved ? JSON.parse(saved) : [];
+            const currentArr = Array.isArray(parsed) ? parsed.map(String) : [];
             if (!currentArr.includes(slug)) {
                 currentArr.push(slug);
                 localStorage.setItem('rimba_completed_lessons', JSON.stringify(currentArr));
-                setIsAlreadyCompleted(true);
             }
+            window.dispatchEvent(new Event(LESSON_PROGRESS_EVENT));
         } catch {
-            // Abaikan
+            console.error('Gagal menyimpan progres belajar.');
         }
     };
 
     const handleCompleteAndNext = () => {
+        if (!isAlreadyCompleted && !(isSubmitted && activeOption?.isCorrect)) return;
         saveCompletionProgress();
 
         if (nextModule) {
@@ -209,6 +234,7 @@ export default function DetailModulBelajarPage() {
     const activeOption = currentModule.interactiveCheck.options.find(
         (opt) => opt.id === selectedOptionId
     );
+    const canContinue = isAlreadyCompleted || (isSubmitted && activeOption?.isCorrect === true);
 
     return (
         <div className="min-h-screen bg-earth-cream pb-24 pt-28 sm:pt-32">
@@ -243,7 +269,7 @@ export default function DetailModulBelajarPage() {
                     <header className="border-b border-rimba-100 pb-8">
                         <div className="flex flex-wrap items-center gap-2 mb-3">
                             <span className="text-xs font-extrabold uppercase px-3 py-1 rounded-full bg-rimba-100 text-rimba-900 tracking-wider">
-                                Bab {currentModule.level}
+                                Bab {currentModule.level} dari {DETAILED_LESSONS.length}
                             </span>
                             <span className="text-xs font-bold uppercase px-2.5 py-1 rounded-full bg-earth-soft text-rimba-700">
                                 {currentModule.heroBadge}
@@ -337,6 +363,23 @@ export default function DetailModulBelajarPage() {
                             {currentModule.interactiveCheck.instruction}
                         </p>
 
+                        <div className="space-y-2">
+                            <button
+                                type="button"
+                                onClick={() => setShowHint((visible) => !visible)}
+                                aria-expanded={showHint}
+                                className="inline-flex items-center gap-2 text-xs font-bold text-rimba-700 hover:text-rimba-950"
+                            >
+                                <HelpCircle className="w-4 h-4" />
+                                {showHint ? 'Sembunyikan petunjuk' : 'Butuh petunjuk?'}
+                            </button>
+                            {showHint && (
+                                <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-relaxed text-amber-950" aria-live="polite">
+                                    {currentModule.interactiveCheck.hint}
+                                </p>
+                            )}
+                        </div>
+
                         <div className="space-y-3">
                             {currentModule.interactiveCheck.options.map((option) => {
                                 const isSelected = selectedOptionId === option.id;
@@ -352,6 +395,7 @@ export default function DetailModulBelajarPage() {
                                     <button
                                         key={option.id}
                                         onClick={() => handleAnswerClick(option.id)}
+                                        disabled={isSubmitted}
                                         className={`w-full text-left p-4 rounded-2xl border text-xs sm:text-sm font-semibold transition-all flex items-start gap-3 cursor-pointer ${btnStyle}`}
                                     >
                                         <span className="w-6 h-6 rounded-lg bg-earth-soft border border-rimba-100 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
@@ -371,8 +415,9 @@ export default function DetailModulBelajarPage() {
                             <div
                                 className={`p-4 rounded-2xl text-xs sm:text-sm font-semibold flex items-start gap-3 animate-in fade-in duration-200 ${activeOption.isCorrect
                                         ? 'bg-emerald-100 text-emerald-950 border border-emerald-200'
-                                        : 'bg-rose-100 text-rose-950 border border-rose-200'
+                                        : 'bg-amber-50 text-amber-950 border border-amber-200'
                                     }`}
+                                aria-live="polite"
                             >
                                 {activeOption.isCorrect ? (
                                     <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
@@ -381,7 +426,7 @@ export default function DetailModulBelajarPage() {
                                 )}
                                 <div className="flex-1">
                                     <p className="font-bold">
-                                        {activeOption.isCorrect ? 'Jawaban Benar!' : 'Belum Tepat, Pelajari Penjelasannya:'}
+                                        {activeOption.isCorrect ? 'Benar! Kamu sudah memahami materi ini.' : 'Belum pas, tidak apa-apa. Kita belajar lagi, ya!'}
                                     </p>
                                     <p className="mt-0.5 font-normal leading-relaxed">
                                         {activeOption.feedback}
@@ -389,18 +434,32 @@ export default function DetailModulBelajarPage() {
                                 </div>
                             </div>
                         )}
+                        {isSubmitted && activeOption && !activeOption.isCorrect && (
+                            <button
+                                type="button"
+                                onClick={handleTryAgain}
+                                className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-rimba-200 bg-white text-rimba-800 text-xs font-bold hover:bg-rimba-50 transition-colors"
+                            >
+                                Coba lagi
+                            </button>
+                        )}
                     </section>
 
                     {/* Footer Tombol Lanjut */}
                     <footer className="pt-6 border-t border-rimba-100 flex flex-col sm:flex-row items-center justify-between gap-4">
                         <span className="text-xs text-rimba-700 font-semibold flex items-center gap-1.5">
                             <Sparkles className="w-4 h-4 text-accent-sun" />
-                            Selesaikan materi ini untuk membuka misi selanjutnya
+                            {canContinue
+                                ? isAlreadyCompleted && !(isSubmitted && activeOption?.isCorrect)
+                                    ? 'Bab ini sudah pernah kamu selesaikan. Kamu boleh lanjut atau belajar lagi.'
+                                    : 'Hebat, kamu sudah menyelesaikan bab ini!'
+                                : 'Jawab kuis dengan benar untuk menandai bab ini selesai.'}
                         </span>
 
                         <button
                             onClick={handleCompleteAndNext}
-                            className="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-rimba-500 hover:bg-rimba-600 active:scale-95 text-white font-display font-bold text-sm shadow-sm hover:shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
+                            disabled={!canContinue}
+                            className="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-rimba-500 hover:bg-rimba-600 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 text-white font-display font-bold text-sm shadow-sm hover:shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
                         >
                             <span>
                                 {nextModule ? `Lanjut ke Bab 0${nextModule.level}` : 'Selesai Materi & Mulai Misi Lapangan'}

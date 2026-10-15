@@ -137,7 +137,7 @@ export default function BelajarHubPage() {
                                         Jalur Belajar Sahabat Rimba
                                     </h2>
                                     <p className="text-xs sm:text-sm text-rimba-800 font-medium mt-0.5">
-                                        Selesaikan setiap bab secara berurutan untuk mengumpulkan Poin Rimba (XP).
+                                        Ikuti bab dari awal, atau pilih bab yang ingin kamu pelajari. Setiap bab yang selesai mendapat 100 Poin Rimba.
                                     </p>
                                 </div>
 
@@ -154,12 +154,24 @@ export default function BelajarHubPage() {
                                 </div>
                             </div>
 
-                            <div className="w-full h-3 bg-rimba-50 rounded-full overflow-hidden p-0.5 border border-rimba-100">
+                            <div
+                                className="w-full h-3 bg-rimba-50 rounded-full overflow-hidden p-0.5 border border-rimba-100"
+                                role="progressbar"
+                                aria-label="Progres belajar"
+                                aria-valuemin={0}
+                                aria-valuemax={DETAILED_LESSONS.length}
+                                aria-valuenow={completedSlugs.length}
+                            >
                                 <div
                                     className="h-full bg-linear-to-r from-leaf to-rimba-500 rounded-full transition-all duration-500 ease-out"
                                     style={{ width: `${progressPercent}%` }}
                                 />
                             </div>
+                            <p className="text-xs text-rimba-700" aria-live="polite">
+                                {mounted
+                                    ? `Kamu sudah menyelesaikan ${completedSlugs.length} dari ${DETAILED_LESSONS.length} bab. Semangat terus!`
+                                    : `Ada ${DETAILED_LESSONS.length} bab seru untuk dipelajari.`}
+                            </p>
 
                             <div className="space-y-4">
                                 {DETAILED_LESSONS.map((lesson, idx) => {

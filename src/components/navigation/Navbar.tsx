@@ -49,10 +49,10 @@ const NAV_ITEMS = [
         desc: 'Simulasi Tanggap Bencana'
     },
     {
-        label: 'Arcade Lab',
+        label: 'Permainan',
         href: '/lab',
         icon: Gamepad2,
-        desc: 'Mini-Game Refleks Karhutla'
+        desc: 'Permainan belajar menjaga hutan'
     },
     {
         label: 'Kit Siaga',
@@ -155,7 +155,7 @@ export const Navbar: React.FC = () => {
                                             : isScrolled
                                                 ? 'text-rimba-800 hover:text-rimba-950 hover:bg-earth-soft'
                                                 : 'text-rimba-900 hover:text-rimba-950 hover:bg-white/50 backdrop-blur-xs'
-                                        }`}
+                                        }` }
                                 >
                                     <Icon
                                         className={`w-4 h-4 ${isActive ? 'text-amber-300' : 'text-rimba-600'

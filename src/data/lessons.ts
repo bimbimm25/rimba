@@ -32,6 +32,7 @@ export interface DetailedLesson {
   interactiveCheck: {
     prompt: string;
     instruction: string;
+    hint: string;
     options: {
       id: string;
       text: string;
@@ -89,6 +90,7 @@ export const DETAILED_LESSONS: DetailedLesson[] = [
     interactiveCheck: {
       prompt: 'Ayo Periksa Pemahamanmu!',
       instruction: 'Mengapa hutan perlu dijaga?',
+      hint: 'Ingat, hutan menjadi rumah bagi satwa dan membantu menjaga air, tanah, serta udara.',
       options: [
         {
           id: 'a',
@@ -162,6 +164,7 @@ export const DETAILED_LESSONS: DetailedLesson[] = [
     interactiveCheck: {
       prompt: 'Ayo Periksa Pemahamanmu!',
       instruction: 'Apa yang bisa terjadi jika tanah gambut mengering?',
+      hint: 'Gambut mengandung sisa tumbuhan. Pikirkan apa yang terjadi pada bahan tumbuhan saat kering.',
       options: [
         {
           id: 'a',
@@ -235,6 +238,7 @@ export const DETAILED_LESSONS: DetailedLesson[] = [
     interactiveCheck: {
       prompt: 'Ayo Periksa Pemahamanmu!',
       instruction: 'Mengapa membakar daun kering di dekat hutan berbahaya?',
+      hint: 'Daun kering mudah terbakar. Pikirkan ke mana angin bisa membawa percikan api.',
       options: [
         {
           id: 'a',
@@ -308,6 +312,7 @@ export const DETAILED_LESSONS: DetailedLesson[] = [
     interactiveCheck: {
       prompt: 'Ayo Periksa Pemahamanmu!',
       instruction: 'Apa yang harus kamu lakukan jika melihat asap keluar dari tanah?',
+      hint: 'Asap dari tanah bisa menandakan bara tersembunyi. Utamakan keselamatanmu dan minta bantuan.',
       options: [
         {
           id: 'a',
@@ -382,6 +387,7 @@ export const DETAILED_LESSONS: DetailedLesson[] = [
     interactiveCheck: {
       prompt: 'Ayo Periksa Pemahamanmu!',
       instruction: 'Apa yang sebaiknya dilakukan ketika udara di sekitar rumah dipenuhi asap?',
+      hint: 'Pilih tindakan yang mengurangi paparan asap dan ikuti arahan orang dewasa.',
       options: [
         {
           id: 'a',
@@ -456,6 +462,7 @@ export const DETAILED_LESSONS: DetailedLesson[] = [
     interactiveCheck: {
       prompt: 'Ayo Periksa Pemahamanmu!',
       instruction: 'Apa yang harus dilakukan jika melihat satwa liar yang terluka?',
+      hint: 'Satwa liar yang terluka perlu bantuan petugas. Kamu bisa membantu dengan tetap menjaga jarak.',
       options: [
         {
           id: 'a',
@@ -530,6 +537,7 @@ export const DETAILED_LESSONS: DetailedLesson[] = [
     interactiveCheck: {
       prompt: 'Ayo Periksa Pemahamanmu!',
       instruction: 'Apa manfaat mengolah daun kering menjadi kompos?',
+      hint: 'Kompos membuat daun bermanfaat bagi tanah tanpa perlu membakarnya.',
       options: [
         {
           id: 'a',
@@ -604,6 +612,7 @@ export const DETAILED_LESSONS: DetailedLesson[] = [
     interactiveCheck: {
       prompt: 'Ayo Periksa Pemahamanmu!',
       instruction: 'Apa yang perlu dilakukan setelah kebakaran hutan berhasil dipadamkan?',
+      hint: 'Hutan perlu waktu untuk pulih. Pikirkan cara merawatnya dan mencegah kebakaran terulang.',
       options: [
         {
           id: 'a',

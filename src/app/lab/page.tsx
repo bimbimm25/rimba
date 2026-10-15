@@ -10,8 +10,7 @@ import {
     Play,
     Flame,
     Droplets,
-    Sparkles,
-    Plane
+    Sparkles
 } from 'lucide-react';
 import { LAB_GAME_MODULES, GameId } from '@/data/lab-games';
 import { AnimatedItem } from '@/components/common/AnimatedItem';
@@ -117,6 +116,9 @@ export default function GameLabHubPage() {
                         >
                             &larr; <span>Pilih Modul Game Lain</span>
                         </button>
+                        <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-relaxed text-amber-950">
+                            Ini hanya permainan simulasi, bukan petunjuk untuk menghadapi kebakaran. Jika melihat api atau asap sungguhan, menjauhlah dan beri tahu orang dewasa. Jangan mencoba memadamkannya sendiri.
+                        </p>
 
                         {activeGame === 'water-drop' && (
                             <WaterDropGame
@@ -163,19 +165,19 @@ export default function GameLabHubPage() {
                             <ConditionalAnimatedItem variant="fade-up" delay={0}>
                                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rimba-100 border border-rimba-200 text-rimba-900 text-xs font-bold uppercase tracking-wider">
                                     <Gamepad2 className="w-4 h-4 text-rimba-600" />
-                                    <span>Pusat Arcade & Simulasi Karhutla</span>
+                                    <span>Permainan Belajar Karhutla</span>
                                 </div>
                             </ConditionalAnimatedItem>
 
                             <ConditionalAnimatedItem variant="fade-up" delay={120}>
                                 <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-rimba-950 tracking-tight">
-                                    Arena Mini-Game Penjaga Rimba
+                                    Permainan Sahabat Rimba
                                 </h1>
                             </ConditionalAnimatedItem>
 
                             <ConditionalAnimatedItem variant="fade-up" delay={220}>
                                 <p className="text-sm sm:text-base text-rimba-800 font-medium leading-relaxed">
-                                    Mainkan <strong>game aksi tanpa batas skor</strong>! Latih kecepatan refleksmu memadamkan api, melindungi gambut, dan menyelamatkan satwa rimba untuk mencetak rekor tertinggi!
+                                    Ayo bermain sambil belajar menjaga hutan, gambut, dan satwa. Permainan ini bukan panduan menghadapi kebakaran sungguhan. Jika melihat api atau asap, segera menjauh dan beri tahu orang dewasa.
                                 </p>
                             </ConditionalAnimatedItem>
                         </div>
@@ -307,7 +309,7 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
                         setCombo((c) => c + 1);
                         setSplash(true);
                         setTimeout(() => setSplash(false), 500);
-                        setFeedback('🎯 TEPAT SASARAN! Api padam sempurna. Kecepatan pesawat bertambah!');
+                        setFeedback('🎯 Tepat sasaran! Air mengenai titik api dalam simulasi.');
 
                         setFirePos(() => {
                             let newPos;
@@ -320,7 +322,7 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
                         setCombo(0);
                         setMissEffect(true);
                         setTimeout(() => setMissEffect(false), 400);
-                        setFeedback('❌ MELESET! Bom air jatuh di luar target. Butuh timing yang lebih akurat!');
+                        setFeedback('Meleset di simulasi. Air jatuh di luar sasaran.');
                     }
                     return 24;
                 }
@@ -475,7 +477,7 @@ function WaterDropGame({ bestScore, onScoreChange }: { bestScore: number; onScor
                     className="flex-1 py-4 sm:py-4 rounded-2xl bg-sky-500 hover:bg-sky-600 active:scale-95 disabled:opacity-50 text-white font-display font-black text-sm sm:text-base shadow-lg hover:shadow-sky-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                     <Droplets className="w-5 h-5 fill-current" />
-                    <span>JATUHKAN AIR SEKARANG!</span>
+                    <span>JATUHKAN AIR (SIMULASI)</span>
                 </button>
             </div>
         </div>
@@ -517,7 +519,7 @@ function PeatBlasterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
             const hit = Math.abs(peatDepth - targetDepth) < 12;
             if (hit) {
                 setScore((s) => s + 10);
-                setFeedback('CIIIISSS! Uap air putih menyembur! Bara berhasil kamu jinakkan.');
+                setFeedback('Tepat sasaran! Air mencapai bara di dalam simulasi.');
                 setTargetDepth(Math.floor(Math.random() * 65) + 25);
             } else {
                 setFeedback('Meleset! Kedalaman suntikan air belum tepat sasaran.');
@@ -613,7 +615,7 @@ function PeatBlasterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                     className="px-8 py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-display font-extrabold text-sm shadow-md transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
                 >
                     <Droplets className="w-5 h-5 fill-current" />
-                    <span>TEMBAKKAN AIR TEKANAN TINGGI!</span>
+                    <span>JALANKAN SIMULASI PENYUNTIKAN AIR</span>
                 </button>
             </div>
         </div>
@@ -1775,7 +1777,7 @@ function AeroShooterGame({ bestScore, onScoreChange }: { bestScore: number; onSc
                             Pertahanan Rimba Tertembus Api!
                         </h3>
                         <p className="text-xs sm:text-sm text-stone-300 mt-1 max-w-sm">
-                            Kamu berhasil memadamkan titik api dengan rekor <strong className="text-amber-300 font-bold">{score} Poin</strong>.
+                            Dalam simulasi ini, kamu mencetak rekor <strong className="text-amber-300 font-bold">{score} poin</strong>.
                         </p>
                         <button
                             onPointerDown={(e) => {

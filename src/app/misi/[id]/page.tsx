@@ -11,7 +11,6 @@ import {
     XCircle,
     Trophy,
     ShieldAlert,
-    Sparkles,
     HelpCircle,
     Flame,
     Check,
@@ -141,12 +140,12 @@ export default function MissionRunnerPage() {
                                 {isPassed ? 'Misi Berhasil Dituntaskan!' : 'Evaluasi Taktis Belum Lulus'}
                             </span>
                             <h1 className="font-display font-extrabold text-2xl sm:text-3xl text-rimba-950">
-                                {isPassed ? 'Keputusan Lapangan Tepat & Tanggap!' : 'Perlu Pendalaman Strategi Pemadaman'}
+                                {isPassed ? 'Kamu Hebat Memilih Tindakan Aman!' : 'Yuk, Coba Lagi!'}
                             </h1>
                             <p className="text-xs sm:text-sm text-rimba-700 max-w-md mx-auto leading-relaxed">
                                 {isPassed
-                                    ? 'Skor simulasi kamu memenuhi standar kelulusan. Status misi ini resmi dicatat untuk membuka level berikutnya.'
-                                    : 'Skor minimal kelulusan adalah 70%. Ulangi simulasi untuk memperbaiki koordinasi taktis dan membuka level selanjutnya.'}
+                                    ? 'Kamu sudah menyelesaikan tantangan ini. Ingat, kalau melihat api atau asap, menjauhlah dan segera beri tahu orang dewasa.'
+                                    : 'Tidak apa-apa kalau belum berhasil. Baca lagi penjelasan di setiap soal, lalu coba tantangannya sekali lagi.'}
                             </p>
                         </div>
 
@@ -202,9 +201,22 @@ export default function MissionRunnerPage() {
                             <h1 className="font-display font-extrabold text-xl sm:text-2xl text-rimba-950">
                                 {currentMission.title}
                             </h1>
+                            <p className="text-xs leading-relaxed text-rimba-700">
+                                {currentMission.description}
+                            </p>
+                            <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-relaxed text-amber-950">
+                                Ini latihan memilih tindakan aman. Kalau melihat api atau asap sungguhan, menjauhlah dan beri tahu orang dewasa. Jangan mencoba memadamkannya sendiri.
+                            </p>
 
                             {/* Progress Indicator */}
-                            <div className="w-full h-2 bg-earth-soft rounded-full overflow-hidden p-0.5 border border-rimba-200">
+                            <div
+                                className="w-full h-2 bg-earth-soft rounded-full overflow-hidden p-0.5 border border-rimba-200"
+                                role="progressbar"
+                                aria-label="Progres tantangan"
+                                aria-valuemin={0}
+                                aria-valuemax={totalSteps}
+                                aria-valuenow={currentStep + 1}
+                            >
                                 <div
                                     className="h-full bg-rimba-600 rounded-full transition-all duration-300"
                                     style={{ width: `${((currentStep + 1) / totalSteps) * 100}%` }}
@@ -270,17 +282,18 @@ export default function MissionRunnerPage() {
                             <div
                                 className={`p-4 rounded-2xl text-xs sm:text-sm font-medium flex items-start gap-3 animate-in fade-in duration-200 ${isCurrentCorrect
                                         ? 'bg-emerald-100 text-emerald-950 border border-emerald-200'
-                                        : 'bg-rose-100 text-rose-950 border border-rose-200'
+                                        : 'bg-amber-50 text-amber-950 border border-amber-200'
                                     }`}
+                                aria-live="polite"
                             >
                                 {isCurrentCorrect ? (
                                     <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
                                 ) : (
-                                    <XCircle className="w-5 h-5 text-rose-700 shrink-0 mt-0.5" />
+                                    <XCircle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
                                 )}
                                 <div className="flex-1 space-y-0.5">
                                     <p className="font-bold">
-                                        {isCurrentCorrect ? 'Jawaban Benar!' : 'Jawaban Kurang Tepat:'}
+                                        {isCurrentCorrect ? 'Benar! Kamu memahami langkah yang aman.' : 'Belum pas, tidak apa-apa. Baca penjelasan ini, ya.'}
                                     </p>
                                     <p className="leading-relaxed font-normal">{currentQuestion.explanation}</p>
                                 </div>

@@ -55,19 +55,19 @@ export default function MisiListPage() {
                         <AnimatedItem variant="fade-up" delay={0}>
                             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100 border border-amber-200 text-amber-900 text-xs font-bold uppercase tracking-wider">
                                 <Target className="w-4 h-4 text-amber-600" />
-                                <span>Simulasi Aksi Lapangan Karhutla</span>
+                                <span>Tantangan Belajar Karhutla</span>
                             </div>
                         </AnimatedItem>
 
                         <AnimatedItem variant="fade-up" delay={120}>
                             <h1 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-rimba-950 tracking-tight leading-tight">
-                                Pusat Misi Tanggap Bencana Rimba
+                                Tantangan Sahabat Rimba
                             </h1>
                         </AnimatedItem>
 
                         <AnimatedItem variant="fade-up" delay={220}>
                             <p className="text-rimba-800 text-sm sm:text-base leading-relaxed font-medium">
-                                Selesaikan setiap misi secara bertahap mulai dari Level 1! Selesaikan satu tantangan untuk membuka kunci misi berikutnya dan dapatkan Piagam Duta Rimba.
+                                Di setiap tantangan, pilih tindakan yang aman. Selesaikan satu tantangan untuk membuka tantangan berikutnya dan mendapatkan Piagam Duta Rimba. Kalau melihat api atau asap sungguhan, menjauhlah dan beri tahu orang dewasa—jangan mencoba memadamkannya.
                             </p>
                         </AnimatedItem>
 
